@@ -17,7 +17,7 @@ $app->post( '/tip', 'tip');
 $app->run();
 
 	function controller () {
-
+        return "hello world";
 	}
 
     function tip (){
