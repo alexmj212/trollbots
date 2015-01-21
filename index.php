@@ -32,7 +32,7 @@ function tip (){
 
     $reciever = $vars['text'];
 
-    $text = '@'.$poster.' has sent 1 karma tip to '.$reciever;
+    $text = '@'.$poster.' has tipped '.$reciever.'.';
 
     if (strpos($reciever,'@') === false) {
         echo "That's not a valid username";
