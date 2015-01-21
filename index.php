@@ -22,6 +22,8 @@ function tip (){
     global $vars;
     global $webhook_url;
 
+    $flag = 1;
+
     $channel = "#tipbottest";
 
     $username = "tipbot";
@@ -34,29 +36,32 @@ function tip (){
 
     if (strpos($reciever,'@') !== false) {
         echo "That's not a valid username";
-        return;
+        $flag = 0;
     }
 
     if('@'.$poster == $reciever){
         echo "You can't tip yourself!";
-        return;
+        $flag = 0;
     }
 
-    $data = '{"channel": "'.$channel.'", "username": "'.$username.'", "text": "'.$text.'", "icon_emoji": ":heavy_dollar_sign:"}';
-    $ch = curl_init();
+    if($flag){
+        $data = '{"channel": "'.$channel.'", "username": "'.$username.'", "text": "'.$text.'", "icon_emoji": ":heavy_dollar_sign:"}';
+        $ch = curl_init();
 
-    curl_setopt($ch, CURLOPT_URL,$webhook_url);
-    curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS,$data);
+        curl_setopt($ch, CURLOPT_URL,$webhook_url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS,$data);
 
-    // receive server response ...
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        // receive server response ...
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-    $server_output = curl_exec ($ch);
+        $server_output = curl_exec ($ch);
 
-    curl_close ($ch);
+        curl_close ($ch);
 
-    //echo "Debugging: ".$server_output;
+        //echo "Debugging: ".$server_output;
+        //
+    }
 }
 
 ?>
