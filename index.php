@@ -30,7 +30,19 @@ function tip (){
 
     $reciever = $vars['text'];
 
-    $data = '{"channel": "'.$channel.'", "username": "'.$username.'", "text": "@'.$poster.' has sent 1 karma tip to '.$reciever.'", "icon_emoji": ":heavy_dollar_sign:"}';
+    $text = '@'.$poster.' has sent 1 karma tip to '.$reciever;
+
+    if (strpos($reciever,'@') !== false) {
+        echo "That's not a valid username";
+        return;
+    }
+
+    if('@'.$poster == $reciever){
+        echo "You can't tip yourself!";
+        return;
+    }
+
+    $data = '{"channel": "'.$channel.'", "username": "'.$username.'", "text": "'.$text@.'", "icon_emoji": ":heavy_dollar_sign:"}';
     $ch = curl_init();
 
     curl_setopt($ch, CURLOPT_URL,$webhook_url);
