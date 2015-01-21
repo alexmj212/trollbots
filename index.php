@@ -24,9 +24,9 @@ function tip (){
 
     $flag = 1;
 
-    $channel = "#tipbottest";
+    $channel = "#".$vars['channel_name'];
 
-    $username = "tipbot";
+    $username = "Tip Bot";
 
     $poster = $vars['user_name'];
 
