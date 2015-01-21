@@ -42,7 +42,7 @@ function tip (){
         return;
     }
 
-    $data = '{"channel": "'.$channel.'", "username": "'.$username.'", "text": "'.$text@.'", "icon_emoji": ":heavy_dollar_sign:"}';
+    $data = '{"channel": "'.$channel.'", "username": "'.$username.'", "text": "'.$text.'", "icon_emoji": ":heavy_dollar_sign:"}';
     $ch = curl_init();
 
     curl_setopt($ch, CURLOPT_URL,$webhook_url);
