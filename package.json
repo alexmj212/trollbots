@@ -1,0 +1,17 @@
+{
+  "name": "Status",
+  "main": "index.php",
+  "version": "1.0.0",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-composer": "^0.4.1",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-git": "~0.2.14",
+    "grunt-phplint": "0.0.5",
+    "grunt-shell": "~0.7.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexmj212/status.git"
+  }
+}
