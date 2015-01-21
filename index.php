@@ -7,26 +7,44 @@
  */
 
 require 'vendor/autoload.php';
+include 'config.php';
 
 $app = new \Slim\Slim();
 
-$app->get( '/api' , 'controller' );
+$vars = $app->request->get();
 
-$app->post( '/tip', 'tip');
+$app->get( '/tip/', tip());
 
 $app->run();
 
-	function controller () {
-        return "hello world";
-	}
+function tip (){
 
-    function tip (){
-        return 'tipped!';
-    }
+    global $vars;
+    global $webhook_url;
 
-    function print_data($data) {
+    $channel = "#tipbottest";
 
-		echo json_encode($data);
-    }
+    $username = "tipbot";
+
+    $poster = $vars['user_name'];
+
+    $reciever = $vars['text'];
+
+    $data = '{"channel": "'.$channel.'", "username": "'.$username.'", "text": "@'.$poster.' has sent 1 karma tip to '.$reciever.'", "icon_emoji": ":heavy_dollar_sign:"}';
+    $ch = curl_init();
+
+    curl_setopt($ch, CURLOPT_URL,$webhook_url);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS,$data);
+
+    // receive server response ...
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $server_output = curl_exec ($ch);
+
+    curl_close ($ch);
+
+    //echo "Debugging: ".$server_output;
+}
 
 ?>
