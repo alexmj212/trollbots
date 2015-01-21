@@ -1,5 +1,5 @@
 {
-  "name": "Status",
+  "name": "Tipbot",
   "main": "index.php",
   "version": "1.0.0",
   "devDependencies": {
@@ -12,6 +12,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/alexmj212/status.git"
+    "url": "https://github.com/alexmj212/tipbot.git"
   }
 }
