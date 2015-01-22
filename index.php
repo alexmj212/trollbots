@@ -12,9 +12,9 @@ include 'includes/sender.php';
 
 $app = new \Slim\Slim();
 
-$sender = new ProcessPayload($app->request->post());
+$sender = new ProcessPayload($app->request->get());
 
-$app->post( '/tip/', 'tip');
+$app->get( '/tip/', 'tip');
 
 $app->run();
 
