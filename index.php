@@ -56,15 +56,18 @@ $app->run();
         switch($payload->payload_type){
             case 'user_name' :
                 if($payload->user_name == $payload->recipient){
-                    return "You can't tip yourself!";
+                    echo "You can't tip yourself!";
+                    return 0;
                 }
                 return $payload->user_name.' has tipped '.$payload->recipient.' in the channel '.$payload->channel_name;
                 break;
             case 'total' :
-                return "Just the tip.";
+                echo "Just the tip.";
+                return 0;
                 break;
             default :
-                return "Invalid command!";
+                echo "Invalid command!";
+                return 0;
                 break;
         }
     }
