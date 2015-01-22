@@ -3,5 +3,4 @@ composer.lock
 composer.phar
 tipbot.sublime-project
 tipbot.sublime-workspace
-vagrant
 vendor/*
