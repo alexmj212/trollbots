@@ -8,7 +8,7 @@
 
 require 'vendor/autoload.php';
 include 'config.php';
-include 'includes/sender.php';
+include 'includes/payload_processor.php';
 
 $app = new \Slim\Slim();
 
