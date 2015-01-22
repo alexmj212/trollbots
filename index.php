@@ -33,7 +33,7 @@ $app->run();
         if($text){
             $data = '{"channel": "'.$sender->channel_name.'", ';
             $data = $data.'"username": "'.$bot_username.'", ';
-            $data = $data.'"text": "'.$sender->text.'", ';
+            $data = $data.'"text": "'.$text.'", ';
             $data = $data.'"icon_emoji": ":heavy_dollar_sign:"}';
             $ch = curl_init();
 
