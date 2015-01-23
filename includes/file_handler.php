@@ -49,12 +49,14 @@ class Handler {
 		//
 		if(!array_key_exists($payload->user_name, $data)){
 			$data[$payload->user_name]['sent'] = 0;
+			$data[$payload->user_name]['received'] = 0;
 			$data[$payload->user_name]['created'] = date('Y-m-d H:i:s');
 			$data[$payload->user_name]['last_sent_date'] = 0;
 			$data[$payload->user_name]['last_sent_user'] = $payload->recipient;
 			$data[$payload->user_name]['last_received_date'] = 0;
 		}
 		if(!array_key_exists($payload->recipient, $data)){
+			$data[$payload->recipient]['sent'] = 0;
 			$data[$payload->recipient]['received'] = 0;
 			$data[$payload->recipient]['created'] = date('Y-m-d H:i:s');
 			$data[$payload->recipient]['last_received_date'] = 0;
