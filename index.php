@@ -42,13 +42,7 @@ $app->run();
         $payload = new ProcessPayload($app->request->get());
         $payload->response_text = tip_process_response($payload);
 
-        if($payload->payload_type != 'invalid'){
-            
-            send_response($payload);
-        }
     }
-
-
 
     function tip_process_response(&$payload){
 
@@ -61,7 +55,9 @@ $app->run();
                     return;
                 }
                 $filehandler->log_tip($payload);
-                return $payload->user_name.' has tipped '.$payload->recipient;
+                $payload->response_text = $payload->user_name.' has tipped '.$payload->recipient;
+                send_response($payload);
+                return;
                 break;
             case 'total' :
                 echo "You've been tipped ".$filehandler->retrieve_total($payload->user_name)." time(s)";
