@@ -39,30 +39,40 @@ class Handler {
 
 		$data = json_decode(file_get_contents($this->filename), true);
 
+		if(!$data){
+			$data = array();
+		}
+
 		$this->rate_limit = strtotime('now');
 
 		//TODO: CLEAN THIS UP
-
-		if($data[$payload->user_name]['last_sent_date']){
-
+		//
+		if(!array_key_exists($payload->user_name, $data)){
+			$data[$payload->user_name]['sent'] = 1;
+			$data[$payload->user_name]['created'] = date('Y-m-d H:i:s');
+			$data[$payload->user_name]['last_sent_date'] = date('Y-m-d H:i:s');
+			$data[$payload->user_name]['last_sent_user'] = $payload->recipient;
+			$data[$payload->user_name]['last_received_date'] = 0;
+		}
+		else {
 			if(strtotime($data[$payload->user_name]['last_sent_date'].' + 10 seconds') <= $this->rate_limit){
-
 				$data[$payload->user_name]['sent'] += 1;
 				$data[$payload->user_name]['last_sent_date'] = date('Y-m-d H:i:s');
 				$data[$payload->user_name]['last_sent_user'] = $payload->recipient;
-				$data[$payload->recipient]['received'] += 1;
+			}
+		
+			if(!array_key_exists($payload->recipient, $data)){
+				$data[$payload->recipient]['received'] = 1;
+				$data[$payload->recipient]['created'] = date('Y-m-d H:i:s');
 				$data[$payload->recipient]['last_received_date'] = date('Y-m-d H:i:s');
 				$data[$payload->recipient]['last_received_user'] = $payload->user_name;
-
-			} 
-		}
-		else {
-			$data[$payload->user_name]['sent'] += 1;
-			$data[$payload->user_name]['last_sent_date'] = date('Y-m-d H:i:s');
-			$data[$payload->user_name]['last_sent_user'] = $payload->recipient;
-			$data[$payload->recipient]['received'] += 1;
-			$data[$payload->recipient]['last_received_date'] = date('Y-m-d H:i:s');
-			$data[$payload->recipient]['last_received_user'] = $payload->user_name;
+				$data[$payload->recipient]['last_sent_date'] = 0;
+			}
+			else {
+					$data[$payload->recipient]['received'] += 1;
+					$data[$payload->recipient]['last_received_date'] = date('Y-m-d H:i:s');
+					$data[$payload->recipient]['last_received_user'] = $payload->user_name;
+			}
 		}
 
 
