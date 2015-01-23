@@ -23,7 +23,7 @@ $app = new \Slim\Slim();
 $filehandler = new Handler();
 
 //Define 'tip' endpoint and associated controller
-$app->post( '/tip/', 'tip');
+$app->get( '/tip/', 'tip');
 
 //Execute Slim framework processing
 $app->run();
@@ -39,7 +39,7 @@ $app->run();
         global $payload;
         global $filehandler;
 
-        $payload = new ProcessPayload($app->request->post());
+        $payload = new ProcessPayload($app->request->get());
         $payload->response_text = tip_process_response($payload);
 
         if($payload->payload_type != 'invalid'){
@@ -92,8 +92,6 @@ $app->run();
 
         // receive server response ...
         //curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        
-        echo $payload->response_text;
 
         $server_output = curl_exec ($ch);
 
