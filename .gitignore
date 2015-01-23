@@ -4,3 +4,4 @@ composer.phar
 tipbot.sublime-project
 tipbot.sublime-workspace
 vendor/*
+tips.json
