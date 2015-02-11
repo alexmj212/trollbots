@@ -41,9 +41,7 @@ class Responder {
         // receive server response ...
         //curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-        //curl_exec ($ch);
-        echo $post;
-
+        curl_exec ($ch);
 
         curl_close ($ch);
 

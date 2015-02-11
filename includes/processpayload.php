@@ -47,16 +47,12 @@ class ProcessPayload {
 
 		$file = new Handler();
 
-
-
 		switch(true){
 
 			case $this->is_user_name() :
 
 				$this->recipient = $this->text;
 			    if($this->user_name == $this->recipient){
-			    	echo $this->user_name;
-			    	echo $this->recipient;
                     $this->response("You can't tip yourself!",'private');
                     return;
                 }
