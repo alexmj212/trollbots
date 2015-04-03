@@ -18,6 +18,9 @@ include 'includes/processPayload.php';
 //Initialize Slim Framework
 $app = new \Slim\Slim();
 
+//Loads the web view for displaying stastics
+$app->get( '/', 'main');
+
 //Define 'tip' endpoint and associated controller
 $app->post( '/tip/', 'tip');
 
@@ -35,6 +38,10 @@ $app->run();
 
         $payload = new ProcessPayload($app->request->post());
 
+    }
+
+    function main (){
+        echo file_get_contents('./web/dist/index.html');
     }
 
 
