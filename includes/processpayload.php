@@ -6,8 +6,8 @@
  * Payload Processor
  */
 
-include 'filehandler.php';
-include 'responsehandler.php';
+include 'fileHandler.php';
+include 'responseHandler.php';
 
 /**
  * Description:
@@ -19,50 +19,50 @@ include 'responsehandler.php';
 class ProcessPayload {
 
 	public $token;
-	public $team_id;
-	public $channel_id;
-	public $channel_name;
-	public $user_id;
-	public $user_name;
+	public $teamId;
+	public $channelId;
+	public $channelName;
+	public $userId;
+	public $userName;
 	public $text;
 	public $recipient;
-	public $payload_type;
-	public $response_text;
-	public $response_type;
+	public $payloadType;
+	public $responseText;
+	public $responseType;
 
 	public function __construct ($data){
 
 		$this->token = $data['token'];
-		$this->team_id = $data['team_id'];
-		$this->channel_id = $data['channel_id'];
-		$this->channel_name = '#'.$data['channel_name'];
-		$this->user_id = $data['user_id'];
-		$this->user_name = '@'.strtolower($data['user_name']);
+		$this->teamId = $data['team_id'];
+		$this->channelId = $data['channel_id'];
+		$this->channelName = '#'.$data['channel_name'];
+		$this->userId = $data['user_id'];
+		$this->userName = '@'.strtolower($data['user_name']);
 		$this->text = strtolower($data['text']);
-		$this->payload_type = $this->parse_command();
+		$this->payloadType = $this->parseCommand();
 
 	}
 
-	private function parse_command(){
+	private function parseCommand(){
 
 		$file = new Handler();
 
 		switch(true){
 
-			case $this->is_user_name() :
+			case $this->isUserName() :
 
 				$this->recipient = $this->text;
-			    if($this->user_name == $this->recipient){
+			    if($this->userName == $this->recipient){
                     $this->response("You can't tip yourself!",'private');
                     return;
                 }
-                $this->response($this->user_name.' has tipped '.$this->recipient,'channel');
-                $file->log_tip($this);
+                $this->response($this->userName.' has tipped '.$this->recipient,'channel');
+                $file->logTip($this);
             	break;
 
 			case $this->text == 'total' :
 
-           		$total = $file->retrieve_total($this->user_name);
+           		$total = $file->retrieveTotal($this->userName);
            		$this->response("You've been tipped ".$total." time(s)", 'private');
            		break;
 
@@ -76,13 +76,13 @@ class ProcessPayload {
 	}
 
 	private function response($text, $type){
-		$this->response_text = $text;
-		$this->response_type = $type;
+		$this->responseText = $text;
+		$this->responseType = $type;
 
 		$responder = new Responder($this);
 	}
 
-	private function is_user_name(){
+	private function isUserName(){
 		if(strpos($this->text,'@') > 0 || strpos($this->text,'@') === false){
 			return false;
 		}

@@ -4,13 +4,13 @@ include 'config.php';
 
 class Responder {
 
-    private $bot_user_name = "Tip Bot";
+    private $botUserName = "Tip Bot";
 
     public function __construct(&$data){
 
-        switch ($data->response_type) {
+        switch ($data->responseType) {
             case 'private':
-                echo $data->response_text;
+                echo $data->responseText;
                 break;
 
             case 'channel':
@@ -26,15 +26,15 @@ class Responder {
 
     private function post(&$data){
 
-        global $webhook_url;
+        global $webhookUrl;
 
-        $post = '{"channel": "'.$data->channel_name.'", ';
-        $post = $post.'"username": "'.$this->bot_user_name.'", ';
-        $post = $post.'"text": "'.$data->response_text.'", ';
+        $post = '{"channel": "'.$data->channelName.'", ';
+        $post = $post.'"username": "'.$this->botUserName.'", ';
+        $post = $post.'"text": "'.$data->responseText.'", ';
         $post = $post.'"icon_emoji": ":heavy_dollar_sign:"}';
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL,$webhook_url);
+        curl_setopt($ch, CURLOPT_URL,$webhookUrl);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
 

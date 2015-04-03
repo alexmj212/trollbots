@@ -13,7 +13,7 @@
  */
 
 require 'vendor/autoload.php';
-include 'includes/processpayload.php';
+include 'includes/processPayload.php';
 
 //Initialize Slim Framework
 $app = new \Slim\Slim();
