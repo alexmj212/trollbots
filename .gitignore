@@ -5,3 +5,5 @@ tipbot.sublime-project
 tipbot.sublime-workspace
 vendor/*
 tips.json
+bower_components
+node_modules
