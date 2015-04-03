@@ -72,8 +72,6 @@ class Handler {
 			$data[$payload->recipient]['last_received_user'] = $payload->userName;
 		}
 
-
-
 		file_put_contents($this->filename, json_encode($data));
 
 	}
