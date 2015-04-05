@@ -1,21 +1,21 @@
 <div class="row">
   <table class="table">
     <thead>
-      <th>User</th>
+      <th><a href="" ng-click="order='$key';reverse=!reverse">User</a></th>
       <th>Sent</th>
       <th>Received</th>
       <th>Last Tip Sent</th>
       <th>Last Tip Recieved</th>
       <th>Created</th>
     </thead>
-    <tbody ng-repeat="(user, data) in tips">
-      <tr>
-        <td>{{ user }}</td>
-        <td>{{ data.sent }}</td>
-        <td>{{ data.received }}</td>
-        <td><span ng-show="data.last_sent_date">{{ convertToDate(data.last_sent_date) | date:'medium'}}</span></td>
-        <td><span ng-show="data.last_received_date">{{ convertToDate(data.last_received_date) | date:'medium'}}</span></td>
-        <td>{{ convertToDate(data.created) | date:'medium'}}</td>
+    <tbody>
+      <tr ng-repeat="tip in tips | toArray | orderBy:order:reverse">
+        <td>{{ tip.$key }}</td>
+        <td>{{ tip.sent }}</td>
+        <td>{{ tip.received }}</td>
+        <td><span ng-show="tip.last_sent_date">{{ convertToDate(tip.last_sent_date) | date:'medium'}}</span></td>
+        <td><span ng-show="tip.last_received_date">{{ convertToDate(tip.last_received_date) | date:'medium'}}</span></td>
+        <td>{{ convertToDate(tip.created) | date:'medium'}}</td>
       <tr>
     </tbody>
   </table>

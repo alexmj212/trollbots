@@ -14,6 +14,9 @@ angular.module('webApp')
 			$scope.tips = data;
 		});
 
+		$scope.order = '$key';
+		$scope.reverse = true;
+
 		$scope.convertToDate = function (stringDate){
 		  var dateOut = new Date(stringDate);
 		  dateOut.setDate(dateOut.getDate() + 1);
