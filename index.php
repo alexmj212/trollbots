@@ -41,7 +41,8 @@ $app->run();
     }
 
     function main (){
-        echo file_get_contents('./web/dist/index.html');
+        header('Location: /dist/index.html');
+        die();
     }
 
 
