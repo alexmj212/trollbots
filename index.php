@@ -21,6 +21,9 @@ $app = new \Slim\Slim();
 //Loads the web view for displaying stastics
 $app->get( '/', 'main');
 
+//For displaying the readme on the about page
+$app->get( '/README.md', 'readme');
+
 //Define 'tip' endpoint and associated controller
 $app->post( '/tip/', 'tip');
 
@@ -43,6 +46,10 @@ $app->run();
     function main (){
         header('Location: /dist/index.html');
         die();
+    }
+
+    function readme(){
+        return file_get_contents('README.md');
     }
 
 
