@@ -8,10 +8,9 @@
  * Controller of the webApp
  */
 angular.module('webApp')
-  .controller('AboutCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+	.controller('AboutCtrl', function ($scope, $http) {
+		$http.get('/README.md')
+			.success(function(data){
+				$scope.text = data;
+			});
   });

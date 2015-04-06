@@ -16,7 +16,8 @@ angular
     'ngRoute',
     'ngSanitize',
     'ngTouch',
-    'angular-toArrayFilter'
+    'angular-toArrayFilter',
+    'markdown'
   ])
   .config(function ($routeProvider) {
     $routeProvider
