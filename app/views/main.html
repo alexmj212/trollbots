@@ -1,21 +1,35 @@
-<div class="row">
-  <table class="table">
+<div class="jumbotron">
+  <div class="container">
+    <ul class="list-unstyled">
+      <li><h4><strong>{{ totalSent }}</strong> tips sent</h4></li>
+      <li><h4><strong>{{ totalUsers }}</strong> unique users</h4></li>
+      <li><h4><strong>{{ mostSentUser }}</strong> has sent the most tips ({{ mostSentNum }})</h4></li>
+      <li><h4><strong>{{ mostReceivedUser }}</strong> has received the most tips ({{ mostReceivedNum }})</h4></li>
+      <!--<li><h4><strong>{{ lastReceivedUser }}</strong> most recently received a tip on {{ lastReceivedDate | date:'mediumDate' }}</h4></li>-->
+    </ul>
+  </div>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-striped">
     <thead>
       <th><a href="" ng-click="order='$key';reverse=!reverse">User</a></th>
-      <th>Sent</th>
-      <th>Received</th>
-      <th>Last Tip Sent</th>
-      <th>Last Tip Recieved</th>
-      <th>Created</th>
+      <th><a href="" ng-click="order='sent';reverse=!reverse">Sent</a></th>
+      <th><a href="" ng-click="order='received';reverse=!reverse">Received</a></th>
+      <th><a href="" ng-click="order='last_sent_date';reverse=!reverse">Last Tip Sent</a></th>
+      <th><a href="" ng-click="order='last_received_date';reverse=!reverse">Last Tip Recieved</a></th>
+      <th><a href="" ng-click="order='created';reverse=!reverse">Created</a></th>
     </thead>
     <tbody>
       <tr ng-repeat="tip in tips | toArray | orderBy:order:reverse">
         <td>{{ tip.$key }}</td>
         <td>{{ tip.sent }}</td>
         <td>{{ tip.received }}</td>
-        <td><span ng-show="tip.last_sent_date">{{ convertToDate(tip.last_sent_date) | date:'medium'}}</span></td>
-        <td><span ng-show="tip.last_received_date">{{ convertToDate(tip.last_received_date) | date:'medium'}}</span></td>
-        <td>{{ convertToDate(tip.created) | date:'medium'}}</td>
+        <td><span ng-show="tip.last_sent_date">{{ convertToDate(tip.last_sent_date) | date:'mediumDate' | -0500}}</span>
+            <span ng-hide="tip.last_sent_date">Never</span></td>
+        <td><span ng-show="tip.last_received_date">{{ convertToDate(tip.last_received_date) | date:'mediumDate' | -0500}}</span>
+          <span ng-hide="tip.last_received_date">Never</span></td>
+        <td>{{ convertToDate(tip.created) | date:'mediumDate' | -0500}}</td>
       <tr>
     </tbody>
   </table>
