@@ -27,6 +27,9 @@ $app->get( '/README.md', 'readme');
 //Define 'tip' endpoint and associated controller
 $app->post( '/tip/', 'tip');
 
+//Define 'triggered' endpoint
+$app->post( '/triggered/', 'triggered');
+
 //Execute Slim framework processing
 $app->run();
 
@@ -40,6 +43,23 @@ $app->run();
         global $app;
 
         $payload = new ProcessPayload($app->request->post());
+        $payload->payloadType = $payload->parseCommand();
+
+    }
+
+    function triggered (){
+
+        global $app;
+
+        $payload = new ProcessPayload($app->request->post());
+
+        $payload->responseType = "triggered";
+
+        if($payload->isUserName()){
+            $payload->response($payload->userName." has been triggered by ".$payload->text."!","triggered");
+        } else {
+            $payload->response($payload->userName." has been triggered!","triggered");
+        }
 
     }
 

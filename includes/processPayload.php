@@ -39,11 +39,11 @@ class ProcessPayload {
 		$this->userId = $data['user_id'];
 		$this->userName = '@'.strtolower($data['user_name']);
 		$this->text = strtolower($data['text']);
-		$this->payloadType = $this->parseCommand();
+		//$this->payloadType = $this->parseCommand();
 
 	}
 
-	private function parseCommand(){
+	public function parseCommand(){
 
 		$file = new Handler();
 
@@ -75,14 +75,14 @@ class ProcessPayload {
 
 	}
 
-	private function response($text, $type){
+	public function response($text, $type){
 		$this->responseText = $text;
 		$this->responseType = $type;
 
 		$responder = new Responder($this);
 	}
 
-	private function isUserName(){
+	public function isUserName(){
 		if(strpos($this->text,'@') > 0 || strpos($this->text,'@') === false || !ctype_alnum(substr($this->text, 1))){
 			return false;
 		}
