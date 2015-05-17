@@ -47,7 +47,7 @@ class Responder {
         $post = '{"channel": "'.$data->channelName.'", ';
         $post = $post.'"username": "'.$this->botUserName.'", ';
         $post = $post.'"text": "'.$data->responseText.'", ';
-        $post = $post.'"icon_emoji": '.$this->icon.'}';
+        $post = $post.'"icon_emoji": "'.$this->icon.'"}';
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL,$webhookUrl);
