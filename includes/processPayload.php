@@ -89,6 +89,14 @@ class ProcessPayload {
 		return true;
 	}
 
+        public function isChannel(){
+                if(strpos($this->text,'#') > 0 || strpos($this->text,'#') === false || !ctype_alnum(substr($this->text, 1))){
+                        return false;
+                }
+                return true;
+        }
+
+
 }
 
 ?>

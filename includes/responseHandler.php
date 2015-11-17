@@ -32,7 +32,12 @@ class Responder {
                 $this->setBotUserName("Trigger Bot");
                 $this->post($data);
                 break;
-            
+
+	    case 'channelPolice':
+		$this->setBotIcon(":no_entry_sign:");
+		$this->setBotUserName("Channel Police");
+		$this->post($data);
+            	break;
             default:
                 echo "Not a valid channel";
                 break;
