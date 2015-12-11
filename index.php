@@ -43,7 +43,7 @@ $app->run();
 
 //Redirect main page (optional)
     function main (){
-        header('Location: https://github.com/alexmj212/tipbot');
+        header('Location: https://github.com/alexmj212/slackphpbot');
         die();
     }
 

@@ -24,6 +24,18 @@ There are two base includes that all scripts will use to parse and send response
 * Responder
 * ProcessPayload 
 
+Because the Responder class must make a connection with Slack to post a message, it reads from the `config.php` file to retrieve the appropriate credentials.
+You'll need to create a php file called config.php in the `includes` directory in order for the response to get the webhook url.
+```
+<?php
+
+$webhookURL = <your slack webhook url>
+
+?>
+```
+
+## Functionality
+
 ### Process Payload
 The ProcessPayload class will take the incoming slack command and return a class that is made available to the script. This class has several functions that allow the user to retrieve and manipulate data associated with the payload.
 * `setResponseText($responseText)`
@@ -43,29 +55,18 @@ The ProcessPayload class will take the incoming slack command and return a class
 
 ### Responder
 The Responder class allows the script to respond to the incoming request. It take fives separate arguments that allow you to customize the response.
-* botName
+* `botName`
   * The name that the bot will use in the response posted to Slack
-* botIcon
+* `botIcon`
   * The icon that the bot will use in the response posted to Slack (usually one of Slack's emoji codes)
-* botText
+* `botText`
   * What the bot will say in the response posted to Slack
-* botChannel
+* `botChannel`
   * The channel that the bot will post to
-* botVisibility
+* `botVisibility`
   * A true/false for whether the bot will respond to everyone in the channel or just the original user
     * True - the bot posts a response visibile to everyone in the channel
     * False - the bot posts a response only the original use can see
-
-### config.php
-Because the Responder class must make a connection with Slakc to post a message, it reads from the `config.php` file to retrive the appropriate credentials.
-You'll need to create a php file called config.php in the includes directory in order for the response to get the webhook url.
-```
-<?php
-
-$webhookURL = <your slack webhook url>
-
-?>
-```
 
 ## Examples
 Several example response are included in the scripts directory which demonstrate the use of Slack PHP Bot.
