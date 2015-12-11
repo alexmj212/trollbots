@@ -6,9 +6,6 @@
  * Payload Processor
  */
 
-include 'fileHandler.php';
-include 'responseHandler.php';
-
 /**
  * Description:
  * * Construct the object to retain event data
@@ -18,20 +15,17 @@ include 'responseHandler.php';
 
 class ProcessPayload {
 
-	public $token;
-	public $teamId;
-	public $channelId;
-	public $channelName;
-	public $userId;
-	public $userName;
-	public $text;
-	public $recipient;
-	public $payloadType;
-	public $responseText;
-	public $responseType;
+	private $token;
+	private $teamId;
+	private $channelId;
+	private $channelName;
+	private $userId;
+	private $userName;
+	private $text;
+	private $responseText;
 
 	public function __construct ($data){
-
+		
 		$this->token = $data['token'];
 		$this->teamId = $data['team_id'];
 		$this->channelId = $data['channel_id'];
@@ -39,47 +33,27 @@ class ProcessPayload {
 		$this->userId = $data['user_id'];
 		$this->userName = '@'.strtolower($data['user_name']);
 		$this->text = strtolower($data['text']);
-		//$this->payloadType = $this->parseCommand();
 
 	}
 
-	public function parseCommand(){
-
-		$file = new Handler();
-
-		switch(true){
-
-			case $this->isUserName() :
-
-				$this->recipient = $this->text;
-			    if($this->userName == $this->recipient){
-                    $this->response("You can't tip yourself!",'private');
-                    return;
-                }
-                $this->response($this->userName.' has tipped '.$this->recipient,'channel');
-                $file->logTip($this);
-            	break;
-
-			case $this->text == 'total' :
-
-           		$total = $file->retrieveTotal($this->userName);
-           		$this->response("You've been tipped ".$total." time(s)", 'private');
-           		break;
-
-           	default :
-
-           		$this->response("Invalid Command",'private');
-           		break;
-
-		}
-
+	public function setResponseText($responseText){
+		$this->responseText = $responseText;
 	}
 
-	public function response($text, $type){
-		$this->responseText = $text;
-		$this->responseType = $type;
+	public function getResponseText(){
+		return $this->responseText;
+	}
 
-		$responder = new Responder($this);
+	public function getChannelName(){
+		return $this->channelName;
+	}
+
+	public function getUserName(){
+		return $this->userName;
+	}
+
+	public function getPayloadText(){
+		return $this->text;
 	}
 
 	public function isUserName(){

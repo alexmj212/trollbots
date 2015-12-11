@@ -1,6 +1,6 @@
 <?php
 
-class Handler {
+class TipBot {
 
 	/*
 		{
@@ -23,15 +23,38 @@ class Handler {
 		}
 	 */
 	
-	private $filename;
-
+	private $filename = 'tips.json';
+	private $botName = 'Tip Bot';
+	private $botIcon = ':heavy_dollar_sign:';
 	private $rateLimit;
 
-	public function __construct(){
-
-		$this->filename = 'tips.json';
-
+	public function __construct($data){
+		$payload = new ProcessPayload($data);
+		$this->processTip($payload);
 	}
+
+	public function processTip(&$data){
+
+		switch(true){
+			case $data->isUserName() :
+				$recipient = $data->getPayloadText();
+				if($data->getUserName() == $recipient){
+					$responder = new Responder($this->botName,$this->botIcon,"You can't tip yourself!",$data->getChannelName(),0);
+					return;
+				}
+				$responder = new Responder($this->botName,$this->botIcon,'*'.$data->getUserName().'* has tipped *'.$recipient.'*',$data->getChannelName(),1);
+				//$this->logTip($data);
+			break;
+			/*case $data->text == 'total' :
+				$data = retrieveTotal($this->userName);
+				$data->response("You've been tipped ".$total." time(s)",$this->botName,$this->botIcon,0);
+			break;*/
+			default :
+				$responder = new Responder($this->botName,$this->botIcon,"Invalid command",$data->getChannelName(),0);
+			break;
+		}
+	}
+
 
 	public function logTip(&$payload){
 

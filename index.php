@@ -1,97 +1,50 @@
 <?php
 
 /**
- * Tip Bot for Slack
+ * PHP Bot for Slack
  * Alex Johnson
- * Main
  */
 
 /**
  * Description:
  * * Driver for the application
- * * Recieve data, rocess and send responses
+ * * Set endpoints for bot scripts
  */
 
 require 'vendor/autoload.php';
 include 'includes/processPayload.php';
+include 'includes/responseHandler.php';
+
+foreach (glob("scripts/*.php") as $filename)
+{
+    include $filename;
+}
 
 //Initialize Slim Framework
 $app = new \Slim\Slim();
 
-//Loads the web view for displaying stastics
-$app->get( '/', 'main');
+//Redirect the root web page to something
+$app->get('/', 'main');
 
-//For displaying the readme on the about page
-$app->get( '/README.md', 'readme');
-
-//Define 'tip' endpoint and associated controller
-$app->post( '/tip/', 'tip');
+//Define 'tip' endpoint
+$app->post('/tipbot/', function() use ($app) {$tipbot = new TipBot($app->request->post());});
 
 //Define 'triggered' endpoint
-$app->post( '/triggered/', 'triggered');
+$app->post('/triggerbot/', function() use ($app) {$triggerbot = new TriggerBot($app->request->post());});
 
 //Define 'channelpolice' endpoint
-$app->post('/channelPolice/','channelPolice');
+$app->post('/channelPolice/', function() use ($app) {$channelpolicebot = new ChannelPoliceBot($app->request->post());});
 
-//Execute Slim framework processing
+//Define 'punbot' endpoint
+$app->post('/punbot/', function() use ($app) {$pbot = new PunBot($app->request->post());});
+
+//Run the app
 $app->run();
 
-    /**
-     * tip function
-     * Controller for the tip endpoint
-     */
-
-    function tip (){
-
-        global $app;
-
-        $payload = new ProcessPayload($app->request->post());
-        $payload->payloadType = $payload->parseCommand();
-
-    }
-
-    function triggered (){
-
-        global $app;
-
-        $payload = new ProcessPayload($app->request->post());
-
-        $payload->responseType = "triggered";
-
-        if($payload->isUserName()){
-            $payload->response($payload->userName." has been triggered by ".$payload->text."!","triggered");
-        } else {
-            $payload->response($payload->userName." has been triggered!","triggered");
-        }
-
-    }
-
-    function channelPolice(){
-	global $app;
-
-	$payload = new ProcessPayload($app->request->post());
-
-	$payload->responseType = "channelPolice";
-
-	if($payload->isChannel()){
-	    $payload->response(":rotating_light::rotating_light::rotating_light: *".$payload->userName." has requested that this discussion be moved to the channel ".$payload->text.".*","channelPolice");
-	} else {
-	    $payload->response(":rotating_light::rotating_light::rotating_light: *".$payload->userName." has requested that this discussion be moved to the appropriate channel.*","channelPolice");
-	}
-
-    }
-
+//Redirect main page (optional)
     function main (){
-        header('Location: /dist/index.html');
+        header('Location: https://github.com/alexmj212/tipbot');
         die();
     }
-
-    function readme(){
-        return file_get_contents('README.md');
-    }
-
-
-
-
 
 ?>

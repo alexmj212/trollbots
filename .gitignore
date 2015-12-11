@@ -1,11 +1,8 @@
-config.php
+includes/config.php
 composer.lock
 composer.phar
 tipbot.sublime-project
 tipbot.sublime-workspace
 vendor/*
-tips.json
-bower_components
-node_modules
 .tmp
 .sass-cache
