@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHP Bot for Slack
+ * Slack PHP Bot
  * Alex Johnson
  */
 
@@ -14,10 +14,9 @@
 require 'vendor/autoload.php';
 include 'includes/processPayload.php';
 include 'includes/responseHandler.php';
-
-foreach (glob("scripts/*.php") as $filename)
+foreach (glob('scripts/*.php') as $filename)
 {
-    include $filename;
+    include_once $filename;
 }
 
 //Initialize Slim Framework
@@ -37,6 +36,10 @@ $app->post('/channelPolice/', function() use ($app) {$channelpolicebot = new Cha
 
 //Define 'punbot' endpoint
 $app->post('/punbot/', function() use ($app) {$pbot = new PunBot($app->request->post());});
+
+//Define 'dkpbot' endpoint
+$app->post('/dkpbot/', function() use ($app) {$dkpbot = new DKPBot($app->request->post());});
+
 
 //Run the app
 $app->run();
