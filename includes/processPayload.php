@@ -57,7 +57,14 @@ class ProcessPayload {
 	}
 
 	public function isUserName(){
-		if(strpos($this->text,'@') > 0 || strpos($this->text,'@') === false || !ctype_alnum(substr($this->text, 1))){
+		if(func_get_args()){
+			$args = func_get_args();
+			$text = $args[0];	
+		} else {
+			$text = $this->text;
+		}
+		
+		if(strpos($text,'@') > 0 || strpos($text,'@') === false || !ctype_alnum(substr($text, 1))){
 			return false;
 		}
 		return true;
