@@ -4,7 +4,7 @@ A PHP implementation for Slack incoming webhooks
 
 ##Components
 
-The backend is a [SlimPHP](https://github.com/slimphp/Slim) application which manages end points `specified in index.php`.
+The backend is a [SlimPHP](https://github.com/slimphp/Slim) application which manages end points specified in `index.php`.
 
 ## Dependencies
 
@@ -12,20 +12,19 @@ Dependencies are listed in [composer.json](https://github.com/alexmj212/slackphp
 
 ## Installation
 
-`php composer.phar install` installs [SlimPHP](https://github.com/slimphp/Slim).
+`composer install` installs [SlimPHP](https://github.com/slimphp/Slim) from the package list in `composer.json`.
 
 ## Configuration
 
-All endpoints must be specified per the SlimPHP specifications. Each end points can point to class from the files in the scripts directory. All files in the scripts directory will be included when an endpoint is called.
+All endpoints must be specified per the SlimPHP specifications. Each end point can point to a class from the files in the `scripts/` directory. All files in the `scripts/` directory will be included when an endpoint is called.
 
-All of the commands that are sent to the bot must be added as slash commands in the Slack configuration.
+All of the commands that are sent to the bot must be added as slash commands in your Slack configuration.
 
 There are two base includes that all scripts will use to parse and send responses.
 * Responder
 * ProcessPayload 
 
-Because the Responder class must make a connection with Slack to post a message, it reads from the `config.php` file to retrieve the appropriate credentials.
-You'll need to create a php file called config.php in the `includes` directory in order for the response to get the webhook url.
+Because the Responder class must make a connection with Slack to post a message, it reads from the `config.php` file to retrieve the appropriate credentials. You'll need to create a php file called `config.php` in the `includes/` directory in order for the response to get the webhook url.
 ```
 <?php
 
