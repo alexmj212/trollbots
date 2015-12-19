@@ -10,7 +10,6 @@
  * * Driver for the application
  * * Set endpoints for bot scripts
  */
-
 require 'vendor/autoload.php';
 include 'includes/processPayload.php';
 include 'includes/responseHandler.php';
@@ -32,10 +31,10 @@ $app->post('/tipbot/', function() use ($app) {$tipbot = new TipBot($app->request
 $app->post('/triggerbot/', function() use ($app) {$triggerbot = new TriggerBot($app->request->post());});
 
 //Define 'channelpolice' endpoint
-$app->post('/channelPolice/', function() use ($app) {$channelpolicebot = new ChannelPoliceBot($app->request->post());});
+$app->post('/channelpolicebot/', function() use ($app) {$channelpolicebot = new ChannelPoliceBot($app->request->post());});
 
 //Define 'punbot' endpoint
-$app->post('/punbot/', function() use ($app) {$pbot = new PunBot($app->request->post());});
+$app->post('/punbot/', function() use ($app) {$punbot = new PunBot($app->request->post());});
 
 //Define 'dkpbot' endpoint
 $app->post('/dkpbot/', function() use ($app) {$dkpbot = new DKPBot($app->request->post());});
