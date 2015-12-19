@@ -1,6 +1,5 @@
 <?php
 
-include 'config.php';
 
 class Responder {
 
@@ -20,22 +19,15 @@ class Responder {
 	}
 
 	public function post(){
+		$response_type = null;
 		if($this->botVisibility){
-			global $webhookUrl;
-			$post = '{"channel": "'.$this->botChannel.'", ';
-			$post = $post.'"username": "'.$this->botName.'", ';
-			$post = $post.'"text": "'.$this->botText.'", ';
-			$post = $post.'"icon_emoji": "'.$this->botIcon.'"}';
-			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL,$webhookUrl);
-			curl_setopt($ch, CURLOPT_POST, 1);
-			curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
-			curl_exec ($ch);
-			curl_close ($ch);
-			die();
+			$response_type = "in_channel";
 		} else {
-			echo $this->botText;
+			$response_type = "ephemeral";
 		}
+		header('Content-Type: application/json');
+		echo json_encode(array('response_type' => $response_type, 'text' => $this->botText));
+		exit;
 	}
 }
 
