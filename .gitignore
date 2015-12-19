@@ -6,3 +6,6 @@ tipbot.sublime-workspace
 vendor/*
 .tmp
 .sass-cache
+tips.json
+dkp.json
+punbot.json
