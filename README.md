@@ -24,15 +24,6 @@ There are two base includes that all scripts will use to parse and send response
 * Responder
 * ProcessPayload 
 
-Because the Responder class must make a connection with Slack to post a message, it reads from the `config.php` file to retrieve the appropriate credentials. You'll need to create a php file called `config.php` in the `includes/` directory in order for the response to get the webhook url.
-```
-<?php
-
-$webhookURL = <your slack webhook url>
-
-?>
-```
-
 ## Functionality
 
 ### Process Payload
