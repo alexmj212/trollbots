@@ -44,6 +44,10 @@ class ProcessPayload {
 		return $this->responseText;
 	}
 
+	public function getTeamId(){
+		return $this->teamId;
+	}
+
 	public function getChannelName(){
 		return $this->channelName;
 	}
