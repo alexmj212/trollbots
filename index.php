@@ -13,6 +13,7 @@
 require 'vendor/autoload.php';
 include 'includes/processPayload.php';
 include 'includes/responseHandler.php';
+include 'includes/dataSource.php';
 foreach (glob('scripts/*.php') as $filename)
 {
     include_once $filename;
@@ -44,9 +45,11 @@ $app->post('/dkpbot/', function() use ($app) {$dkpbot = new DKPBot($app->request
 $app->run();
 
 //Redirect main page (optional)
-    function main (){
-        header('Location: https://github.com/alexmj212/slackphpbot');
-        die();
-    }
+	function main (){
+		header('Location: https://github.com/alexmj212/slackphpbot');
+		die();
+	}
+
+
 
 ?>

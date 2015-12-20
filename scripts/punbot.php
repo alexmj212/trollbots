@@ -6,76 +6,101 @@ class PunBot {
 
 	private $botIcon = ':unamused:';
 
-	private $fileName = 'punbot.json';
+	private $payload;
+
+	private $user;
+	
+	private $rating;
 
 	public function __construct($data){
 
-                $payload = new ProcessPayload($data);
-                $userpoints = explode(" ",$payload->getPayloadText());
+                $this->payload = new ProcessPayload($data);
+                $userrating = explode(" ",$this->payload->getPayloadText());
+                if(sizeof($userrating) == 2){
+                        $this->user = $userrating[0];
+                        $this->rating = $userrating[1];;
+                }
 
-                if($payload->isUserName($userpoints[0]) && is_numeric($userpoints[1]) && $userpoints[1] >= 0 &&  $userpoints[1] <= 10 && $userpoints[0] != $payload->getUserName()){
-			$this->logPun($payload);
-			$text = '*'.$payload->getUserName().'* has rated *'.$userpoints[0].'\'s* pun '.$userpoints[1].'/10';
-			$text = $text.' bringing their average to '.$this->retrieveRating($userpoints[0]).'/10';
-			$payload->setResponseText($text);
-			$responder = new Responder($this->botName, $this->botIcon, $payload->getResponseText(), $payload->getChannelName(), 1);
-		} if($payload->getPayloadText() == 'total'){
-			$payload->setResponseText("You've been rated ".$this->retrieveRatingCount($payload->getUserName())." times for an average of ".$this->retrieveRating($payload->getUserName())."/10");
-			$responder = new Responder($this->botName, $this->botIcon, $payload->getResponseText(), $payload->getChannelName(), 0);
+                if($this->payload->isUserName($this->user) && is_numeric($this->rating) && $this->rating >= 0 &&  $this->rating <= 10 && $this->user != $this->payload->getUserName()){
+			$this->logPunRating();
+			$text = '*'.$this->payload->getUserName().'* has rated *'.$this->user.'\'s* pun '.$this->rating.'/10';
+			$text = $text.' bringing their average to '.$this->retrieveRating($this->user).'/10';
+			$this->payload->setResponseText($text);
+			$responder = new Responder($this->botName, $this->botIcon, $this->payload->getResponseText(), $this->payload->getChannelName(), 1);
+		} if($this->payload->getPayloadText() == 'total'){
+			$this->payload->setResponseText("You've been rated ".$this->retrieveRatingCount($this->payload->getUserName())." times for an average of ".$this->retrieveRating($this->payload->getUserName())."/10");
+			$responder = new Responder($this->botName, $this->botIcon, $this->payload->getResponseText(), $this->payload->getChannelName(), 0);
 		} else {
-			$responder = new Responder($this->botName, $this->botIcon, "Invalid Command", $payload->getChannelName(), 0);
+			$responder = new Responder($this->botName, $this->botIcon, "Invalid Command", $this->payload->getChannelName(), 0);
 		}
 	}
 
-        private function logPun(&$payload){
+        private function logPunRating(){
 
                 date_default_timezone_set('UTC');
+                $database = new dataSource();
+                $collection = $database->getCollection("punbot");
 
-                $data = json_decode(file_get_contents($this->fileName), true);
-
-                if(!$data){
-                        $data = array();
+                //Does this team exist?
+                if($document = $collection->findOne(array("team_id"=>$this->payload->getTeamId()))){
+                        //Yes this team exists
+                        $users = $document["users"];
+                        //Does this user exist?
+                        if(array_key_exists($this->user,$users)){
+                                //Yes this user exists
+                        	$users[$this->user]['ratings_received'] += 1;
+                        	$users[$this->user]['rating'] = $users[$this->user]['rating'] + (($this->rating - $users[$this->user]['rating']) / $users[$this->user]['ratings_received']);
+                                $users[$this->user]['last_received_date'] = date('Y-m-d H:i:s');
+                        } else {
+                                //No, add this user, create them
+                        	$users[$this->user]['ratings_received'] = 1;
+                        	$users[$this->user]['rating'] = $this->rating;
+                        	$users[$this->user]['created'] = date('Y-m-d H:i:s');
+                        	$users[$this->user]['last_received_date'] = date('Y-m-d H:i:s');
+                        }
+                        //Save the new information
+                        $document["users"] = $users;
+                        $collection->update(array("team_id"=>$this->payload->getTeamId()),$document);
+                } else {
+                        //No, this team doesn't exist
+                        $team = array(
+                                "team_id"=>$this->payload->getTeamId(),
+                                "users"=>array(
+                                        $this->user => array(
+						"ratings_received" => 1,
+                                                "rating" => $this->rating,
+                                                "created" => date('Y-m-d H:i:s'),
+                                                "last_received_date" => date('Y-m-d H:i:s')
+                                        )
+                                )
+                        );
+                        $collection->insert($team);
                 }
 
-                $this->rateLimit = strtotime('now');
-
-                $userpoints = explode(" ",$payload->getPayloadText());
-
-                if(!array_key_exists($userpoints[0], $data)){
-                        $data[$userpoints[0]]['rating'] = 5 + (($userpoints[1] - 5) / 1);
-                        $data[$userpoints[0]]['ratings_received'] = 2;
-                        $data[$userpoints[0]]['created'] = date('Y-m-d H:i:s');
-                        $data[$userpoints[0]]['last_received_date'] = 0;
-                } else {
-			$currentRating = $this->retrieveRating($userpoints[0]);
-			$currentRatingCount = $this->retrieveRatingCount($userpoints[0]);
-
-                        $data[$userpoints[0]]['rating'] = $currentRating + (($userpoints[1] - $currentRating) / $currentRatingCount);
-                        $data[$userpoints[0]]['ratings_received'] += 1;
-                        $data[$userpoints[0]]['last_received_date'] = date('Y-m-d H:i:s');
-		}
-                file_put_contents($this->fileName, json_encode($data));
 
         }
 
         private function retrieveRating($userName){
-                $data = json_decode(file_get_contents($this->fileName), true);
-
-                if($data[$userName]['rating']){
-                        return round($data[$userName]['rating'],2);
+                $database = new dataSource();
+                $collection = $database->getCollection("punbot");
+                
+                if($document = $collection->findOne(array("team_id"=>$this->payload->getTeamId()))){
+                        if(array_key_exists($this->user,$document["users"])){
+                                return $document["users"][$this->user]['rating'];
+                        } else return 0;
                 } else return 0;
-
         }
 
         private function retrieveRatingCount($userName){
-                $data = json_decode(file_get_contents($this->fileName), true);
+                $database = new dataSource();
+                $collection = $database->getCollection("punbot");
 
-                if($data[$userName]['ratings_received']){
-                        return $data[$userName]['ratings_received'];
+                if($document = $collection->findOne(array("team_id"=>$this->payload->getTeamId()))){
+                        if(array_key_exists($this->user,$document["users"])){
+                                return $document["users"][$this->user]['ratings_received'];
+                        } else return 0;
                 } else return 0;
-
         }
-
-
 }
 ?>
+

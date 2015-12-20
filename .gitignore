@@ -1,4 +1,3 @@
-includes/config.php
 composer.lock
 composer.phar
 tipbot.sublime-project
@@ -6,6 +5,4 @@ tipbot.sublime-workspace
 vendor/*
 .tmp
 .sass-cache
-tips.json
-dkp.json
-punbot.json
+includes/dataSource.php

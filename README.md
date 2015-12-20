@@ -6,6 +6,8 @@ A PHP implementation for Slack incoming webhooks
 
 The backend is a [SlimPHP](https://github.com/slimphp/Slim) application which manages end points specified in `index.php`.
 
+The datasource uses a mongo database for data persistance. I've configured one with [MongoLab](https://mongolab.com).
+
 ## Dependencies
 
 Dependencies are listed in [composer.json](https://github.com/alexmj212/slackphp/blob/master/composer.json)
@@ -22,7 +24,10 @@ All of the commands that are sent to the bot must be added as slash commands in 
 
 There are two base includes that all scripts will use to parse and send responses.
 * Responder
-* ProcessPayload 
+* ProcessPayload
+* DataSource
+
+A file called `dataSource-default.php` is provided, fill in the database connection and rename the file to `dataSource.php`
 
 ## Functionality
 
@@ -60,3 +65,13 @@ The Responder class allows the script to respond to the incoming request. It tak
 
 ## Examples
 Several example response are included in the scripts directory which demonstrate the use of Slack PHP Bot.
+* Channel Police Bot
+  * Allows users to indicate the current conversation is not appropriate for the current channel.
+* Trigger Bot
+  * Allows users to let everyone know they've been triggered
+* Pun Bot
+  * Rate the puns of users and average their ratings
+* Tip Bot
+  * Tip users with points that accumulate over time
+* DKP Bot
+  * Give (or take) DKP from users and maintain their total over time
