@@ -23,3 +23,15 @@ body {
         color: #FFF;
 }
 
+.punbot {
+        background-color: rgb(253,219,115);
+}
+.punbot h3 {
+        color: #000;
+        border-bottom:1px solid #000;
+}
+.punbot p, .punbot li {
+        color: #000;
+}
+
+
