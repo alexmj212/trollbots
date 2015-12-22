@@ -1,0 +1,25 @@
+body {
+	background-color:#4e5d6c;
+}
+
+.dkpbot {
+	background-color: rgb(237,109,48);
+}
+.dkpbot h3 {
+	color:#fff;
+	border-bottom:1px solid #fff;
+}
+.dkpbot p, .dkpbot li {
+	color: #FFF;
+}
+.tipbot {
+        background-color: rgb(0,108,162);
+}
+.tipbot h3 {
+	color: #fff;
+        border-bottom:1px solid #fff;
+}
+.tipbot p, .tipbot li {
+        color: #FFF;
+}
+
