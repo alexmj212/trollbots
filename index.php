@@ -44,7 +44,7 @@ $app->post('/punbot/', function() use ($app) {$punbot = new PunBot($app->request
 
 //Define 'dkpbot' endpoint
 $app->post('/dkpbot/', function() use ($app) {$dkpbot = new DKPBot($app->request->post());});
-$app->get('/dkpbot-auth/', function() use ($app) {$dkpbotauth = new OAuth($app->request->get(),"dkpbot");});
+$app->get('/dkpbot-auth/', function() use ($app) {$dkpbotauth = new OAuth($app->request->get(),"DKP Bot");});
 
 //Run the app
 $app->run();
