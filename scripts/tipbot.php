@@ -23,7 +23,7 @@ class TipBot {
 				}
 			break;
 			case $this->payload->getPayloadText() == 'total' :
-				$total = $this->retrieveTotal($this->payload->getUserName());
+				$total = $this->retrieveTips($this->payload->getUserName());
 				$responder = new Responder($this->botName,$this->botIcon,"You've been tipped ".$total." time(s)",$this->payload->getChannelName(),0);
 
 			break;

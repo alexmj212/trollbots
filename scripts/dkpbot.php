@@ -21,7 +21,7 @@ class DKPBot {
 			$this->points = intval($userpoints[1]);
 		}
 
-		if($this->payload->isUserName($this->user) &&  is_numeric($this->points) && $this->points != 0 && $this->points <= 10){
+		if($this->payload->isUserName($this->user) &&  is_numeric($this->points) && $this->points >= -10 && $this->points != 0 && $this->points <= 10){
 			if($this->user == $this->payload->getUserName()){
 				$this->points = 0 - $this->points;
 				$this->logDKP($this->payload);
