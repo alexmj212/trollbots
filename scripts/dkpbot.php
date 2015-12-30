@@ -35,8 +35,11 @@ class DKPBot {
 				$this->payload->setResponseText($text);
 			}
 			$responder = new Responder($this->botName, $this->botIcon, $this->payload->getResponseText(), $this->payload->getChannelName(), 1);
-		} else if ($this->payload->getPayloadText() == "total"){
+		} else if ($this->payload->getPayloadText() == "score"){
 			$responder = new Responder($this->botName, $this->botIcon, "You have ".$this->retrieveDKP($this->payload->getUserName())."DKP", $this->payload->getChannelName(), 0);
+		} else if ($this->payload->getPayloadText() == "rank"){
+			$this->payload->setResponseText($this->ranking());
+			$responder = new Responder($this->botName, $this->botIcon, $this->payload->getResponseText(), $this->payload->getChannelName(), 0);
 		} else {
 			$responder = new Responder($this->botName, $this->botIcon, "Invalid command", $this->payload->getChannelName(), 0);
 		}
@@ -83,6 +86,32 @@ class DKPBot {
 		
 
         }
+
+	private function ranking(){
+		$database = new dataSource();
+		$collection = $database->getCollection("dkpbot");
+		$data = $collection->findOne(array("team_id"=>$this->payload->getTeamId()));
+		//Preserve array keys for sorting
+		foreach($data["users"] as $username=>$user){
+			$data["users"][$username]["username"] = $username;
+		}
+		//Sort in desc by DKP
+		usort($data["users"], function($a, $b) {
+    			return $b['dkp'] - $a['dkp'];
+		});
+		$leaderboard = "*DKP Leaderboard*\n";
+		foreach($data["users"] as $user){
+			$leaderboard .= $user["dkp"]." DKP\t\t";
+			if($user["username"] == $this->payload->getUserName()){
+				$leaderboard .= "*".$user["username"]."*";
+			} else {
+				$leaderboard .= $user["username"];
+			}
+			$leaderboard .= "\n";		
+		}
+		$leaderboard .= "If you're not listed, you've not received DKP";
+		return $leaderboard;
+	}
 
         private function retrieveDKP($userName){
                 $database = new dataSource();
