@@ -28,23 +28,23 @@ $app->get('/', 'main');
 
 //Define 'tip' endpoint
 $app->post('/tipbot/', function() use ($app) {$tipbot = new TipBot($app->request->post());});
-//$app->get('/tipbot-auth/', function() use ($app) {$tipbotauth = new OAuth($app->request->get(),"tipbot");});
+//$app->get('/tipbot-auth/', function() use ($app) {$tipbotauth = new OAuth($app->request->get(),'tipbot');});
 
 //Define 'triggered' endpoint
 $app->post('/triggerbot/', function() use ($app) {$triggerbot = new TriggerBot($app->request->post());});
-//$app->get('/triggerbot-auth/', function() use ($app) {$triggerbotauth = new OAuth($app->request->get(),"triggerbot");});
+//$app->get('/triggerbot-auth/', function() use ($app) {$triggerbotauth = new OAuth($app->request->get(),'triggerbot');});
 
 //Define 'channelpolice' endpoint
 $app->post('/channelpolicebot/', function() use ($app) {$channelpolicebot = new ChannelPoliceBot($app->request->post());});
-//$app->get('/channelpolicebot-auth/', function() use ($app) {$channelpolicebotauth = new OAuth($app->request->get(),"channelpolicebot");});
+//$app->get('/channelpolicebot-auth/', function() use ($app) {$channelpolicebotauth = new OAuth($app->request->get(),'channelpolicebot');});
 
 //Define 'punbot' endpoint
 $app->post('/punbot/', function() use ($app) {$punbot = new PunBot($app->request->post());});
-//$app->get('/punbot-auth/', function() use ($app) {$punbotauth = new OAuth($app->request->get(),"punbot");});
+//$app->get('/punbot-auth/', function() use ($app) {$punbotauth = new OAuth($app->request->get(),'punbot');});
 
 //Define 'dkpbot' endpoint
 $app->post('/dkpbot/', function() use ($app) {$dkpbot = new DKPBot($app->request->post());});
-$app->get('/dkpbot-auth/', function() use ($app) {$dkpbotauth = new OAuth($app->request->get(),"DKP Bot");});
+$app->get('/dkpbot-auth/', function() use ($app) {$dkpbotauth = new OAuth($app->request->get(),'DKP Bot');});
 
 //Run the app
 $app->run();
@@ -54,4 +54,4 @@ $app->run();
 		header('Location: http://alexmj212.github.io/slackphpbot/');
 		die();
 	}
-?>
+

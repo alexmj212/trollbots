@@ -6,4 +6,7 @@ vendor/*
 .tmp
 .sass-cache
 includes/dataSource.php
+/.idea
 includes/oauth.php
+/slackphpbot.iml
+
