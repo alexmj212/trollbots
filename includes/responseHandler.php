@@ -25,8 +25,13 @@ class Responder {
 		} else {
 			$response_type = "ephemeral";
 		}
-		header('Content-Type: application/json');
-		echo json_encode(array('response_type' => $response_type, 'text' => $this->botText));
+		if(is_array($this->botText)){
+			header('Content-Type: application/json');
+			echo json_encode(array('response_type' => $response_type,'attachments'=>array($this->botText)));
+		} else {
+			header('Content-Type: application/json');
+			echo json_encode(array('response_type' => $response_type, 'text' => $this->botText, 'unfurl_links' => true));
+		}
 		exit;
 	}
 }
