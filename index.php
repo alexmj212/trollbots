@@ -15,6 +15,7 @@ include 'includes/processPayload.php';
 include 'includes/responseHandler.php';
 include 'includes/dataSource.php';
 include 'includes/oauth.php';
+include 'includes/reddit-oauth.php';
 foreach (glob('scripts/*.php') as $filename)
 {
     include_once $filename;
@@ -46,12 +47,16 @@ $app->post('/punbot/', function() use ($app) {$punbot = new PunBot($app->request
 $app->post('/dkpbot/', function() use ($app) {$dkpbot = new DKPBot($app->request->post());});
 $app->get('/dkpbot-auth/', function() use ($app) {$dkpbotauth = new OAuth($app->request->get(),"DKP Bot");});
 
+//Define 'subredditbot' endpoint
+$app->post('/subredditbot/', function() use ($app) {$subredditbot = new SubredditBot($app->request->post());});
+$app->get('/subredditbot-redditauth/', function() use ($app) {$subredditbotredditoauth = new RedditOAuth($app->request->get());});
 //Run the app
 $app->run();
 
 //Redirect main page (optional)
 	function main (){
-		header('Location: http://alexmj212.github.io/slackphpbot/');
+		echo "This is the test bot. You shouldn't be here!";
+		//header('Location: http://alexmj212.github.io/slackphpbot/');
 		die();
 	}
 ?>
