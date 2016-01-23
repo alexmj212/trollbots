@@ -10,7 +10,7 @@ class Responder {
 	private $botVisibility;
 
 	public function __construct($botName, $botIcon, $botText, $botChannel, $botVisibility){
-                $this->botName = $botName;
+        $this->botName = $botName;
 		$this->botIcon = $botIcon;
 		$this->botText = $botText;
 		$this->botChannel = $botChannel;
@@ -19,11 +19,11 @@ class Responder {
 	}
 
 	public function post(){
-		$response_type = null;
+
+		$response_type = 'ephemeral';
+
 		if($this->botVisibility){
-			$response_type = "in_channel";
-		} else {
-			$response_type = "ephemeral";
+			$response_type = 'in_channel';
 		}
 		if(is_array($this->botText)){
 			header('Content-Type: application/json');
@@ -36,4 +36,3 @@ class Responder {
 	}
 }
 
-?>
