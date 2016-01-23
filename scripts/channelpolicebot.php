@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class ChannelPoliceBot
+ */
 class ChannelPoliceBot {
 
 	private $botName = 'Channel Police';
@@ -11,12 +14,11 @@ class ChannelPoliceBot {
 		$payload = new ProcessPayload($data);
 
 		if($payload->isChannel()){
-			$payload->setResponseText('*'.$payload->getUserName()."* has requested this discussion be moved to the *".$payload->getPayloadText()."* channel!");
+			$payload->setResponseText('*'.$payload->getUserName().'* has requested this discussion be moved to the *'.$payload->getPayloadText().'* channel!');
 		} else {
-			$payload->setResponseText('*'.$payload->getUserName()."* has requested this discussion be moved to the appropriate channel.");
+			$payload->setResponseText('*'.$payload->getUserName().'* has requested this discussion be moved to the appropriate channel.');
 		}
 		$responder = new Responder($this->botName, $this->botIcon, $payload->getResponseText(), $payload->getChannelName(), 1);
 
 	}
 }
-?>

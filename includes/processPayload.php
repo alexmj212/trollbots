@@ -1,16 +1,9 @@
 <?php
 
 /**  
- * Tip Bot for Slack
+ * Slack PHP Bot
  * Alex Johnson
  * Payload Processor
- */
-
-/**
- * Description:
- * * Construct the object to retain event data
- * * Parse the recieved text and determine it's validity
- * * Test to see if the text is a username
  */
 
 class ProcessPayload {
@@ -68,20 +61,12 @@ class ProcessPayload {
 			$text = $this->text;
 		}
 		
-		if(strpos($text,'@') > 0 || strpos($text,'@') === false || !ctype_alnum(substr($text, 1))){
-			return false;
-		}
-		return true;
+		return !(strpos($text,'@') > 0 || strpos($text,'@') === false || !ctype_alnum(substr($text, 1)));
+
 	}
 
-        public function isChannel(){
-                if(strpos($this->text,'#') > 0 || strpos($this->text,'#') === false || !ctype_alnum(substr($this->text, 1))){
-                        return false;
-                }
-                return true;
-        }
-
+	public function isChannel(){
+		return !(strpos($this->text,'#') > 0 || strpos($this->text,'#') === false || !ctype_alnum(substr($this->text, 1)));
+	}
 
 }
-
-?>
