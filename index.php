@@ -13,6 +13,7 @@
  */
 
 require 'vendor/autoload.php';
+require 'includes/Post.php';
 require 'includes/Payload.php';
 require 'includes/Responder.php';
 require 'includes/DataSource.php';
