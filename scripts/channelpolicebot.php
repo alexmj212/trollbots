@@ -11,10 +11,10 @@ class ChannelPoliceBot {
 
 	public function __construct($data){
 
-		$payload = new ProcessPayload($data);
+		$payload = new Payload($data);
 
 		if($payload->isChannel()){
-			$payload->setResponseText('*'.$payload->getUserName().'* has requested this discussion be moved to the *'.$payload->getPayloadText().'* channel!');
+			$payload->setResponseText('*'.$payload->getUserName().'* has requested this discussion be moved to the *'.$payload->getText().'* channel!');
 		} else {
 			$payload->setResponseText('*'.$payload->getUserName().'* has requested this discussion be moved to the appropriate channel.');
 		}

@@ -12,13 +12,13 @@ class PunBot {
 	private $payload;
 
 	private $user;
-	
+
 	private $rating;
 
 	public function __construct($data){
 
-        $this->payload = new ProcessPayload($data);
-        $userRating = explode(' ',$this->payload->getPayloadText());
+        $this->payload = new Payload($data);
+        $userRating = explode(' ',$this->payload->getText());
         if(count($userRating) === 2){
             $this->user = $userRating[0];
             $this->rating = $userRating[1];;
@@ -26,11 +26,11 @@ class PunBot {
 
         if($this->payload->isUserName($this->user) && is_numeric($this->rating) && $this->rating >= 0 &&  $this->rating <= 10 && $this->user !== $this->payload->getUserName()){
 			$this->logPunRating();
-			$text = '*'.$this->payload->getUserName().'* has rated *'.$this->user.'\'s* pun '.$this->rating.'/10';
-			$text = $text.' bringing their average to '.$this->retrieveRating($this->user).'/10';
-			$this->payload->setResponseText($text);
-			$responder = new Responder($this->botName, $this->botIcon, $this->payload->getResponseText(), $this->payload->getChannelName(), 1);
-		} if($this->payload->getPayloadText() === 'total'){
+			$ratingText = '*'.$this->payload->getUserName().'* has rated *'.$this->user.'\'s* pun '.$this->rating.'/10';
+			$totalText = 'Their average is now '.$this->retrieveRating($this->user).'/10';
+			$responder = new Responder($this->botName, $this->botIcon, $ratingText, $this->payload->getChannelName(), 1);
+            $responder = new Responder($this->botName, $this->botIcon, $totalText, $this->payload->getChannelName(), 1);
+		} if($this->payload->getText() === 'total'){
 			$this->payload->setResponseText('You\'ve been rated '.$this->retrieveRatingCount($this->payload->getUserName()).' times for an average of '.$this->retrieveRating($this->payload->getUserName()).'/10');
 			$responder = new Responder($this->botName, $this->botIcon, $this->payload->getResponseText(), $this->payload->getChannelName(), 0);
 		} else {
@@ -44,7 +44,7 @@ class PunBot {
     private function logPunRating(){
 
         date_default_timezone_set('UTC');
-        $database = new dataSource();
+        $database = new DataSource();
         $collection = $database->getCollection('punbot');
 
         //Does this team exist?
@@ -91,7 +91,7 @@ class PunBot {
      * @return int
      */
     private function retrieveRating($userName){
-        $database = new dataSource();
+        $database = new DataSource();
         $collection = $database->getCollection('punbot');
 
         if($document = $collection->findOne(array('team_id'=>$this->payload->getTeamId()))){
@@ -106,7 +106,7 @@ class PunBot {
      * @return int
      */
     private function retrieveRatingCount($userName){
-        $database = new dataSource();
+        $database = new DataSource();
         $collection = $database->getCollection('punbot');
 
         if($document = $collection->findOne(array('team_id'=>$this->payload->getTeamId()))){

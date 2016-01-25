@@ -1,24 +1,63 @@
 <?php
 
 /**
- * Class TriggerBot
+ * TriggerBot.php
+ *
+ * PHP version 5
+ *
+ * @category Script
+ * @package  SlackPHPbot
+ * @author   Alex Johnson <alexmj212@gmail.com>
+ * @license  http://opensource.org/licenses/GPL-3.0 GPL 3.0
+ * @link     https://github.com/alexmj212/slackphpbot
  */
-class TriggerBot {
 
-	private $botName = 'Trigger Bot';
+/**
+ * Class TriggerBot
+ *
+ * @category Bot
+ * @package  SlackPHPbot
+ * @author   Alex Johnson <alexmj212@gmail.com>
+ * @license  http://opensource.org/licenses/GPL-3.0 GPL 3.0
+ * @link     https://github.com/alexmj212/slackphpbot
+ */
+class TriggerBot
+{
 
-	private $botIcon = ':bangbang:';
+    /**
+     * The name of the Bot
+     *
+     * @var string
+     */
+    private $_name = 'Trigger Bot';
 
-	public function __construct($data){
+    /**
+     * The icon to represent the bot
+     *
+     * @var string
+     */
+    private $_icon = ':bangbang:';
 
-		$payload = new ProcessPayload($data);
 
-		if($payload->isUserName()){
-			$payload->setResponseText('*'.$payload->getUserName().'* has been triggered by *'.$payload->getPayloadText().'*!');
-		} else {
-			$payload->setResponseText('*'.$payload->getUserName().'* has been triggered!');
-		}
-		$responder = new Responder($this->botName, $this->botIcon, $payload->getResponseText(), $payload->getChannelName(), 1);
+    /**
+     * TriggerBot constructor.
+     *
+     * @param Payload $payload the payload data
+     */
+    public function __construct($payload)
+    {
 
-	}
-}
+        $response = null;
+
+        if ($payload->isUserName() === true) {
+            $response = '*'.$payload->getUserName().'* has been triggered by *'.$payload->getText().'*!';
+        } else {
+            $response = '*'.$payload->getUserName().'* has been triggered!';
+        }
+
+        $respond = new Responder(new Post($this->_name, $this->_icon, $response, $payload->getChannelName(), true));
+
+    }//end __construct()
+
+
+}//end class

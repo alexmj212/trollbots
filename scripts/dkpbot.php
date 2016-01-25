@@ -17,8 +17,8 @@ class DKPBot {
 
 	public function __construct($data){
 
-		$this->payload = new ProcessPayload($data);
-		$userPoints = explode(' ',$this->payload->getPayloadText());
+		$this->payload = new Payload($data);
+		$userPoints = explode(' ',$this->payload->getText());
 		if(count($userPoints) === 2){
 			$this->user = $userPoints[0];
 			$this->points = (int) $userPoints[1];
@@ -38,9 +38,9 @@ class DKPBot {
 				$this->payload->setResponseText($text);
 			}
 			$responder = new Responder($this->botName, $this->botIcon, $this->payload->getResponseText(), $this->payload->getChannelName(), 1);
-		} else if ($this->payload->getPayloadText() === 'score'){
+		} else if ($this->payload->getText() === 'score'){
 			$responder = new Responder($this->botName, $this->botIcon, 'You have '.$this->retrieveDKP($this->payload->getUserName()).'DKP', $this->payload->getChannelName(), 0);
-		} else if ($this->payload->getPayloadText() === 'rank'){
+		} else if ($this->payload->getText() === 'rank'){
 			$responder = new Responder($this->botName, $this->botIcon, $this->ranking(), $this->payload->getChannelName(), 0);
 		} else {
 			$responder = new Responder($this->botName, $this->botIcon, 'Invalid command', $this->payload->getChannelName(), 0);
@@ -53,7 +53,7 @@ class DKPBot {
     private function logDKP(){
 
         date_default_timezone_set('UTC');
-        $database = new dataSource();
+        $database = new DataSource();
         $collection = $database->getCollection('dkpbot');
 
 		//Does this team exist?
@@ -94,7 +94,7 @@ class DKPBot {
      * @return string
      */
     private function ranking(){
-		$database = new dataSource();
+		$database = new DataSource();
 		$collection = $database->getCollection('dkpbot');
 		$data = $collection->findOne(array('team_id'=>$this->payload->getTeamId()));
 		//Preserve array keys for sorting
@@ -124,7 +124,7 @@ class DKPBot {
      * @return int
      */
     private function retrieveDKP($userName){
-		$database = new dataSource();
+		$database = new DataSource();
 		$collection = $database->getCollection('dkpbot');
 
         if($document = $collection->findOne(array('team_id'=>$this->payload->getTeamId()))){

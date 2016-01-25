@@ -5,8 +5,8 @@ tipbot.sublime-workspace
 vendor/*
 .tmp
 .sass-cache
-includes/dataSource.php
+includes/DataSource.php
 /.idea
-includes/oauth.php
+includes/OAuth.php
 /slackphpbot.iml
 
