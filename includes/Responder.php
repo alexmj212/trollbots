@@ -25,6 +25,12 @@
 class Responder
 {
 
+    /**
+     * The post that will be used to respond
+     *
+     * @var Post
+     */
+    private $_post;
 
     /**
      * Echo the contents of the post to Slack
@@ -33,12 +39,19 @@ class Responder
      *
      * @return void
      */
-    public function respond($post)
+
+
+    public function __construct(&$post)
+    {
+        $this->_post = &$post;
+    }
+
+    public function respond()
     {
 
         // Set response header to json type.
         header('Content-Type: application/json');
-        echo $post->toString();
+        echo $this->_post->toString();
         exit;
 
     }//end respond()

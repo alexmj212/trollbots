@@ -55,7 +55,8 @@ class TriggerBot
             $response = '*'.$payload->getUserName().'* has been triggered!';
         }
 
-        $respond = new Responder(new Post($this->_name, $this->_icon, $response, $payload->getChannelName(), true));
+        $responder = new Responder(new Post($this->_name, $this->_icon, $response, $payload->getChannelName(), true));
+        $responder->respond();
 
     }//end __construct()
 
