@@ -145,7 +145,7 @@ class Post
             'response_type' => $this->_responseType,
         );
 
-        return json_encode($this);
+        return json_encode($post);
 
     }//end toString()
 

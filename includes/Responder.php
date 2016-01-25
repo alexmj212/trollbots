@@ -32,19 +32,18 @@ class Responder
      */
     private $_post;
 
+
     /**
      * Echo the contents of the post to Slack
      *
      * @param Post $post The post that is sent to Slack
-     *
-     * @return void
      */
-
-
     public function __construct(&$post)
     {
         $this->_post = &$post;
-    }
+
+    }//end __construct()
+
 
     public function respond()
     {
