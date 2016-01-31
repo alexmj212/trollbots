@@ -42,6 +42,7 @@ $app->get(
     '/dkpbot-auth/',
     function () use ($app) {
         $dkpbotauth = new OAuth($app->request->get(), 'DKP Bot');
+        $dkpbotauth->requestSlackAuth();
     }
 );
 
@@ -69,7 +70,7 @@ $app->post(
 $app->post(
     '/channelpolicebot/',
     function () use ($app) {
-        $channelpolicebot = new ChannelPoliceBot($app->request->post());
+        $channelpolicebot = new ChannelPoliceBot(new Payload($app->request->post()));
     }
 );
 
@@ -77,7 +78,7 @@ $app->post(
 $app->post(
     '/punbot/',
     function () use ($app) {
-        $punbot = new PunBot($app->request->post());
+        $punbot = new PunBot(new Payload($app->request->post()));
     }
 );
 

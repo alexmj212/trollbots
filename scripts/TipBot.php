@@ -55,31 +55,50 @@ class TipBot
 
 
     /**
-     * TriggerBot constructor.
+     * TipBot constructor.
      *
      * @param Payload $payload the payload data
      */
     public function __construct($payload)
     {
+
+        $post = null;
+
         $this->_teamId = $payload->getTeamId();
 
+        // Determine the type of request and form the appropriate response.
         if ($payload->isUserName() === true) {
+            // Verify a valid username was provided.
             $this->_user = $payload->getText();
             if ($payload->getUserName() === $this->_user) {
-                $responder = new Responder(new Post($this->_name, $this->_icon, 'You can\'t tip yourself!', $payload->getChannelName(), 0));
+                // Stop fools from trying to tip themselves.
+                $post = new Post($this->_name, $this->_icon, 'You can\'t tip yourself!', $payload->getChannelName(), 0);
             } else {
+                // Log the new Tip.
                 $this->_logTip();
-                $response = '*'.$payload->getUserName().'* has tipped *'.$this->_user.'*'.' bringing their total to '.$this->_retrieveTips($this->_user).' tips';
-                $responder = new Responder(new Post($this->_name, $this->_icon, $response, $payload->getChannelName(), 1));
+                // Build Response.
+                $response  = '*'.$payload->getUserName().'* has tipped *'.$this->_user.'*';
+                $response .= ' bringing their total to '.$this->_retrieveTips($this->_user).' tips';
+                // Generate new Post.
+                $post = new Post($this->_name, $this->_icon, $response, $payload->getChannelName(), 1);
             }
         } else if ($payload->getText() === 'total') {
+            // Return the total number of tips of the requester.
             $this->_user = $payload->getUserName();
+            // Retrieve the total amount.
             $total = $this->_retrieveTips();
+            // Build response.
             $response = 'You\'ve been tipped '.$total.' time(s)';
-            $responder = new Responder(new Post($this->_name, $this->_icon, $response, $payload->getChannelName(), 0));
+            // Generate new Post.
+            $post = new Post($this->_name, $this->_icon, $response, $payload->getChannelName(), 0);
         } else {
-            $responder = new Responder(new Post($this->_name, $this->_icon, 'Invalid command', $payload->getChannelName(), 0));
-        }
+            // No matching commands, return invalid.
+            $post = new Post($this->_name, $this->_icon, 'Invalid command', $payload->getChannelName(), 0);
+        }//end if
+
+        // Submit the response.
+        $responder = new Responder($post);
+        $responder->respond();
 
     }//end __construct()
 
@@ -98,6 +117,7 @@ class TipBot
         // Does this team exist?
         if ($document = $collection->findOne(array('team_id' => $this->_teamId)) === true) {
             // Yes this team exists.
+            // TODO: Verify array keys and handle errors
             $users = $document['users'];
             // Does this user exist?
             if (array_key_exists($this->_user, $users) === true) {
@@ -112,6 +132,7 @@ class TipBot
             }
 
             // Save the new information.
+            // TODO: Verify array keys and handle errors
             $document['users'] = $users;
             $collection->update(array('team_id' => $this->_teamId), $document);
         } else {
@@ -126,6 +147,7 @@ class TipBot
                                                    ),
                                   ),
                     );
+            // TODO: Handle Errors
             $collection->insert($team);
         }//end if
 
@@ -135,8 +157,6 @@ class TipBot
     /**
      * Retrieve the total number of tips the given user has received
      *
-     * @param string $userName the name of the user
-     *
      * @return int
      */
     private function _retrieveTips()
@@ -145,6 +165,7 @@ class TipBot
         $collection = $this->_retrieveTipCollection('tipbot');
 
         if ($document = $collection->findOne(array('team_id' => $this->_teamId)) === true) {
+            // TODO: Verify array keys and handle errors
             if (array_key_exists($this->_user, $document['users']) === true) {
                 return (int) $document['users'][$this->_user]['received'];
             } else {
@@ -168,7 +189,7 @@ class TipBot
     {
         try {
             $database   = new DataSource();
-            $collection = $database->getCollection('$collectionName');
+            $collection = $database->getCollection($collectionName);
             if ($collection === null) {
                 throw new ErrorException('Unable to retrieve tip collection');
             }
