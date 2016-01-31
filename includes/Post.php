@@ -140,10 +140,10 @@ class Post
     public function toString()
     {
         $post = array(
-            'text' => $this->_text,
-            'attachments' => $this->_attachments,
-            'response_type' => $this->_responseType,
-        );
+                 'text'          => $this->_text,
+                 'attachments'   => $this->_attachments,
+                 'response_type' => $this->_responseType,
+                );
 
         return json_encode($post);
 
