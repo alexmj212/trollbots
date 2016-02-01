@@ -12,7 +12,7 @@
  * @link     https://github.com/alexmj212/slackphpbot
  */
 
-require '../config.php';
+require '/../config.php';
 
 /**
  * Class DataSource
