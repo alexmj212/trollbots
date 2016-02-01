@@ -115,7 +115,16 @@ class TipBot
         $collection = $this->_retrieveTipCollection('tipbot');
 
         // Does this team exist?
-        if ($document = $collection->findOne(array('team_id' => $this->_teamId)) === true) {
+        try {
+            $document = $collection->findOne(array('team_id' => $this->_teamId));
+            if ($document === false) {
+                throw new MongoConnectionException('Team '.$this->_teamId.' does not exist or was not created.');
+            }
+        } catch (MongoConnectionException $e){
+            echo 'Mongo Connection Exception: '.$e->getMessage();
+        }
+
+        if ($document !== false) {
             // Yes this team exists.
             // TODO: Verify array keys and handle errors
             $users = $document['users'];
