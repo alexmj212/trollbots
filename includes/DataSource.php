@@ -129,12 +129,19 @@ class DataSource
     private function _connect()
     {
 
-        if ($this->_mongo_connection = new Mongo($this->buildMongoConnectionString()) === false) {
-            throw new MongoConnectionException('Unable to connect to database '.$this->_mongo_domain);
-        }
+        try {
+            $this->_mongo_connection = new Mongo($this->buildMongoConnectionString());
+            if ($this->_mongo_connection === false) {
+                throw new MongoConnectionException('Unable to connect to database '.$this->_mongo_domain);
+            }
 
-        if ($this->_mongo_dbo = $this->_mongo_connection->selectDB($this->_mongo_database) === false) {
-            throw new MongoConnectionException('Unable to select database '.$this->_mongo_database);
+            $this->_mongo_dbo = $this->_mongo_connection->selectDB($this->_mongo_database);
+            if ($this->_mongo_dbo === false) {
+                throw new MongoConnectionException('Unable to select database '.$this->_mongo_database);
+            }
+        } catch (MongoConnectionException $e) {
+            echo 'Mongo Connection Exception: '.$e->getMessage().'\n';
+            return false;
         }
 
         return true;
