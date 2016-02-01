@@ -56,7 +56,7 @@ class ChannelPoliceBot
             $response = '*'.$payload->getUserName().'* has requested the discussion be moved to the appropriate channel.';
         }
 
-        $responder = new Responder(new Post($this->_name, $this->_icon, $response, $payload->getChannelName(), 1));
+        $responder = new Responder(new Post($this->_name, $this->_icon, $response, $payload->getChannelName(), true));
         $responder->respond();
 
     }//end __construct()
