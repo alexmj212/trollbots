@@ -170,9 +170,11 @@ class DataSource
      */
     public function buildMongoConnectionString()
     {
+        // TODO: Unit test this.
         $connectionString  = 'mongodb://'.$this->_mongo_username.':';
         $connectionString .= $this->_mongo_password.'@';
         $connectionString .= $this->_mongo_domain.':'.$this->_mongo_port;
+        $connectionString .= '/'.$this->_mongo_database;
         return $connectionString;
 
     }//end buildMongoConnectionString()
