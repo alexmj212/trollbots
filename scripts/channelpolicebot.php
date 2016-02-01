@@ -1,24 +1,65 @@
 <?php
 
 /**
- * Class ChannelPoliceBot
+ * ChannelPoliceBot.php
+ *
+ * PHP version 5
+ *
+ * @category Script
+ * @package  SlackPHPbot
+ * @author   Alex Johnson <alexmj212@gmail.com>
+ * @license  http://opensource.org/licenses/GPL-3.0 GPL 3.0
+ * @link     https://github.com/alexmj212/slackphpbot
  */
-class ChannelPoliceBot {
 
-	private $botName = 'Channel Police';
+/**
+ * Class ChannelPoliceBot
+ *
+ * @category Bot
+ * @package  SlackPHPbot
+ * @author   Alex Johnson <alexmj212@gmail.com>
+ * @license  http://opensource.org/licenses/GPL-3.0 GPL 3.0
+ * @link     https://github.com/alexmj212/slackphpbot
+ */
+class ChannelPoliceBot
+{
 
-	private $botIcon = ':warning:';
+    /**
+     * The name of the Bot
+     *
+     * @var string
+     */
+    private $_name = 'Channel Police Bot';
 
-	public function __construct($data){
+    /**
+     * The icon to represent the bot
+     *
+     * @var string
+     */
+    private $_icon = ':warning:';
 
-		$payload = new Payload($data);
 
-		if($payload->isChannel()){
-			$payload->setResponseText('*'.$payload->getUserName().'* has requested this discussion be moved to the *'.$payload->getText().'* channel!');
-		} else {
-			$payload->setResponseText('*'.$payload->getUserName().'* has requested this discussion be moved to the appropriate channel.');
-		}
-		$responder = new Responder($this->botName, $this->botIcon, $payload->getResponseText(), $payload->getChannelName(), 1);
+    /**
+     * ChannelPoliceBot constructor.
+     *
+     * @param Payload $payload the payload data
+     */
+    public function __construct($payload)
+    {
 
-	}
-}
+        $response = null;
+
+        if ($payload->isChannel() === true) {
+            // TODO: Verifiy validity of requested channel.
+            $response = '*'.$payload->getUserName().'* has requested the discussion be moved to the *'.$payload->getText().'* channel!';
+        } else {
+            $response = '*'.$payload->getUserName().'* has requested the discussion be moved to the appropriate channel.';
+        }
+
+        $responder = new Responder(new Post($this->_name, $this->_icon, $response, $payload->getChannelName(), 1));
+        $responder->respond();
+
+    }//end __construct()
+
+
+}//end class
