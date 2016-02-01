@@ -72,7 +72,7 @@ class TipBot
             $this->_user = $payload->getText();
             if ($payload->getUserName() === $this->_user) {
                 // Stop fools from trying to tip themselves.
-                $post = new Post($this->_name, $this->_icon, 'You can\'t tip yourself!', $payload->getChannelName(), 0);
+                $post = new Post($this->_name, $this->_icon, 'You can\'t tip yourself!', $payload->getChannelName(), false);
             } else {
                 // Log the new Tip.
                 $this->_logTip();
@@ -80,7 +80,7 @@ class TipBot
                 $response  = '*'.$payload->getUserName().'* has tipped *'.$this->_user.'*';
                 $response .= ' bringing their total to '.$this->_retrieveTips($this->_user).' tips';
                 // Generate new Post.
-                $post = new Post($this->_name, $this->_icon, $response, $payload->getChannelName(), 1);
+                $post = new Post($this->_name, $this->_icon, $response, $payload->getChannelName(), true);
             }
         } else if ($payload->getText() === 'total') {
             // Return the total number of tips of the requester.
@@ -90,10 +90,10 @@ class TipBot
             // Build response.
             $response = 'You\'ve been tipped '.$total.' time(s)';
             // Generate new Post.
-            $post = new Post($this->_name, $this->_icon, $response, $payload->getChannelName(), 0);
+            $post = new Post($this->_name, $this->_icon, $response, $payload->getChannelName(), false);
         } else {
             // No matching commands, return invalid.
-            $post = new Post($this->_name, $this->_icon, 'Invalid command', $payload->getChannelName(), 0);
+            $post = new Post($this->_name, $this->_icon, 'Invalid command', $payload->getChannelName(), false);
         }//end if
 
         // Submit the response.
