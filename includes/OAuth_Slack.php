@@ -1,7 +1,7 @@
 <?php
 
 /**
- * OAuth.php
+ * OAuth_Slack.php
  *
  * PHP version 5
  *
@@ -15,7 +15,7 @@
 require '/../config.php';
 
 /**
- * Class OAuth
+ * Class OAuth_Slack
  *
  * @category OAuth
  * @package  SlackPHPbot
@@ -24,7 +24,7 @@ require '/../config.php';
  * @link     https://github.com/alexmj212/slackphpbot
  */
 
-class OAuth
+class OAuth_Slack
 {
 
     /**
@@ -71,7 +71,7 @@ class OAuth
         // Store the bot name.
         $this->_bot = $botName;
         // Set the client credentials based on the bot requesting access.
-        $this->_setClientDetails();
+        $this->_setSlackClientDetails();
 
     }//end __construct()
 
@@ -82,19 +82,19 @@ class OAuth
      * @return void
      * @throws ErrorException
      */
-    private function _setClientDetails()
+    private function _setSlackClientDetails()
     {
         // Pull the Slack API credentials.
         global $conf;
         try {
-            if (array_key_exists('client_id', $conf['bots'][$this->_bot]) === true) {
-                $this->_client_id = $conf['bots'][$this->_bot]['client_id'];
+            if (array_key_exists('slack_client_id', $conf['bots'][$this->_bot]) === true) {
+                $this->_client_id = $conf['bots'][$this->_bot]['slack_client_id'];
             } else {
                 throw new ErrorException('No Client ID for '.$this->_bot);
             }
 
-            if (array_key_exists('client_secret', $conf['bots'][$this->_bot]) === true) {
-                $this->_client_secret = $conf['bots'][$this->_bot]['client_secret'];
+            if (array_key_exists('slack_client_secret', $conf['bots'][$this->_bot]) === true) {
+                $this->_client_secret = $conf['bots'][$this->_bot]['slack_client_secret'];
             } else {
                 throw new ErrorException('No Client Secret for '.$this->_bot);
             }
@@ -105,7 +105,7 @@ class OAuth
             exit();
         }//end try
 
-    }//end _setClientDetails()
+    }//end _setSlackClientDetails()
 
 
     /**
