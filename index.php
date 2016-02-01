@@ -17,7 +17,7 @@ require 'includes/Post.php';
 require 'includes/Payload.php';
 require 'includes/Responder.php';
 require 'includes/DataSource.php';
-require 'includes/OAuth.php';
+require 'includes/OAuth_Slack.php';
 foreach (glob('scripts/*.php') as $filename) {
     include $filename;
 }
@@ -41,7 +41,7 @@ $app->get(
 $app->get(
     '/dkpbot-auth/',
     function () use ($app) {
-        $dkpbotauth = new OAuth($app->request->get(), 'DKP Bot');
+        $dkpbotauth = new OAuth_Slack($app->request->get(), 'DKP Bot');
         $dkpbotauth->requestSlackAuth();
     }
 );
