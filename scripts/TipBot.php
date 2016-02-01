@@ -157,23 +157,37 @@ class TipBot
     /**
      * Retrieve the total number of tips the given user has received
      *
+     * @param string $user the given users tips we seek
+     *
      * @return int
      */
-    private function _retrieveTips()
+    private function _retrieveTips($user = null)
     {
+
+        if ($user === null) {
+            // Verify user was supplied, otherwise use command user.
+            $user = $this->_user;
+        }
 
         $collection = $this->_retrieveTipCollection('tipbot');
 
-        if ($document = $collection->findOne(array('team_id' => $this->_teamId)) === true) {
-            // TODO: Verify array keys and handle errors
-            if (array_key_exists($this->_user, $document['users']) === true) {
-                return (int) $document['users'][$this->_user]['received'];
-            } else {
-                return 0;
+        try {
+            $document = $collection->findOne(array('team_id' => $this->_teamId));
+            if ($document === false) {
+                throw new MongoConnectionException('Team '.$this->_teamId.' does not exist or was not created.');
             }
+        } catch (MongoConnectionException $e){
+            echo 'Mongo Connection Exception: '.$e->getMessage();
+            return 0;
+        }
+
+        // TODO: Verify array keys and handle errors.
+        if (array_key_exists($user, $document['users']) === true) {
+            return (int) $document['users'][$user]['received'];
         } else {
             return 0;
         }
+
 
     }//end _retrieveTips()
 
