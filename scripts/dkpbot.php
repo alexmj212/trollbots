@@ -151,9 +151,8 @@ class DKPBot
             // Publish update to datasource.
             try {
                 $collection->update(array('team_id' => $this->_teamId), $document);
-                throw new MongoException('Unable to update user '.$this->_user.' with team '.$this->_teamId);
-            } catch (MongoException $e){
-                echo 'Mongo Update Exception: '.$e->getMessage();
+            } catch (MongoCursorException $e){
+                echo '\'Unable to update user \'.$this->_user.\' with team \'.$this->_teamId: '.$e->getMessage();
             }
         } else {
             // No, this team doesn't exist.
@@ -169,9 +168,8 @@ class DKPBot
                     );
             try {
                 $collection->insert($team);
-                throw new MongoException('Unable to insert team '.$this->_teamId);
             } catch (MongoException $e){
-                echo 'Mongo Update Exception: '.$e->getMessage();
+                echo '\'Unable to insert team '.$this->_teamId.': '.$e->getMessage();
             }
         }//end if
 
