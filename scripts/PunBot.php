@@ -60,6 +60,13 @@ class PunBot
      */
     private $_teamId;
 
+    /**
+     * The name of the bots collection
+     *
+     * @var string
+     */
+    private $_collectionName = 'punbot';
+
 
     /**
      * PunBot constructor.
@@ -95,16 +102,16 @@ class PunBot
             $response  = '*'.$payload->getUserName().'* has rated *'.$this->_user.'\'s* pun '.$this->_rating.'/10. ';
             $response .= 'Their average is now '.$this->_retrieveRating($this->_user).'/10';
             // Store the Post.
-            $post = new Post($this->_name, $this->_icon, $response, $payload->getChannelName(), 1);
+            $post = new Post($this->_name, $this->_icon, $response, $payload->getChannelName(), true);
         } else if ($payload->getText() === 'total') {
             // Build the requested "total" response string.
             $response  = 'You\'ve been rated '.$this->_retrieveRatingCount($payload->getUserName()).' times ';
             $response .= 'for an average of '.$this->_retrieveRating($payload->getUserName()).'/10';
             // Store the Post.
-            $post = new Post($this->_name, $this->_icon, $response, $payload->getChannelName(), 0);
+            $post = new Post($this->_name, $this->_icon, $response, $payload->getChannelName(), false);
         } else {
             // Invalid command.
-            $post = new Post($this->_name, $this->_icon, 'Invalid Command', $payload->getChannelName(), 0);
+            $post = new Post($this->_name, $this->_icon, 'Invalid Command', $payload->getChannelName(), false);
         }
 
         $responder = new Responder($post);
@@ -114,7 +121,7 @@ class PunBot
 
 
     /**
-     * Log the Pun send by the user
+     * Log the Pun sent by the user
      *
      * @return void
      */
@@ -122,16 +129,16 @@ class PunBot
     {
 
         date_default_timezone_set('UTC');
-        // Initialize datasource.
-        $database = new DataSource();
-        // Retrieve Punbot collection for querying.
-        // TODO: Handle errors
-        $collection = $database->getCollection('punbot');
+        // Retrieve the database collection.
+        $database = new DataSource($this->_collectionName);
+        // Get the database collection.
+        $collection = $database->getCollection();
+        // Retrieve the punbot document.
+        $document = $database->retrieveDocument($this->_teamId);
 
         // Does this team exist?
-        if ($document = $collection->findOne(array('team_id' => $this->_teamId)) === true) {
+        if (is_array($document) === true && array_key_exists('users', $document) === true) {
             // Yes this team exists.
-            // TODO: Verify array keys.
             $users = $document['users'];
             // Does this user exist?
             if (array_key_exists($this->_user, $users) === true) {
@@ -144,23 +151,21 @@ class PunBot
                 $users[$this->_user]['last_received_date'] = date('Y-m-d H:i:s');
             } else {
                 // No, add this user, create them.
-                // Set first count.
                 $users[$this->_user]['ratings_received'] = 1;
-                // Set first rating.
-                $users[$this->_user]['rating'] = $this->_rating;
-                // Set created date.
-                $users[$this->_user]['created'] = date('Y-m-d H:i:s');
-                // Set received date.
+                $users[$this->_user]['rating']           = $this->_rating;
+                $users[$this->_user]['created']          = date('Y-m-d H:i:s');
                 $users[$this->_user]['last_received_date'] = date('Y-m-d H:i:s');
-
             }//end if
 
-            // TODO: Validate and handle error associated with data updates.
-            // Save the new information.
             // Save the user document.
             $document['users'] = $users;
             // Publish update to datasource.
-            $collection->update(array('team_id' => $this->_teamId), $document);
+            try {
+                $collection->update(array('team_id' => $this->_teamId), $document);
+                throw new MongoException('Unable to update user '.$this->_user.' with team '.$this->_teamId);
+            } catch (MongoException $e){
+                echo 'Mongo Update Exception: '.$e->getMessage();
+            }
         } else {
             // No, this team doesn't exist.
             $team = array(
@@ -174,8 +179,12 @@ class PunBot
                                                    ),
                                   ),
                     );
-            // TODO: Validate and handle error associated with data inserts.
-            $collection->insert($team);
+            try {
+                $collection->insert($team);
+                throw new MongoException('Unable to insert team '.$this->_teamId);
+            } catch (MongoException $e){
+                echo 'Mongo Update Exception: '.$e->getMessage();
+            }
         }//end if
 
     }//end _logPunRating()
@@ -190,28 +199,22 @@ class PunBot
      */
     private function _retrieveRating($user = null)
     {
-        // Initialize datasource.
-        $database = new DataSource();
-        // Retrieve punbot collection.
-        // TODO: Handle exception
-        $collection = $database->getCollection('punbot');
 
         if ($user === null) {
             // Verify user was supplied, otherwise use command user.
             $user = $this->_user;
         }
 
-        // TODO: Verify array keys.
-        if ($document = $collection->findOne(array('team_id' => $this->_teamId)) === true) {
-            if (array_key_exists($user, $document['users']) === true) {
-                // User exists, return their rating, round result.
-                return round($document['users'][$user]['rating'], 2);
-            } else {
-                // Team exists but user doesn't.
-                return 0;
-            }
+        // Retrieve the database collection.
+        $database = new DataSource($this->_collectionName);
+        // Retrieve the punbot document.
+        $document = $database->retrieveDocument($this->_teamId);
+
+        if (is_array($document) === true && array_key_exists($user, $document['users']) === true) {
+            // User exists, return their rating, round result.
+            return round($document['users'][$user]['rating'], 2);
         } else {
-            // Team and User do not exist.
+            // Team exists but user doesn't.
             return 0;
         }
 
@@ -227,25 +230,20 @@ class PunBot
      */
     private function _retrieveRatingCount($user = null)
     {
-        // Initialize datasource.
-        $database = new DataSource();
-        // Retrieve punbot collection.
-        // TODO: Handle exception
-        $collection = $database->getCollection('punbot');
 
         if ($user === null) {
             // Verify user was supplied, otherwise use command user.
             $user = $this->_user;
         }
 
-        // TODO: Verify array keys.
-        if ($document = $collection->findOne(array('team_id' => $this->_teamId)) === true) {
-            if (array_key_exists($this->user, $document['users']) === true) {
-                // User exists, return their rating, round result.
-                return $document['users'][$user]['ratings_received'];
-            } else {
-                return 0;
-            }
+        // Retrieve the database collection.
+        $database = new DataSource($this->_collectionName);
+        // Retrieve the punbot document.
+        $document = $database->retrieveDocument($this->_teamId);
+
+        if (is_array($document) === true && array_key_exists($user, $document['users']) === true) {
+            // User exists, return their rating, round result.
+            return $document['users'][$user]['ratings_received'];
         } else {
             return 0;
         }

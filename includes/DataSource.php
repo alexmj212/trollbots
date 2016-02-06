@@ -73,11 +73,20 @@ class DataSource
      */
     private $_mongo_dbo;
 
+    /**
+     * Mongo database collection
+     *
+     * @var MongoCollection
+     */
+    private $_mongo_collection;
+
 
     /**
      * Grab configuration data
+     *
+     * @param string $collectionName the name of the collection
      */
-    public function __construct()
+    public function __construct($collectionName = null)
     {
 
         global $conf;
@@ -117,6 +126,11 @@ class DataSource
             exit();
         }//end try
 
+        // Set the collection name if provided.
+        if ($collectionName !== null) {
+            $this->_mongo_collection = $this->_retrieveCollection($collectionName);
+        }
+
     }//end __construct()
 
 
@@ -150,27 +164,6 @@ class DataSource
 
 
     /**
-     * Retrieve the specified collection
-     *
-     * @param string $collection the collection requested
-     *
-     * @return MongoCollection
-     * @throws Exception
-     */
-    public function getCollection($collection)
-    {
-        try {
-            $this->_connect();
-            return $this->_mongo_dbo->selectCollection($collection);
-        } catch (Exception $e) {
-            echo 'Error Retrieving Collection: ', $e->getMessage(), '\n';
-            exit();
-        }
-
-    }//end getCollection()
-
-
-    /**
      * Build connection string
      *
      * @return string
@@ -185,6 +178,81 @@ class DataSource
         return $connectionString;
 
     }//end buildMongoConnectionString()
+
+
+    /**
+     * Return the database collection
+     *
+     * @return MongoCollection
+     */
+    public function getCollection()
+    {
+
+        return $this->_mongo_collection;
+
+    }//end getCollection()
+
+
+    /**
+     * Retrive the database collection
+     *
+     * @param string $collectionName the name of the collection to retrieve
+     *
+     * @return MongoCollection
+     */
+    private function _retrieveCollection($collectionName = null)
+    {
+        if ($collectionName === null) {
+            $collectionName = $this->_mongo_collection;
+        }
+
+        try {
+            $this->_connect();
+            $collection = $this->_mongo_dbo->selectCollection($collectionName);
+            if ($collection === null) {
+                throw new ErrorException('Unable to retrieve collection');
+            }
+        } catch (Exception $e) {
+            echo 'Log '.$collectionName.' Error: ', $e->getMessage(), '\n';
+            exit;
+        }
+
+        return $collection;
+
+    }//end _retrieveCollection()
+
+
+    /**
+     * Retrieve the database document
+     *
+     * @param string $teamId the Id of the team
+     *
+     * TODO: Unit test return type.
+     *
+     * @return array
+     */
+    public function retrieveDocument($teamId)
+    {
+
+        $document = null;
+
+        try {
+            $document = $this->_mongo_collection->findOne(array('team_id' => $teamId));
+            if ($document === false) {
+                throw new MongoConnectionException('Team '.$teamId.' does not exist or was not created.');
+            }
+
+            if ($document === null) {
+                throw new MongoConnectionException('Unable to search for team '.$teamId);
+            }
+
+            return $document;
+        } catch (MongoConnectionException $e){
+            echo 'Mongo Connection Exception: '.$e->getMessage();
+            exit();
+        }
+
+    }//end retrieveDocument()
 
 
 }//end class

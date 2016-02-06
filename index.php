@@ -86,7 +86,7 @@ $app->post(
 $app->post(
     '/dkpbot/',
     function () use ($app) {
-        $dkpbot = new DKPBot($app->request->post());
+        $dkpbot = new DKPBot(new Payload($app->request->post()));
     }
 );
 

@@ -53,6 +53,13 @@ class TipBot
      */
     private $_teamId;
 
+    /**
+     * The name of the bots collection
+     *
+     * @var string
+     */
+    private $_collectionName = 'tipbot';
+
 
     /**
      * TipBot constructor.
@@ -68,11 +75,17 @@ class TipBot
 
         // Determine the type of request and form the appropriate response.
         if ($payload->isUserName() === true) {
-            // Verify a valid username was provided.
+            // Verify a valid username was provided and encrypt it.
             $this->_user = $payload->getText();
             if ($payload->getUserName() === $this->_user) {
                 // Stop fools from trying to tip themselves.
-                $post = new Post($this->_name, $this->_icon, 'You can\'t tip yourself!', $payload->getChannelName(), false);
+                $post = new Post(
+                    $this->_name,
+                    $this->_icon,
+                    'You can\'t tip yourself!',
+                    $payload->getChannelName(),
+                    false
+                );
             } else {
                 // Log the new Tip.
                 $this->_logTip();
@@ -112,21 +125,15 @@ class TipBot
     {
 
         date_default_timezone_set('UTC');
-        $collection = $this->_retrieveTipCollection('tipbot');
+        // Retrieve the database collection.
+        $database = new DataSource($this->_collectionName);
+        // Get the database collection.
+        $collection = $database->getCollection();
+        // Retrieve the tipbot document.
+        $document = $database->retrieveDocument($this->_teamId);
 
-        // Does this team exist?
-        try {
-            $document = $collection->findOne(array('team_id' => $this->_teamId));
-            if ($document === false) {
-                throw new MongoConnectionException('Team '.$this->_teamId.' does not exist or was not created.');
-            }
-        } catch (MongoConnectionException $e){
-            echo 'Mongo Connection Exception: '.$e->getMessage();
-        }
-
-        if ($document !== false) {
+        if (is_array($document) === true && array_key_exists('users', $document) === true) {
             // Yes this team exists.
-            // TODO: Verify array keys and handle errors
             $users = $document['users'];
             // Does this user exist?
             if (array_key_exists($this->_user, $users) === true) {
@@ -141,9 +148,14 @@ class TipBot
             }
 
             // Save the new information.
-            // TODO: Verify array keys and handle errors
             $document['users'] = $users;
-            $collection->update(array('team_id' => $this->_teamId), $document);
+
+            try {
+                $collection->update(array('team_id' => $this->_teamId), $document);
+                throw new MongoException('Unable to update user '.$this->_user.' with team '.$this->_teamId);
+            } catch (MongoException $e){
+                echo 'Mongo Update Exception: '.$e->getMessage();
+            }
         } else {
             // No, this team doesn't exist.
             $team = array(
@@ -156,8 +168,13 @@ class TipBot
                                                    ),
                                   ),
                     );
-            // TODO: Handle Errors
-            $collection->insert($team);
+
+            try {
+                $collection->insert($team);
+                throw new MongoException('Unable to insert team '.$this->_teamId);
+            } catch (MongoException $e){
+                echo 'Mongo Update Exception: '.$e->getMessage();
+            }
         }//end if
 
     }//end _logTip()
@@ -178,52 +195,18 @@ class TipBot
             $user = $this->_user;
         }
 
-        $collection = $this->_retrieveTipCollection('tipbot');
+        // Retrieve the database collection.
+        $database = new DataSource($this->_collectionName);
+        // Retrieve the tipbot document.
+        $document = $database->retrieveDocument($this->_teamId);
 
-        try {
-            $document = $collection->findOne(array('team_id' => $this->_teamId));
-            if ($document === false) {
-                throw new MongoConnectionException('Team '.$this->_teamId.' does not exist or was not created.');
-            }
-        } catch (MongoConnectionException $e){
-            echo 'Mongo Connection Exception: '.$e->getMessage();
-            return 0;
-        }
-
-        // TODO: Verify array keys and handle errors.
-        if (array_key_exists($user, $document['users']) === true) {
+        if (is_array($document) === true && array_key_exists($user, $document['users']) === true) {
             return (int) $document['users'][$user]['received'];
         } else {
             return 0;
         }
 
-
     }//end _retrieveTips()
-
-
-    /**
-     * Retrive the tip database collection
-     *
-     * @param string $collectionName the name of the collection to retrieve
-     *
-     * @return MongoCollection
-     */
-    private function _retrieveTipCollection($collectionName)
-    {
-        try {
-            $database   = new DataSource();
-            $collection = $database->getCollection($collectionName);
-            if ($collection === null) {
-                throw new ErrorException('Unable to retrieve tip collection');
-            }
-        } catch (Exception $e) {
-            echo 'Log Tip Error: ', $e->getMessage(), '\n';
-            exit;
-        }
-
-        return $collection;
-
-    }//end _retrieveTipCollection()
 
 
 }//end class
