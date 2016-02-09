@@ -90,22 +90,22 @@ class DKPBot
                 $response .= 'but instead receives -'.abs($this->_points).'DKP';
                 $response .= '\n'.$this->_user.' now has '.$this->_retrieveDKP($this->_user).'DKP';
 
-                $post = new Post($this->_name, $this->_icon, $response, $payload->getChannelName(), 1);
+                $post = new Post($this->_name, $this->_icon, $response, $payload->getChannelName(), true);
             } else {
                 $this->_logDKP();
                 $response  = '*'.$payload->getUserName().'* has given *'.$this->_user.'* '.$this->_points.'DKP';
                 $response .= '\n'.$this->_user.' now has '.$this->_retrieveDKP($this->_user).'DKP';
 
-                $post = new Post($this->_name, $this->_icon, $response, $payload->getChannelName(), 1);
+                $post = new Post($this->_name, $this->_icon, $response, $payload->getChannelName(), true);
             }
         } else if ($payload->getText() === 'score') {
             $response = 'You have '.$this->_retrieveDKP($payload->getUserName()).'DKP';
 
-            $post = new Post($this->_name, $this->_icon, $response, $payload->getChannelName(), 0);
+            $post = new Post($this->_name, $this->_icon, $response, $payload->getChannelName(), false);
         } else if ($payload->getText() === 'rank') {
-            $post = new Post($this->_name, $this->_icon, $this->_ranking(), $payload->getChannelName(), 0);
+            $post = new Post($this->_name, $this->_icon, $this->_ranking(), $payload->getChannelName(), false);
         } else {
-            $post = new Post($this->_name, $this->_icon, 'Invalid command', $payload->getChannelName(), 0);
+            $post = new Post($this->_name, $this->_icon, 'Invalid command', $payload->getChannelName(), false);
         }//end if
 
         $responder = new Responder($post);
