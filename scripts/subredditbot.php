@@ -10,7 +10,7 @@ class SubredditBot {
 
 		$payload = new ProcessPayload($data);
 
-		$redditauth = new RedditOAuth();
+		$redditauth = new OAuth_Reddit();
 
 		$redditauth->requestSubreddit($payload->getPayloadText());
 
