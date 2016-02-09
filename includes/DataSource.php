@@ -85,6 +85,8 @@ class DataSource
      * Grab configuration data
      *
      * @param string $collectionName the name of the collection
+     *
+     * @throws ErrorException
      */
     public function __construct($collectionName = null)
     {
@@ -140,7 +142,7 @@ class DataSource
      * @return boolean
      * @throws Exception
      */
-    private function _connect()
+    public function connect()
     {
 
         try {
@@ -160,7 +162,7 @@ class DataSource
 
         return true;
 
-    }//end _connect()
+    }//end connect()
 
 
     /**
@@ -170,7 +172,7 @@ class DataSource
      */
     public function buildMongoConnectionString()
     {
-        // TODO: Unit test this.
+
         $connectionString  = 'mongodb://'.$this->_mongo_username.':';
         $connectionString .= $this->_mongo_password.'@';
         $connectionString .= $this->_mongo_domain.':'.$this->_mongo_port;
@@ -199,15 +201,18 @@ class DataSource
      * @param string $collectionName the name of the collection to retrieve
      *
      * @return MongoCollection
+     * @throws ErrorException
      */
     private function _retrieveCollection($collectionName = null)
     {
-        if ($collectionName === null) {
-            $collectionName = $this->_mongo_collection;
+        if ($collectionName === null && $this->_mongo_collection->getName() !== null) {
+            $collectionName = $this->_mongo_collection->getName();
+        } else {
+            throw new ErrorException('No collection selected');
         }
 
         try {
-            $this->_connect();
+            $this->connect();
             $collection = $this->_mongo_dbo->selectCollection($collectionName);
             if ($collection === null) {
                 throw new ErrorException('Unable to retrieve collection');
@@ -230,6 +235,7 @@ class DataSource
      * TODO: Unit test return type.
      *
      * @return array
+     * @throws MongoConnectionException
      */
     public function retrieveDocument($teamId)
     {
