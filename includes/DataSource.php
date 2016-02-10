@@ -243,12 +243,6 @@ class DataSource
     {
 
         try {
-            if ($collectionName === null && $this->_mongo_collection->getName() !== null) {
-                $collectionName = $this->_mongo_collection->getName();
-            } else {
-                throw new ErrorException('No collection selected');
-            }
-
             $this->connect();
             $collection = $this->_mongo_dbo->selectCollection($collectionName);
             if ($collection === null) {
