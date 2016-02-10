@@ -14,8 +14,6 @@ class ResponderTest extends PHPUnit_Framework_TestCase
      * Make sure the post content is a valid JSON
      */
     public function testPostContentIsNotEmpty(){
-        $this->assertJsonStringEqualsJsonString(
-            json_encode(array("Mascott" => "Tux")), json_encode(array("Mascott" => "Tux"))
-        );
+
     }
 }

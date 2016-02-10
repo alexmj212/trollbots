@@ -12,7 +12,7 @@
  * @link     https://github.com/alexmj212/slackphpbot
  */
 
-require '/../includes/Post.php';
+require __DIR__.'/../includes/Post.php';
 
 /**
  * Class Post Test

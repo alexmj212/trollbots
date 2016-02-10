@@ -12,7 +12,7 @@
  * @link     https://github.com/alexmj212/slackphpbot
  */
 
-require '/../includes/OAuth_Slack.php';
+require __DIR__.'/../includes/OAuth_Slack.php';
 
 /**
  * Class OAuth Test

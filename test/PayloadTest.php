@@ -12,7 +12,7 @@
  * @link     https://github.com/alexmj212/slackphpbot
  */
 
-require '/../includes/Payload.php';
+require __DIR__.'/../includes/Payload.php';
 
 /**
  * Class Payload Test
