@@ -152,15 +152,11 @@ class OAuth_Slack
 
         // Build the access.token url for Slack.
         try {
-            if (array_key_exists('oauth.access', $conf['slack']) === true) {
-                $url  = $conf['slack']['oauth.access'];
+                $url  = 'https://slack.com/api/oauth.access';
                 $url .= '?client_id='.$this->_client_id;
                 $url .= '&client_secret='.$this->_client_secret;
                 $url .= '&code='.$this->_code;
                 return $url;
-            } else {
-                throw new ErrorException('Unable to find oauth.access URL');
-            }
         } catch (ErrorException $e){
             echo 'OAuth Error: ', $e->getMessage(), '\n';
             exit();
