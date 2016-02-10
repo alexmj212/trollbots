@@ -12,7 +12,7 @@
  * @link     https://github.com/alexmj212/slackphpbot
  */
 
-require  __DIR__.'/../config.php';
+includeIfExists(__DIR__.'/../config.php');
 
 /**
  * Class OAuth_Slack
