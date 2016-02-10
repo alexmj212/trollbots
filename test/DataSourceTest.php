@@ -13,8 +13,8 @@
  * @link     https://github.com/alexmj212/slackphpbot
  */
 
-require '../includes/DataSource.php';
-require  __DIR__.'/../config.php';
+require __DIR__.'/../includes/DataSource.php';
+require __DIR__.'/../config.php';
 
 /**
  * Class DataSource Test
