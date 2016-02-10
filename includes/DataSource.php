@@ -96,12 +96,12 @@ class DataSource
      * @throws ErrorException
      */
     public function __construct(
+        $collectionName = null,
         $userName = null,
         $password = null,
         $domain = null,
         $port = null,
-        $database = null,
-        $collectionName = null
+        $database = null
     ) {
 
         global $conf;
@@ -241,13 +241,14 @@ class DataSource
      */
     private function _retrieveCollection($collectionName = null)
     {
-        if ($collectionName === null && $this->_mongo_collection->getName() !== null) {
-            $collectionName = $this->_mongo_collection->getName();
-        } else {
-            throw new ErrorException('No collection selected');
-        }
 
         try {
+            if ($collectionName === null && $this->_mongo_collection->getName() !== null) {
+                $collectionName = $this->_mongo_collection->getName();
+            } else {
+                throw new ErrorException('No collection selected');
+            }
+
             $this->connect();
             $collection = $this->_mongo_dbo->selectCollection($collectionName);
             if ($collection === null) {
