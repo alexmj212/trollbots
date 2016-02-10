@@ -13,8 +13,7 @@
  * @link     https://github.com/alexmj212/slackphpbot
  */
 
-//require __DIR__.'/../includes/DataSource.php';
-//require __DIR__.'/../config.php';
+require __DIR__.'/../includes/DataSource.php';
 
 /**
  * Class DataSource Test
@@ -32,73 +31,52 @@ class DataSourceTest extends PHPUnit_Framework_TestCase
     /**
      * Ensure datasource is constructed and can connect
      *
+     * @param array $conf database configuration
+     *
+     * @dataProvider providerTestDatabase
+     *
      * @return void
      */
-    public function testDataSourceConnection()
+    public function testDataSourceConnectionString($conf)
     {
-        /*
-        $datasource = new DataSource();
 
-        static::assertTrue($datasource->connect());
-          */
-    }//end testDataSourceConnection()
+        $datasource = new DataSource(
+            $conf['mongo_username'],
+            $conf['mongo_password'],
+            $conf['mongo_domain'],
+            $conf['mongo_port'],
+            $conf['mongo_database']
+        );
+
+        static::assertEquals(
+            'mongodb://'.$conf['mongo_username'].':'.$conf['mongo_password'].'@'.$conf['mongo_domain'].':'.$conf['mongo_port'].'/'.$conf['mongo_database'],
+            $datasource->buildMongoConnectionString()
+        );
+
+    }//end testDataSourceConnectionString()
 
 
     /**
-     * Ensure datasource is constructed and can connect
+     * Provide data for testing Database Connection
      *
-     * @return void
-     * @throws ErrorException
+     * @return array
      */
-    public function testDataSourceConnectionString()
+    public function providerTestDatabase()
     {
-        /*
-        global $conf;
 
-        $mongo_username = null;
-        $mongo_password = null;
-        $mongo_domain   = null;
-        $mongo_port     = null;
-        $mongo_database = null;
+        return array(
+                array(
+                 array(
+                  'mongo_username' => 'test',
+                  'mongo_password' => 'pw',
+                  'mongo_domain'   => 'example.com',
+                  'mongo_port'     => 12345,
+                  'mongo_database' => 'testdb',
+                 ),
+                ),
+               );
 
-        $datasource = new DataSource();
-
-        if (array_key_exists('mongo_username', $conf['datasource']) === true) {
-            $mongo_username = $conf['datasource']['mongo_username'];
-        } else {
-            throw new ErrorException('Missing Mongo Username');
-        }
-
-        if (array_key_exists('mongo_pw', $conf['datasource']) === true) {
-            $mongo_password = $conf['datasource']['mongo_pw'];
-        } else {
-            throw new ErrorException('Missing Mongo Password');
-        }
-
-        if (array_key_exists('mongo_domain', $conf['datasource']) === true) {
-            $mongo_domain = $conf['datasource']['mongo_domain'];
-        } else {
-            throw new ErrorException('Missing Mongo Domain');
-        }
-
-        if (array_key_exists('mongo_database_name', $conf['datasource']) === true) {
-            $mongo_database = $conf['datasource']['mongo_database_name'];
-        } else {
-            throw new ErrorException('Missing Mongo Database Name');
-        }
-
-        if (array_key_exists('mongo_port', $conf['datasource']) === true) {
-            $mongo_port = $conf['datasource']['mongo_port'];
-        } else {
-            throw new ErrorException('Missing Mongo Port');
-        }
-
-        static::assertEquals(
-            'mongodb://'.$mongo_username.':'.$mongo_password.'@'.$mongo_domain.':'.$mongo_port.'/'.$mongo_database,
-            $datasource->buildMongoConnectionString()
-        );
-        */
-    }//end testDataSourceConnectionString()
+    }//end providerTestDatabase()
 
 
 }//end class

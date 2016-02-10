@@ -61,12 +61,14 @@ class OAuth_Slack
     /**
      * OAuth constructor.
      *
-     * @param array  $data    data associated with the oauth request
-     * @param string $botName name of the bot requesting Oauth
+     * @param array  $data          data associated with the oauth request
+     * @param string $botName       name of the bot requesting Oauth
+     * @param string $client_id     slack client id
+     * @param string $client_secret slack client secret
      *
      * @throws ErrorException
      */
-    public function __construct($data, $botName)
+    public function __construct($data, $botName, $client_id = null, $client_secret = null)
     {
         // Store the code provided by Slack.
         $this->_code = $data['code'];
@@ -74,6 +76,9 @@ class OAuth_Slack
         $this->_bot = $botName;
         // Set the client credentials based on the bot requesting access.
         $this->_setSlackClientDetails();
+
+        $this->_client_id     = $client_id;
+        $this->_client_secret = $client_secret;
 
     }//end __construct()
 
@@ -89,6 +94,13 @@ class OAuth_Slack
         // Pull the Slack API credentials.
         global $conf;
         try {
+            if ($conf === null
+                || is_array($conf) !== true
+                || (array_key_exists('bots', $conf) !== true && array_key_exists($this->_bot, $conf['bots']) !== true)
+            ) {
+                throw new ErrorException('Missing '.$this->_bot.' config');
+            }
+
             if (array_key_exists('slack_client_id', $conf['bots'][$this->_bot]) === true) {
                 $this->_client_id = $conf['bots'][$this->_bot]['slack_client_id'];
             } else {
@@ -100,11 +112,8 @@ class OAuth_Slack
             } else {
                 throw new ErrorException('No Client Secret for '.$this->_bot);
             }
-
-            return;
         } catch (Exception $e) {
             echo 'OAuth Error: ', $e->getMessage(), '\n';
-            exit();
         }//end try
 
     }//end _setSlackClientDetails()

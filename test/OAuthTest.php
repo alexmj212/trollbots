@@ -34,13 +34,13 @@ class OAuthTest extends PHPUnit_Framework_TestCase
      */
     public function testOAuthInitialization()
     {
-        /*
-        $oauth = new OAuth_Slack(array('code' => '000000'), 'Test Bot');
+
+        $oauth = new OAuth_Slack(array('code' => '000000'), 'Test Bot', 123456, 654321);
         static::assertEquals(
             $oauth->buildSlackURL(),
             'https://slack.com/api/oauth.access?client_id=123456&client_secret=654321&code=000000'
         );
-        */
+
     }//end testOAuthInitialization()
 
 

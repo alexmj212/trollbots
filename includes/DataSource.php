@@ -86,16 +86,31 @@ class DataSource
     /**
      * Grab configuration data
      *
-     * @param string $collectionName the name of the collection
+     * @param string $userName       connection user
+     * @param string $password       connection pw
+     * @param string $domain         connection domain
+     * @param int    $port           connection port
+     * @param string $database       connection database name
+     * @param string $collectionName the name of the collection*
      *
      * @throws ErrorException
      */
-    public function __construct($collectionName = null)
-    {
+    public function __construct(
+        $userName = null,
+        $password = null,
+        $domain = null,
+        $port = null,
+        $database = null,
+        $collectionName = null
+    ) {
 
         global $conf;
 
         try {
+            if ($conf === null || is_array($conf) !== true || array_key_exists('datasource', $conf) !== true) {
+                throw new ErrorException('Missing datasource config');
+            }
+
             if (array_key_exists('mongo_username', $conf['datasource']) === true) {
                 $this->_mongo_username = $conf['datasource']['mongo_username'];
             } else {
@@ -120,15 +135,34 @@ class DataSource
                 throw new ErrorException('Missing Mongo Database Name');
             }
 
+            // Set the default port.
+            $this->_mongo_port = 27017;
             if (array_key_exists('mongo_port', $conf['datasource']) === true) {
                 $this->_mongo_port = $conf['datasource']['mongo_port'];
-            } else {
-                throw new ErrorException('Missing Mongo Port');
             }
         } catch (Exception $e) {
             echo 'Database Configuration Error: ', $e->getMessage(), '\n';
-            exit();
         }//end try
+
+        if ($userName !== null) {
+            $this->_mongo_username = $userName;
+        }
+
+        if ($password !== null) {
+            $this->_mongo_password = $password;
+        }
+
+        if ($domain !== null) {
+            $this->_mongo_domain = $domain;
+        }
+
+        if ($database !== null) {
+            $this->_mongo_database = $database;
+        }
+
+        if ($port !== null) {
+            $this->_mongo_port = $port;
+        }
 
         // Set the collection name if provided.
         if ($collectionName !== null) {
