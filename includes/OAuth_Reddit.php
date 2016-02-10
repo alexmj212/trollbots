@@ -12,7 +12,10 @@
  * @link     https://github.com/alexmj212/slackphpbot
  */
 
-includeIfExists(__DIR__.'/../config.php');
+
+if (file_exists(__DIR__.'/../config.php') === true) {
+    include __DIR__.'/../config.php';
+}
 
 /**
  * Class OAuth_Reddit
