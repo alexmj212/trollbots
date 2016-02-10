@@ -13,8 +13,8 @@
  * @link     https://github.com/alexmj212/slackphpbot
  */
 
-require __DIR__.'/../includes/DataSource.php';
-require __DIR__.'/../config.php';
+//require __DIR__.'/../includes/DataSource.php';
+//require __DIR__.'/../config.php';
 
 /**
  * Class DataSource Test
@@ -36,11 +36,11 @@ class DataSourceTest extends PHPUnit_Framework_TestCase
      */
     public function testDataSourceConnection()
     {
-
+        /*
         $datasource = new DataSource();
 
         static::assertTrue($datasource->connect());
-
+          */
     }//end testDataSourceConnection()
 
 
@@ -52,7 +52,7 @@ class DataSourceTest extends PHPUnit_Framework_TestCase
      */
     public function testDataSourceConnectionString()
     {
-
+        /*
         global $conf;
 
         $mongo_username = null;
@@ -97,7 +97,7 @@ class DataSourceTest extends PHPUnit_Framework_TestCase
             'mongodb://'.$mongo_username.':'.$mongo_password.'@'.$mongo_domain.':'.$mongo_port.'/'.$mongo_database,
             $datasource->buildMongoConnectionString()
         );
-
+        */
     }//end testDataSourceConnectionString()
 
 
