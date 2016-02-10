@@ -13,7 +13,7 @@
  * @link     https://github.com/alexmj212/slackphpbot
  */
 
-require '/../includes/DataSource.php';
+require '../includes/DataSource.php';
 require  __DIR__.'/../config.php';
 
 /**
