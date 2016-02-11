@@ -1,6 +1,5 @@
 composer.phar
 vendor/*
 /.idea
-/trollbots.iml
-/config.php
+config.php
 
