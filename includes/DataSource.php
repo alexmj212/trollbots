@@ -86,12 +86,12 @@ class DataSource
     /**
      * Grab configuration data
      *
+     * @param string $collectionName the name of the collection
      * @param string $userName       connection user
      * @param string $password       connection pw
      * @param string $domain         connection domain
      * @param int    $port           connection port
      * @param string $database       connection database name
-     * @param string $collectionName the name of the collection*
      *
      * @throws ErrorException
      */
