@@ -74,7 +74,7 @@ class DKPBot
         $userPoints = explode(' ', $payload->getText());
         if (count($userPoints) === 2) {
             $this->_user   = $userPoints[0];
-            $this->_points = $userPoints[1];
+            $this->_points = (int) $userPoints[1];
         }
 
         if (is_numeric($this->_points) === true
