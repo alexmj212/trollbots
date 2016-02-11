@@ -1,57 +1,94 @@
 <?php
 
 /**
- * Slack PHP Bot
- * Alex Johnson
+ * Index
+ *
+ * PHP version 5
+ *
+ * @category Index
+ * @package  SlackPHPbot
+ * @author   Alex Johnson <alexmj212@gmail.com>
+ * @license  http://opensource.org/licenses/GPL-3.0 GPL 3.0
+ * @link     https://github.com/alexmj212/slackphpbot
  */
 
-/**
- * Description:
- * * Driver for the application
- * * Set endpoints for bot scripts
- */
 require 'vendor/autoload.php';
-include 'includes/processPayload.php';
-include 'includes/responseHandler.php';
-include 'includes/dataSource.php';
-include 'includes/oauth.php';
-foreach (glob('scripts/*.php') as $filename)
-{
-    include_once $filename;
+require 'includes/Post.php';
+require 'includes/Payload.php';
+require 'includes/Responder.php';
+require 'includes/DataSource.php';
+require 'includes/OAuth_Slack.php';
+foreach (glob('scripts/*.php') as $filename) {
+    include $filename;
 }
 
-//Initialize Slim Framework
+// Initialize Slim Framework.
 $app = new \Slim\Slim();
 
-//Redirect the root web page to something
-$app->get('/', 'main');
+/*
+    * GET Requests
+*/
 
-//Define 'tip' endpoint
-$app->post('/tipbot/', function() use ($app) {$tipbot = new TipBot($app->request->post());});
-//$app->get('/tipbot-auth/', function() use ($app) {$tipbotauth = new OAuth($app->request->get(),'tipbot');});
+// Redirect the root web page to repo page.
+$app->get(
+    '/',
+    function () {
+        header('Location: http://alexmj212.github.io/slackphpbot/');
+        die();
+    }
+);
 
-//Define 'triggered' endpoint
-$app->post('/triggerbot/', function() use ($app) {$triggerbot = new TriggerBot($app->request->post());});
-//$app->get('/triggerbot-auth/', function() use ($app) {$triggerbotauth = new OAuth($app->request->get(),'triggerbot');});
+$app->get(
+    '/dkpbot-auth/',
+    function () use ($app) {
+        $dkpbotauth = new OAuth_Slack($app->request->get(), 'DKP Bot');
+        $dkpbotauth->requestSlackAuth();
+    }
+);
 
-//Define 'channelpolice' endpoint
-$app->post('/channelpolicebot/', function() use ($app) {$channelpolicebot = new ChannelPoliceBot($app->request->post());});
-//$app->get('/channelpolicebot-auth/', function() use ($app) {$channelpolicebotauth = new OAuth($app->request->get(),'channelpolicebot');});
+/*
+    * POST Requests
+*/
 
-//Define 'punbot' endpoint
-$app->post('/punbot/', function() use ($app) {$punbot = new PunBot($app->request->post());});
-//$app->get('/punbot-auth/', function() use ($app) {$punbotauth = new OAuth($app->request->get(),'punbot');});
+// Define 'tip' endpoint.
+$app->post(
+    '/tipbot/',
+    function () use ($app) {
+        $tipbot = new TipBot(new Payload($app->request->post()));
+    }
+);
 
-//Define 'dkpbot' endpoint
-$app->post('/dkpbot/', function() use ($app) {$dkpbot = new DKPBot($app->request->post());});
-$app->get('/dkpbot-auth/', function() use ($app) {$dkpbotauth = new OAuth($app->request->get(),'DKP Bot');});
+// Define 'triggered' endpoint.
+$app->post(
+    '/triggerbot/',
+    function () use ($app) {
+        $triggerbot = new TriggerBot(new Payload($app->request->post()));
+    }
+);
 
-//Run the app
+// Define 'channelpolice' endpoint.
+$app->post(
+    '/channelpolicebot/',
+    function () use ($app) {
+        $channelpolicebot = new ChannelPoliceBot(new Payload($app->request->post()));
+    }
+);
+
+// Define 'punbot' endpoint.
+$app->post(
+    '/punbot/',
+    function () use ($app) {
+        $punbot = new PunBot(new Payload($app->request->post()));
+    }
+);
+
+// Define 'dkpbot' endpoint.
+$app->post(
+    '/dkpbot/',
+    function () use ($app) {
+        $dkpbot = new DKPBot(new Payload($app->request->post()));
+    }
+);
+
+// Run the app.
 $app->run();
-
-//Redirect main page (optional)
-	function main (){
-		header('Location: http://alexmj212.github.io/slackphpbot/');
-		die();
-	}
-

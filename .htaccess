@@ -8,3 +8,8 @@ RewriteRule ^(.*)$ %{REQUEST_URI}/ [R=301,L]
 RewriteBase /
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^ index.php [QSA,L]
+
+<Files "config.php">
+Order Allow,Deny
+Deny from all
+</Files>

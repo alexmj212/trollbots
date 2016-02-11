@@ -1,12 +1,10 @@
-composer.lock
 composer.phar
 tipbot.sublime-project
 tipbot.sublime-workspace
 vendor/*
 .tmp
 .sass-cache
-includes/dataSource.php
 /.idea
-includes/oauth.php
 /slackphpbot.iml
+/config.php
 
