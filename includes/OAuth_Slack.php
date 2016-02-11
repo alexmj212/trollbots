@@ -6,10 +6,10 @@
  * PHP version 5
  *
  * @category Configuration
- * @package  SlackPHPbot
+ * @package  TrollBots
  * @author   Alex Johnson <alexmj212@gmail.com>
  * @license  http://opensource.org/licenses/GPL-3.0 GPL 3.0
- * @link     https://github.com/alexmj212/slackphpbot
+ * @link     https://github.com/alexmj212/trollbots
  */
 
 if (file_exists(__DIR__.'/../config.php') === true) {
@@ -20,10 +20,10 @@ if (file_exists(__DIR__.'/../config.php') === true) {
  * Class OAuth_Slack
  *
  * @category OAuth
- * @package  SlackPHPbot
+ * @package  TrollBots
  * @author   Alex Johnson <alexmj212@gmail.com>
  * @license  http://opensource.org/licenses/GPL-3.0 GPL 3.0
- * @link     https://github.com/alexmj212/slackphpbot
+ * @link     https://github.com/alexmj212/trollbots
  */
 
 class OAuth_Slack
@@ -134,7 +134,7 @@ class OAuth_Slack
         curl_exec($ch);
         curl_close($ch);
         // Redirect on successful request.
-        header('Location: http://alexmj212.github.io/slackphpbot/?success='.$this->_bot);
+        header('Location: http://alexmj212.github.io/trollbots/?success='.$this->_bot);
         die();
 
     }//end requestSlackAuth()

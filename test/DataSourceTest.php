@@ -7,10 +7,10 @@
  * PHP version 5
  *
  * @category Test
- * @package  SlackPHPbot
+ * @package  TrollBots
  * @author   Alex Johnson <alexmj212@gmail.com>
  * @license  http://opensource.org/licenses/GPL-3.0 GPL 3.0
- * @link     https://github.com/alexmj212/slackphpbot
+ * @link     https://github.com/alexmj212/trollbots
  */
 
 require __DIR__.'/../includes/DataSource.php';
@@ -19,10 +19,10 @@ require __DIR__.'/../includes/DataSource.php';
  * Class DataSource Test
  *
  * @category DataSourceTest
- * @package  SlackPHPbot
+ * @package  TrollBots
  * @author   Alex Johnson <alexmj212@gmail.com>
  * @license  http://opensource.org/licenses/GPL-3.0 GPL 3.0
- * @link     https://github.com/alexmj212/slackphpbot
+ * @link     https://github.com/alexmj212/trollbots
  */
 class DataSourceTest extends PHPUnit_Framework_TestCase
 {

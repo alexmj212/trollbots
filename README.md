@@ -1,6 +1,6 @@
-# Slack PHP Bot
+# Troll Bots
 
-![Travis CI](https://travis-ci.org/alexmj212/slackphpbot.svg?branch=master)
+![Travis CI](https://travis-ci.org/alexmj212/trollbots.svg?branch=master)
 
 A PHP implementation for Slack slash commands and incoming webhooks
 
@@ -58,7 +58,7 @@ This is the post object that is used to store information related to the respons
     * `ephemeral` - default - the bot posts a response only the original user can see
 
 ## Examples
-Several example response are included in the scripts directory which demonstrate the use of Slack PHP Bot.
+Several example response are included in the scripts directory which demonstrate the use of Troll Bots.
 * Channel Police Bot
   * Allows users to indicate the current conversation is not appropriate for the current channel.
 * Trigger Bot

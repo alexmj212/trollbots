@@ -6,10 +6,10 @@
  * PHP version 5
  *
  * @category Configuration
- * @package  SlackPHPbot
+ * @package  TrollBots
  * @author   Alex Johnson <alexmj212@gmail.com>
  * @license  http://opensource.org/licenses/GPL-3.0 GPL 3.0
- * @link     https://github.com/alexmj212/slackphpbot
+ * @link     https://github.com/alexmj212/trollbots
  */
 
 if (file_exists(__DIR__.'/../config.php') === true) {
@@ -20,10 +20,10 @@ if (file_exists(__DIR__.'/../config.php') === true) {
  * Class DataSource
  *
  * @category DataSource
- * @package  SlackPHPbot
+ * @package  TrollBots
  * @author   Alex Johnson <alexmj212@gmail.com>
  * @license  http://opensource.org/licenses/GPL-3.0 GPL 3.0
- * @link     https://github.com/alexmj212/slackphpbot
+ * @link     https://github.com/alexmj212/trollbots
  */
 class DataSource
 {

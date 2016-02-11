@@ -6,10 +6,10 @@
  * PHP version 5
  *
  * @category Test
- * @package  SlackPHPbot
+ * @package  TrollBots
  * @author   Alex Johnson <alexmj212@gmail.com>
  * @license  http://opensource.org/licenses/GPL-3.0 GPL 3.0
- * @link     https://github.com/alexmj212/slackphpbot
+ * @link     https://github.com/alexmj212/trollbots
  */
 
 require __DIR__.'/../includes/Post.php';
@@ -18,10 +18,10 @@ require __DIR__.'/../includes/Post.php';
  * Class Post Test
  *
  * @category PostTest
- * @package  SlackPHPbot
+ * @package  TrollBots
  * @author   Alex Johnson <alexmj212@gmail.com>
  * @license  http://opensource.org/licenses/GPL-3.0 GPL 3.0
- * @link     https://github.com/alexmj212/slackphpbot
+ * @link     https://github.com/alexmj212/trollbots
  */
 
 class PostTest extends PHPUnit_Framework_TestCase

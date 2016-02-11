@@ -6,10 +6,10 @@
  * PHP version 5
  *
  * @category Index
- * @package  SlackPHPbot
+ * @package  TrollBots
  * @author   Alex Johnson <alexmj212@gmail.com>
  * @license  http://opensource.org/licenses/GPL-3.0 GPL 3.0
- * @link     https://github.com/alexmj212/slackphpbot
+ * @link     https://github.com/alexmj212/trollbots
  */
 
 require 'vendor/autoload.php';
@@ -33,7 +33,7 @@ $app = new \Slim\Slim();
 $app->get(
     '/',
     function () {
-        header('Location: http://alexmj212.github.io/slackphpbot/');
+        header('Location: http://alexmj212.github.io/trollbots/');
         die();
     }
 );

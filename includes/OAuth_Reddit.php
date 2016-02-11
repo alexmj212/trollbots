@@ -6,10 +6,10 @@
  * PHP version 5
  *
  * @category Configuration
- * @package  SlackPHPbot
+ * @package  TrollBots
  * @author   Alex Johnson <alexmj212@gmail.com>
  * @license  http://opensource.org/licenses/GPL-3.0 GPL 3.0
- * @link     https://github.com/alexmj212/slackphpbot
+ * @link     https://github.com/alexmj212/trollbots
  */
 
 
@@ -21,10 +21,10 @@ if (file_exists(__DIR__.'/../config.php') === true) {
  * Class OAuth_Reddit
  *
  * @category OAuth
- * @package  SlackPHPbot
+ * @package  TrollBots
  * @author   Alex Johnson <alexmj212@gmail.com>
  * @license  http://opensource.org/licenses/GPL-3.0 GPL 3.0
- * @link     https://github.com/alexmj212/slackphpbot
+ * @link     https://github.com/alexmj212/trollbots
  */
 class OAuth_Reddit
 {
@@ -158,7 +158,7 @@ class OAuth_Reddit
         $header[] = 'Authorization: bearer '.$this->_reddit_access_token;
 
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'SlackPHPBot/0.1 by primeradical');
+        curl_setopt($ch, CURLOPT_USERAGENT, 'TrollBots/0.1 by primeradical');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
         $response = json_decode(curl_exec($ch));

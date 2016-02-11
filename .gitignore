@@ -1,10 +1,6 @@
 composer.phar
-tipbot.sublime-project
-tipbot.sublime-workspace
 vendor/*
-.tmp
-.sass-cache
 /.idea
-/slackphpbot.iml
+/trollbots.iml
 /config.php
 
