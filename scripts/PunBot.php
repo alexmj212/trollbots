@@ -92,7 +92,6 @@ class PunBot
             // Pun value less than 10.
             &&  $this->_rating <= 10
             // Valid username check.
-            && $payload->isUserName($this->_user) === true
             // Self-rating check.
             && $this->_user !== $payload->getUserName()
         ) {
