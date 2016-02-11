@@ -1,6 +1,6 @@
 # Slack PHP Bot
 
-![Travis CI](https://travis-ci.org/alexmj212/slackphpbot.svg?branch=test)
+![Travis CI](https://travis-ci.org/alexmj212/slackphpbot.svg?branch=master)
 
 A PHP implementation for Slack slash commands and incoming webhooks
 
