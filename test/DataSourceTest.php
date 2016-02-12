@@ -41,6 +41,7 @@ class DataSourceTest extends PHPUnit_Framework_TestCase
     {
 
         $datasource = new DataSource(
+            null,
             $conf['mongo_username'],
             $conf['mongo_password'],
             $conf['mongo_domain'],
