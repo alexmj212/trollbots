@@ -195,20 +195,16 @@ class Payload
     /**
      * Check if the text contains a valid username
      *
+     * @param string $user the given user
+     *
      * @return bool
      */
-    public function isUserName()
+    public static function isUserName($user)
     {
-        if (func_get_args() === true) {
-            $args = func_get_args();
-            $text = $args[0];
-        } else {
-            $text = $this->_text;
-        }
 
-        return !(strpos($text, '@') > 0 ||
-            strpos($text, '@') === false ||
-            !ctype_alnum(substr($text, 1)));
+        return !(strpos($user, '@') > 0 ||
+            strpos($user, '@') === false ||
+            !ctype_alnum(substr($user, 1)));
 
     }//end isUserName()
 
@@ -218,12 +214,12 @@ class Payload
      *
      * @return bool
      */
-    public function isChannel()
+    public static function isChannel($channel)
     {
 
-        return !(strpos($this->_text, '#') > 0 ||
-            strpos($this->_text, '#') === false ||
-            !ctype_alnum(substr($this->_text, 1)));
+        return !(strpos($channel, '#') > 0 ||
+            strpos($channel, '#') === false ||
+            !ctype_alnum(substr($channel, 1)));
 
     }//end isChannel()
 
