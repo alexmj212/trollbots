@@ -182,12 +182,12 @@ class DataSource
     {
 
         try {
-            $this->_mongo_connection = new Mongo($this->buildMongoConnectionString());
+            $this->_mongo_connection = new MongoDB\Client($this->buildMongoConnectionString());
             if ($this->_mongo_connection === false) {
                 throw new MongoConnectionException('Unable to connect to database '.$this->_mongo_domain);
             }
 
-            $this->_mongo_dbo = $this->_mongo_connection->selectDB($this->_mongo_database);
+            $this->_mongo_dbo = $this->_mongo_connection->selectDatabase($this->_mongo_database);
             if ($this->_mongo_dbo === false) {
                 throw new MongoConnectionException('Unable to select database '.$this->_mongo_database);
             }

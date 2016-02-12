@@ -2,7 +2,8 @@
     "require": {
         "php": "^5.6.0",
         "slim/slim": "2.*",
-        "ext-mongo": "*",
-        "phpunit/phpunit": "5.1.4"
+        "ext-mongodb": "*",
+        "phpunit/phpunit": "5.1.4",
+        "mongodb/mongodb": "^1.0.0"
     }
 }
