@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9f86fd79fe8ae93337a51cf8bf6be7ec",
-    "content-hash": "06a48f4964a3475d8d04c0174b560f93",
+    "hash": "522414211363c4fb17a47154575374f5",
+    "content-hash": "897c9d8c8f602c22354af6ffb0032e8c",
     "packages": [
         {
             "name": "doctrine/instantiator",
@@ -60,6 +60,66 @@
                 "instantiate"
             ],
             "time": "2015-06-14 21:17:01"
+        },
+        {
+            "name": "mongodb/mongodb",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mongodb/mongo-php-library.git",
+                "reference": "851a560864281cbf91fe182aefed85bfc3395031"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mongodb/mongo-php-library/zipball/851a560864281cbf91fe182aefed85bfc3395031",
+                "reference": "851a560864281cbf91fe182aefed85bfc3395031",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mongodb": "^1.1.0",
+                "php": ">=5.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "MongoDB\\": "src/"
+                },
+                "files": [
+                    "src/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Jeremy Mikola",
+                    "email": "jmikola@gmail.com"
+                },
+                {
+                    "name": "Hannes Magnusson",
+                    "email": "bjori@mongodb.com"
+                },
+                {
+                    "name": "Derick Rethans",
+                    "email": "github@derickrethans.nl"
+                }
+            ],
+            "description": "MongoDB driver library",
+            "homepage": "https://jira.mongodb.org/browse/PHPLIB",
+            "keywords": [
+                "database",
+                "driver",
+                "mongodb",
+                "persistence"
+            ],
+            "time": "2016-01-21 19:43:25"
         },
         {
             "name": "myclabs/deep-copy",
@@ -1099,7 +1159,7 @@
     "prefer-lowest": false,
     "platform": {
         "php": "^5.6.0",
-        "ext-mongo": "*"
+        "ext-mongodb": "*"
     },
     "platform-dev": []
 }
