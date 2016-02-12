@@ -212,6 +212,8 @@ class Payload
     /**
      * Check if the text contains a valid channel name
      *
+     * @param string $channel the given channel
+     *
      * @return bool
      */
     public static function isChannel($channel)
