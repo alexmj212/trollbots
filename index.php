@@ -90,5 +90,13 @@ $app->post(
     }
 );
 
+// Define 'sarcasmbot' endpoint.
+$app->post(
+    '/sarcasmbot/',
+    function () use ($app) {
+        $sarcasmbot = new SarcasmBot(new Payload($app->request->post()));
+    }
+);
+
 // Run the app.
 $app->run();
