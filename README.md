@@ -1,6 +1,6 @@
 # Troll Bots
 
-![Travis CI](https://travis-ci.org/alexmj212/trollbots.svg?branch=master)
+[![Travis CI](https://travis-ci.org/alexmj212/trollbots.svg?branch=master)](https://travis-ci.org/alexmj212/trollbots)
 
 A PHP implementation for Slack slash commands and incoming webhooks
 
