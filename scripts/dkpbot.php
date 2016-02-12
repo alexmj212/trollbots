@@ -81,6 +81,7 @@ class DKPBot
             && $this->_points >= -10
             && $this->_points !== 0
             && $this->_points <= 10
+            && Payload::isUserName($this->_user) === true
         ) {
             if ($this->_user === $payload->getUserName()) {
                 $this->_points = (0 - $this->_points);

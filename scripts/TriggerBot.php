@@ -49,7 +49,7 @@ class TriggerBot
 
         $response = null;
 
-        if ($payload->isUserName() === true) {
+        if ($payload->isUserName($payload->getText()) === true) {
             $response = '*'.$payload->getUserName().'* has been triggered by *'.$payload->getText().'*!';
         } else {
             $response = '*'.$payload->getUserName().'* has been triggered!';

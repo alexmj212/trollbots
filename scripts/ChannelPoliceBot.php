@@ -49,8 +49,7 @@ class ChannelPoliceBot
 
         $response = null;
 
-        if ($payload->isChannel() === true) {
-            // TODO: Verifiy validity of requested channel.
+        if ($payload->isChannel($payload->getText()) === true) {
             $response = '*'.$payload->getUserName().'* has requested the discussion be moved to the *'.$payload->getText().'* channel!';
         } else {
             $response = '*'.$payload->getUserName().'* has requested the discussion be moved to the appropriate channel.';

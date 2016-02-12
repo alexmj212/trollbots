@@ -74,8 +74,8 @@ class TipBot
         $this->_teamId = $payload->getTeamId();
 
         // Determine the type of request and form the appropriate response.
-        if ($payload->isUserName() === true) {
-            // Verify a valid username was provided and encrypt it.
+        if ($payload->isUserName($payload->getText()) === true) {
+            // Verify a valid username was provided.
             $this->_user = $payload->getText();
             if ($payload->getUserName() === $this->_user) {
                 // Stop fools from trying to tip themselves.
