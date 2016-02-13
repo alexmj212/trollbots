@@ -150,7 +150,7 @@ class DKPBot
             $document['users'] = $users;
             // Publish update to datasource.
             try {
-                $collection->update(array('team_id' => $this->_teamId), $document);
+                $collection->updateOne(array('team_id' => $this->_teamId), $document);
             } catch (MongoCursorException $e){
                 echo '\'Unable to update user \'.$this->_user.\' with team \'.$this->_teamId: '.$e->getMessage();
             }
@@ -167,7 +167,7 @@ class DKPBot
                                   ),
                     );
             try {
-                $collection->insert($team);
+                $collection->insertOne($team);
             } catch (MongoException $e){
                 echo '\'Unable to insert team '.$this->_teamId.': '.$e->getMessage();
             }

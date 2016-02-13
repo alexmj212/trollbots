@@ -74,7 +74,7 @@ class TipBot
         $this->_teamId = $payload->getTeamId();
 
         // Determine the type of request and form the appropriate response.
-        if ($payload->isUserName($payload->getText()) === true) {
+        if (Payload::isUserName($payload->getText()) === true) {
             // Verify a valid username was provided.
             $this->_user = $payload->getText();
             if ($payload->getUserName() === $this->_user) {
@@ -151,7 +151,7 @@ class TipBot
             $document['users'] = $users;
 
             try {
-                $collection->update(array('team_id' => $this->_teamId), $document);
+                $collection->updateOne(array('team_id' => $this->_teamId), $document);
             } catch (MongoCursorException $e){
                 echo '\'Unable to update user \'.$this->_user.\' with team \'.$this->_teamId: '.$e->getMessage();
             }
@@ -169,7 +169,7 @@ class TipBot
                     );
 
             try {
-                $collection->insert($team);
+                $collection->insertOne($team);
             } catch (MongoException $e){
                 echo '\'Unable to insert team '.$this->_teamId.': '.$e->getMessage();
             }
