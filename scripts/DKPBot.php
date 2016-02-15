@@ -140,7 +140,7 @@ class DKPBot extends Bot
                      'team_id' => $this->teamId,
                      'users'   => array(
                                    $this->user => array(
-                                                   'rating'             => 500 + $this->_points,
+                                                   'dkp   '             => 500 + $this->_points,
                                                    'created'            => date('Y-m-d H:i:s'),
                                                    'last_received_date' => date('Y-m-d H:i:s'),
                                                   ),
