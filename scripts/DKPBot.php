@@ -79,7 +79,8 @@ class DKPBot extends Bot
 
             $post = new Post($this->name, $this->icon, $response, $payload->getChannelName(), false);
         } else if ($payload->getText() === 'rank') {
-            $post = new Post($this->name, $this->icon, $this->_ranking(), $payload->getChannelName(), false);
+            $post = new Post($this->name, $this->icon, '', $payload->getChannelName(), false);
+            $post->addAttachment($this->_ranking());
         } else {
             $post = new Post($this->name, $this->icon, 'Invalid command', $payload->getChannelName(), false);
         }//end if
@@ -169,27 +170,20 @@ class DKPBot extends Bot
         // Retrieve the dkpbot document.
         $document = $database->retrieveDocument($this->teamId);
 
-        // Preserve array keys for sorting.
-        foreach ($document->users as $username => $user) {
-            $document->users[$username]['username'] = $username;
+        $document->users = Bot::sortUserList($document->users, 'dkp', SORT_DESC);
+
+        $attachment = array(
+                       'title' => 'DKP Leaderboard',
+                       'text'  => '',
+                      );
+
+        foreach ($document->users as $user => $data) {
+            $attachment['text'] .= $user.' - ';
+            $attachment['text'] .= $data['dkp'].' DKP'.PHP_EOL;
         }
 
-        // Sort in desc by DKP.
-        usort(
-            $document->users,
-            function ($a, $b) {
-                return ($b['dkp'] - $a['dkp']);
-            }
-        );
-
-        $leaderBoard = '*DKP Leaderboard*\n';
-        foreach ($document->users as $user) {
-            $leaderBoard .= $user['dkp'].' DKP\t\t';
-            $leaderBoard .= '\n';
-        }
-
-        $leaderBoard .= 'If you\'re not listed, you\'ve not received DKP';
-        return $leaderBoard;
+        $attachment['pretext'] = 'If you\'re not listed, you\'ve not received DKP';
+        return $attachment;
 
     }//end _ranking()
 
