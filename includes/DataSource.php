@@ -263,31 +263,16 @@ class DataSource
      *
      * @param string $teamId the Id of the team
      *
-     * TODO: Unit test return type.
-     *
-     * @return array
-     * @throws MongoConnectionException
+     * @return mixed
      */
     public function retrieveDocument($teamId)
     {
 
         $document = null;
 
-        try {
-            $document = $this->_mongo_collection->findOne(array('team_id' => $teamId));
-            if ($document === false) {
-                throw new MongoConnectionException('Team '.$teamId.' does not exist or was not created.');
-            }
+        $document = $this->_mongo_collection->findOne(array('team_id' => $teamId));
 
-            if ($document === null) {
-                throw new MongoConnectionException('Unable to search for team '.$teamId);
-            }
-
-            return $document;
-        } catch (MongoConnectionException $e){
-            echo 'Mongo Connection Exception: '.$e->getMessage();
-            exit();
-        }
+        return $document;
 
     }//end retrieveDocument()
 

@@ -25,41 +25,6 @@
 class TipBot
 {
 
-    /**
-     * The name of the Bot
-     *
-     * @var string
-     */
-    private $_name = 'Tip Bot';
-
-    /**
-     * The icon to represent the bot
-     *
-     * @var string
-     */
-    private $_icon = ':heavy_dollar_sign:';
-
-    /**
-     * The user receiving or giving the tip
-     *
-     * @var string
-     */
-    private $_user;
-
-    /**
-     * The ID of the team
-     *
-     * @var mixed
-     */
-    private $_teamId;
-
-    /**
-     * The name of the bots collection
-     *
-     * @var string
-     */
-    private $_collectionName = 'tipbot';
-
 
     /**
      * TipBot constructor.
@@ -69,19 +34,23 @@ class TipBot
     public function __construct($payload)
     {
 
+        $this->name           = 'Tip Bot';
+        $this->icon           = ':heavy_dollar_sign:';
+        $this->collectionName = 'tipbot';
+
         $post = null;
 
-        $this->_teamId = $payload->getTeamId();
+        $this->teamId = $payload->getTeamId();
 
         // Determine the type of request and form the appropriate response.
         if (Payload::isUserName($payload->getText()) === true) {
             // Verify a valid username was provided.
-            $this->_user = $payload->getText();
-            if ($payload->getUserName() === $this->_user) {
+            $this->user = $payload->getText();
+            if ($payload->getUserName() === $this->user) {
                 // Stop fools from trying to tip themselves.
                 $post = new Post(
-                    $this->_name,
-                    $this->_icon,
+                    $this->name,
+                    $this->icon,
                     'You can\'t tip yourself!',
                     $payload->getChannelName(),
                     false
@@ -90,23 +59,23 @@ class TipBot
                 // Log the new Tip.
                 $this->_logTip();
                 // Build Response.
-                $response  = '*'.$payload->getUserName().'* has tipped *'.$this->_user.'*';
-                $response .= ' bringing their total to '.$this->_retrieveTips($this->_user).' tips';
+                $response  = '*'.$payload->getUserName().'* has tipped *'.$this->user.'*';
+                $response .= ' bringing their total to '.$this->_retrieveTips($this->user).' tips';
                 // Generate new Post.
-                $post = new Post($this->_name, $this->_icon, $response, $payload->getChannelName(), true);
+                $post = new Post($this->name, $this->icon, $response, $payload->getChannelName(), true);
             }
         } else if ($payload->getText() === 'total') {
             // Return the total number of tips of the requester.
-            $this->_user = $payload->getUserName();
+            $this->user = $payload->getUserName();
             // Retrieve the total amount.
             $total = $this->_retrieveTips();
             // Build response.
             $response = 'You\'ve been tipped '.$total.' time(s)';
             // Generate new Post.
-            $post = new Post($this->_name, $this->_icon, $response, $payload->getChannelName(), false);
+            $post = new Post($this->name, $this->icon, $response, $payload->getChannelName(), false);
         } else {
             // No matching commands, return invalid.
-            $post = new Post($this->_name, $this->_icon, 'Invalid command', $payload->getChannelName(), false);
+            $post = new Post($this->name, $this->icon, 'Invalid command', $payload->getChannelName(), false);
         }//end if
 
         // Submit the response.
@@ -126,52 +95,57 @@ class TipBot
 
         date_default_timezone_set('UTC');
         // Retrieve the database collection.
-        $database = new DataSource($this->_collectionName);
+        $database = new DataSource($this->collectionName);
         // Get the database collection.
         $collection = $database->getCollection();
         // Retrieve the tipbot document.
-        $document = $database->retrieveDocument($this->_teamId);
+        $document = $database->retrieveDocument($this->teamId);
 
-        if (is_array($document) === true && array_key_exists('users', $document) === true) {
+        if ($document !== null
+            && property_exists($document, 'team_id') === true
+            && $document->team_id === $this->teamId
+            && property_exists($document, 'users') === true
+        ) {
             // Yes this team exists.
-            $users = $document['users'];
+            $users = $document->users;
+
             // Does this user exist?
-            if (array_key_exists($this->_user, $users) === true) {
+            if (array_key_exists($this->user, $users) === true) {
                 // Yes this user exists.
-                $users[$this->_user]['received']          += 1;
-                $users[$this->_user]['last_received_date'] = date('Y-m-d H:i:s');
+                $users[$this->user]['received']          += 1;
+                $users[$this->user]['last_received_date'] = date('Y-m-d H:i:s');
             } else {
                 // No, add this user.
-                $users[$this->_user]['received']           = 1;
-                $users[$this->_user]['created']            = date('Y-m-d H:i:s');
-                $users[$this->_user]['last_received_date'] = date('Y-m-d H:i:s');
+                $users[$this->user]['received']           = 1;
+                $users[$this->user]['created']            = date('Y-m-d H:i:s');
+                $users[$this->user]['last_received_date'] = date('Y-m-d H:i:s');
             }
 
             // Save the new information.
-            $document['users'] = $users;
-
+            $document->users = $users;
+            // Publish update to datasource.
             try {
-                $collection->updateOne(array('team_id' => $this->_teamId), $document);
+                $collection->updateOne(array('team_id' => $this->teamId), array('$set' => $document));
             } catch (MongoCursorException $e){
-                echo '\'Unable to update user \'.$this->_user.\' with team \'.$this->_teamId: '.$e->getMessage();
+                echo 'Unable to update user '.$this->user.' with team '.$this->teamId.': '.$e->getMessage();
             }
         } else {
             // No, this team doesn't exist.
             $team = array(
-                     'team_id' => $this->_teamId,
+                     'team_id' => $this->teamId,
                      'users'   => array(
-                                   $this->_user => array(
-                                                    'received'           => 1,
-                                                    'created'            => date('Y-m-d H:i:s'),
-                                                    'last_received_date' => date('Y-m-d H:i:s'),
-                                                   ),
+                                   $this->user => array(
+                                                   'received'           => 1,
+                                                   'created'            => date('Y-m-d H:i:s'),
+                                                   'last_received_date' => date('Y-m-d H:i:s'),
+                                                  ),
                                   ),
                     );
 
             try {
                 $collection->insertOne($team);
             } catch (MongoException $e){
-                echo '\'Unable to insert team '.$this->_teamId.': '.$e->getMessage();
+                echo 'Unable to insert team '.$this->teamId.': '.$e->getMessage();
             }
         }//end if
 
@@ -190,16 +164,19 @@ class TipBot
 
         if ($user === null) {
             // Verify user was supplied, otherwise use command user.
-            $user = $this->_user;
+            $user = $this->user;
         }
 
         // Retrieve the database collection.
-        $database = new DataSource($this->_collectionName);
+        $database = new DataSource($this->collectionName);
         // Retrieve the tipbot document.
-        $document = $database->retrieveDocument($this->_teamId);
+        $document = $database->retrieveDocument($this->teamId);
 
-        if (is_array($document) === true && array_key_exists($user, $document['users']) === true) {
-            return (int) $document['users'][$user]['received'];
+        if (property_exists($document, 'team_id') === true
+            && $document->team_id === $this->teamId
+            && property_exists($document, 'users') === true
+        ) {
+            return (int) $document->users[$user]['received'];
         } else {
             return 0;
         }

@@ -21,22 +21,8 @@
  * @license  http://opensource.org/licenses/GPL-3.0 GPL 3.0
  * @link     https://github.com/alexmj212/trollbots
  */
-class ChannelPoliceBot
+class ChannelPoliceBot extends Bot
 {
-
-    /**
-     * The name of the Bot
-     *
-     * @var string
-     */
-    private $_name = 'Channel Police Bot';
-
-    /**
-     * The icon to represent the bot
-     *
-     * @var string
-     */
-    private $_icon = ':warning:';
 
 
     /**
@@ -46,16 +32,19 @@ class ChannelPoliceBot
      */
     public function __construct($payload)
     {
+        $this->name = 'Channel Police Bot';
+        $this->icon = ':warning:';
+        $this->user = $payload->getUserName();
 
-        $response = null;
+        $response = '*'.$this->user.'* has requested the discussion be moved to the ';
 
-        if ($payload->isChannel($payload->getText()) === true) {
-            $response = '*'.$payload->getUserName().'* has requested the discussion be moved to the *'.$payload->getText().'* channel!';
+        if (Payload::isChannel($payload->getText()) === true) {
+            $response .= '*'.$payload->getText().'* channel!';
         } else {
-            $response = '*'.$payload->getUserName().'* has requested the discussion be moved to the appropriate channel.';
+            $response .= 'appropriate channel.';
         }
 
-        $responder = new Responder(new Post($this->_name, $this->_icon, $response, $payload->getChannelName(), true));
+        $responder = new Responder(new Post($this->name, $this->icon, $response, $payload->getChannelName(), true));
         $responder->respond();
 
     }//end __construct()

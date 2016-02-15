@@ -24,20 +24,6 @@
 class TriggerBot
 {
 
-    /**
-     * The name of the Bot
-     *
-     * @var string
-     */
-    private $_name = 'Trigger Bot';
-
-    /**
-     * The icon to represent the bot
-     *
-     * @var string
-     */
-    private $_icon = ':bangbang:';
-
 
     /**
      * TriggerBot constructor.
@@ -46,16 +32,17 @@ class TriggerBot
      */
     public function __construct($payload)
     {
+        $this->name = 'Trigger Bot';
+        $this->icon = ':bangbang:';
+        $this->user = $payload->getUserName();
 
-        $response = null;
+        $response = '*'.$payload->getUserName().'* has been triggered';
 
-        if ($payload->isUserName($payload->getText()) === true) {
-            $response = '*'.$payload->getUserName().'* has been triggered by *'.$payload->getText().'*!';
-        } else {
-            $response = '*'.$payload->getUserName().'* has been triggered!';
+        if (Payload::isUserName($payload->getText()) === true) {
+            $response .= ' *'.$payload->getText().'*!';
         }
 
-        $responder = new Responder(new Post($this->_name, $this->_icon, $response, $payload->getChannelName(), true));
+        $responder = new Responder(new Post($this->name, $this->icon, $response, $payload->getChannelName(), true));
         $responder->respond();
 
     }//end __construct()
