@@ -23,12 +23,20 @@ There are several base includes that all scripts will use to parse and send resp
 * Responder
 * Payload
 * DataSource
+* Bot
 
-All configuration is stored in `config.php` in the root directory to allow for storage of passwords and configuration information. Each of the above classes seeks the specific configuration information and verifies the apporpriate credentials are available.
+All configuration is stored in `config.php` in the root directory to allow for storage of environment passwords and configuration information. Each of the above classes seeks the specific configuration information and verifies the apporpriate credentials are available.
 
 Currently, there are two variations of OAuth, one which specifies the Slack OAuth for handling integration requests and the second is for the Subreddit Bot which handles access to the Reddit API.
 
 ## Functionality
+
+## Bot
+The Bot class contains the basic fields required for a bot and a few additional methods. These include:
+* `verifyToken()`
+  * Verify the payload token is the correct one provided by Slack for verification
+* `sortUserList()`
+  * Sort the user document based on the given field
 
 ### Payload
 The ProcessPayload class will take the incoming slack command and return a class that is made available to the script. This class has several setters and getters that allow the user to retrieve and manipulate data associated with the payload. In addition, there are verification checks here to validate usernames ot channel names in the slack command arguments.
@@ -69,3 +77,6 @@ Several example response are included in the scripts directory which demonstrate
   * Tip users with points that accumulate over time
 * DKP Bot
   * Give (or take) DKP from users and maintain their total over time
+* Sarcasm
+  * Make it obvious you weren't serious because someone thought you were
+  
