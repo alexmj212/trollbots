@@ -22,7 +22,7 @@
  * @link     https://github.com/alexmj212/trollbots
  */
 
-class TipBot
+class TipBot extends Bot
 {
 
 

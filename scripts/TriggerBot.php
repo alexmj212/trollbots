@@ -21,7 +21,7 @@
  * @license  http://opensource.org/licenses/GPL-3.0 GPL 3.0
  * @link     https://github.com/alexmj212/trollbots
  */
-class TriggerBot
+class TriggerBot extends Bot
 {
 
 
