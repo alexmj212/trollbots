@@ -97,4 +97,35 @@ class Bot
     }//end getCollectionName()
 
 
+    /**
+     * Sort user list by given field
+     *
+     * @param array  $users the given arrays of users
+     * @param string $field the field that will be used for sorting
+     * @param int    $order the order of sorting, true = asc, false = desc
+     *
+     * @return array
+     */
+    public static function sortUserList($users, $field, $order)
+    {
+        // Convert user array if needed.
+        if (is_array($users) !== true) {
+            $users = (array) $users;
+        }
+
+        $sortField = array();
+
+        // Preserve array field for sorting.
+        foreach ($users as $username => $user) {
+            $sortField[] = $user[$field];
+        }
+
+        // Perform sort on field.
+        array_multisort($sortField, $order, $users);
+
+        return $users;
+
+    }//end sortUserList()
+
+
 }//end class

@@ -76,4 +76,51 @@ class BotTest extends PHPUnit_Framework_TestCase
     }//end providerTestVerifyToken()
 
 
+    /**
+     * Test sorting algorithm
+     *
+     * @param array $original the unsorted array
+     * @param array $expected the sorted array to test against
+     *
+     * @dataProvider providerTestSortUserList
+     *
+     * @return void
+     */
+    public function testSortUserList($original, $expected)
+    {
+
+        $result = Bot::sortUserList($original, 'number', SORT_DESC);
+
+        static::assertEquals($result, $expected);
+
+    }//end testSortUserList()
+
+
+    /**
+     * Provide data for testing user sorting
+     *
+     * @return array
+     */
+    public function providerTestSortUserList()
+    {
+        return array(
+                array(
+                 // Provided.
+                 array(
+                  '@slackbot1' => array('number' => 2),
+                  '@slackbot2' => array('number' => 3),
+                  '@slackbot3' => array('number' => 1),
+                 ),
+                 // Expected.
+                 array(
+                  '@slackbot2' => array('number' => 3),
+                  '@slackbot1' => array('number' => 2),
+                  '@slackbot3' => array('number' => 1),
+                 ),
+                ),
+               );
+
+    }//end providerTestSortUserList()
+
+
 }//end class
