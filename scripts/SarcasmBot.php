@@ -21,22 +21,8 @@
  * @license  http://opensource.org/licenses/GPL-3.0 GPL 3.0
  * @link     https://github.com/alexmj212/trollbots
  */
-class SarcasmBot
+class SarcasmBot extends Bot
 {
-
-    /**
-     * The name of the Bot
-     *
-     * @var string
-     */
-    private $_name = 'Sarcasm Bot';
-
-    /**
-     * The icon to represent the bot
-     *
-     * @var string
-     */
-    private $_icon = ':upside_down_face::';
 
 
     /**
@@ -47,10 +33,14 @@ class SarcasmBot
     public function __construct($payload)
     {
 
-        $response  = '*'.$payload->getUserName().'* would like you to know that they are being ';
+        $this->name = 'Sarcasm Bot';
+        $this->icon = ':upside_down_face:';
+        $this->user = $payload->getUserName();
+
+        $response  = '*'.$this->user.'* would like you to know that they are being ';
         $response .= 'deliberately sarcastic and that their statement isn\'t meant to be taken literally.';
 
-        $responder = new Responder(new Post($this->_name, $this->_icon, $response, $payload->getChannelName(), true));
+        $responder = new Responder(new Post($this->name, $this->icon, $response, $payload->getChannelName(), true));
         $responder->respond();
 
     }//end __construct()

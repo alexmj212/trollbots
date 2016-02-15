@@ -20,29 +20,8 @@
  * @license  http://opensource.org/licenses/GPL-3.0 GPL 3.0
  * @link     https://github.com/alexmj212/trollbots
  */
-class DKPBot
+class DKPBot extends Bot
 {
-
-    /**
-     * The name of the bot
-     *
-     * @var string
-     */
-    private $_name = 'DKP Bot';
-
-    /**
-     * The icon to represent the bot
-     *
-     * @var string
-     */
-    private $_icon = ':dragon_face:';
-
-    /**
-     * The user receiving or giving the dkp
-     *
-     * @var
-     */
-    private $_user;
 
     /**
      * The ID of the team
@@ -50,13 +29,6 @@ class DKPBot
      * @var int
      */
     private $_points;
-
-    /**
-     * The name of the bots collection
-     *
-     * @var string
-     */
-    private $_collectionName = 'dkpbot';
 
 
     /**
@@ -67,13 +39,17 @@ class DKPBot
     public function __construct($payload)
     {
 
+        $this->name           = 'DKP Bot';
+        $this->icon           = ':dragon_face:';
+        $this->collectionName = 'dkpbot';
+
         $post = null;
 
-        $this->_teamId = $payload->getTeamId();
+        $this->teamId = $payload->getTeamId();
 
         $userPoints = explode(' ', $payload->getText());
         if (count($userPoints) === 2) {
-            $this->_user   = $userPoints[0];
+            $this->user    = $userPoints[0];
             $this->_points = (int) $userPoints[1];
         }
 
@@ -81,31 +57,32 @@ class DKPBot
             && $this->_points >= -10
             && $this->_points !== 0
             && $this->_points <= 10
-            && Payload::isUserName($this->_user) === true
+            && Payload::isUserName($this->user) === true
         ) {
-            if ($this->_user === $payload->getUserName()) {
+            if ($this->user === $payload->getUserName()) {
                 $this->_points = (0 - $this->_points);
                 $this->_logDKP();
                 $response  = '*'.$payload->getUserName().'* has attempted to grant themselves DKP ';
                 $response .= 'but instead receives -'.abs($this->_points).'DKP';
-                $response .= '\n'.$this->_user.' now has '.$this->_retrieveDKP($this->_user).'DKP';
+                $response .= '\n'.$this->user.' now has '.$this->_retrieveDKP($this->user).'DKP';
 
-                $post = new Post($this->_name, $this->_icon, $response, $payload->getChannelName(), true);
+                $post = new Post($this->name, $this->icon, $response, $payload->getChannelName(), true);
             } else {
                 $this->_logDKP();
-                $response  = '*'.$payload->getUserName().'* has given *'.$this->_user.'* '.$this->_points.'DKP';
-                $response .= '\n'.$this->_user.' now has '.$this->_retrieveDKP($this->_user).'DKP';
+                $response  = '*'.$payload->getUserName().'* has given *'.$this->user.'* '.$this->_points.'DKP';
+                $response .= '\n'.$this->user.' now has '.$this->_retrieveDKP($this->user).'DKP';
 
-                $post = new Post($this->_name, $this->_icon, $response, $payload->getChannelName(), true);
+                $post = new Post($this->name, $this->icon, $response, $payload->getChannelName(), true);
             }
         } else if ($payload->getText() === 'score') {
-            $response = 'You have '.$this->_retrieveDKP($payload->getUserName()).'DKP';
+            $response = 'You have '.$this->_retrieveDKP($payload->getUserName()).' DKP';
 
-            $post = new Post($this->_name, $this->_icon, $response, $payload->getChannelName(), false);
+            $post = new Post($this->name, $this->icon, $response, $payload->getChannelName(), false);
         } else if ($payload->getText() === 'rank') {
-            $post = new Post($this->_name, $this->_icon, $this->_ranking(), $payload->getChannelName(), false);
+            $post = new Post($this->name, $this->icon, '', $payload->getChannelName(), false);
+            $post->addAttachment($this->_ranking());
         } else {
-            $post = new Post($this->_name, $this->_icon, 'Invalid command', $payload->getChannelName(), false);
+            $post = new Post($this->name, $this->icon, 'Invalid command', $payload->getChannelName(), false);
         }//end if
 
         $responder = new Responder($post);
@@ -124,52 +101,56 @@ class DKPBot
 
         date_default_timezone_set('UTC');
         // Retrieve the database collection.
-        $database = new DataSource($this->_collectionName);
+        $database = new DataSource($this->collectionName);
         // Get the database collection.
         $collection = $database->getCollection();
         // Retrieve the punbot document.
-        $document = $database->retrieveDocument($this->_teamId);
+        $document = $database->retrieveDocument($this->teamId);
 
         // Does this team exist?
-        if (is_array($document) === true && array_key_exists('users', $document) === true) {
+        if ($document !== null
+            && property_exists($document, 'team_id') === true
+            && $document->team_id === $this->teamId
+            && property_exists($document, 'users') === true
+        ) {
             // Yes this team exists.
-            $users = $document['users'];
+            $users = $document->users;
             // Does this user exist?
-            if (array_key_exists($this->_user, $users) === true) {
+            if (array_key_exists($this->user, $users) === true) {
                 // Yes this user exists.
-                $users[$this->_user]['dkp'] += $this->_points;
-                $users[$this->_user]['last_received_date'] = date('Y-m-d H:i:s');
+                $users[$this->user]['dkp'] += $this->_points;
+                $users[$this->user]['last_received_date'] = date('Y-m-d H:i:s');
             } else {
                 // No, add this user, start them at 500.
-                $users[$this->_user]['dkp']     = (500 + $this->_points);
-                $users[$this->_user]['created'] = date('Y-m-d H:i:s');
-                $users[$this->_user]['last_received_date'] = date('Y-m-d H:i:s');
+                $users[$this->user]['dkp']     = (500 + $this->_points);
+                $users[$this->user]['created'] = date('Y-m-d H:i:s');
+                $users[$this->user]['last_received_date'] = date('Y-m-d H:i:s');
             }
 
-            // Save the user document.
-            $document['users'] = $users;
+            // Save the new information.
+            $document->users = $users;
             // Publish update to datasource.
             try {
-                $collection->update(array('team_id' => $this->_teamId), $document);
+                $collection->updateOne(array('team_id' => $this->teamId), array('$set' => $document));
             } catch (MongoCursorException $e){
-                echo '\'Unable to update user \'.$this->_user.\' with team \'.$this->_teamId: '.$e->getMessage();
+                echo 'Unable to update user '.$this->user.' with team '.$this->teamId.': '.$e->getMessage();
             }
         } else {
             // No, this team doesn't exist.
             $team = array(
-                     'team_id' => $this->_teamId,
+                     'team_id' => $this->teamId,
                      'users'   => array(
-                                   $this->_user => array(
-                                                    'rating'             => 500 + $this->_points,
-                                                    'created'            => date('Y-m-d H:i:s'),
-                                                    'last_received_date' => date('Y-m-d H:i:s'),
-                                                   ),
+                                   $this->user => array(
+                                                   'dkp   '             => 500 + $this->_points,
+                                                   'created'            => date('Y-m-d H:i:s'),
+                                                   'last_received_date' => date('Y-m-d H:i:s'),
+                                                  ),
                                   ),
                     );
             try {
-                $collection->insert($team);
+                $collection->insertOne($team);
             } catch (MongoException $e){
-                echo '\'Unable to insert team '.$this->_teamId.': '.$e->getMessage();
+                echo '\'Unable to insert team '.$this->teamId.': '.$e->getMessage();
             }
         }//end if
 
@@ -185,31 +166,24 @@ class DKPBot
     {
         date_default_timezone_set('UTC');
         // Retrieve the database collection.
-        $database = new DataSource($this->_collectionName);
+        $database = new DataSource($this->collectionName);
         // Retrieve the dkpbot document.
-        $document = $database->retrieveDocument($this->_teamId);
+        $document = $database->retrieveDocument($this->teamId);
 
-        // Preserve array keys for sorting.
-        foreach ($document['users'] as $username => $user) {
-            $document['users'][$username]['username'] = $username;
+        $document->users = Bot::sortUserList($document->users, 'dkp', SORT_DESC);
+
+        $attachment = array(
+                       'title' => 'DKP Leaderboard',
+                       'text'  => '',
+                      );
+
+        foreach ($document->users as $user => $data) {
+            $attachment['text'] .= $user.' - ';
+            $attachment['text'] .= $data['dkp'].' DKP'.PHP_EOL;
         }
 
-        // Sort in desc by DKP.
-        usort(
-            $document['users'],
-            function ($a, $b) {
-                return ($b['dkp'] - $a['dkp']);
-            }
-        );
-
-        $leaderBoard = '*DKP Leaderboard*\n';
-        foreach ($document['users'] as $user) {
-            $leaderBoard .= $user['dkp'].' DKP\t\t';
-            $leaderBoard .= '\n';
-        }
-
-        $leaderBoard .= 'If you\'re not listed, you\'ve not received DKP';
-        return $leaderBoard;
+        $attachment['pretext'] = 'If you\'re not listed, you\'ve not received DKP';
+        return $attachment;
 
     }//end _ranking()
 
@@ -225,17 +199,23 @@ class DKPBot
     {
         if ($user === null) {
             // Verify user was supplied, otherwise use command user.
-            $user = $this->_user;
+            $user = $this->user;
         }
 
         date_default_timezone_set('UTC');
         // Retrieve the database collection.
-        $database = new DataSource($this->_collectionName);
+        $database = new DataSource($this->collectionName);
         // Retrieve the dkpbot document.
-        $document = $database->retrieveDocument($this->_teamId);
+        $document = $database->retrieveDocument($this->teamId);
 
-        if (is_array($document) === true && array_key_exists($this->_user, $document['users']) === true) {
-            return $document['users'][$user]['dkp'];
+        // Does this team exist?
+        if ($document !== null
+            && property_exists($document, 'team_id') === true
+            && $document->team_id === $this->teamId
+            && property_exists($document, 'users') === true
+            && property_exists($document->users, $user) === true
+        ) {
+            return $document->users[$user]['dkp'];
         } else {
             return 500;
         }

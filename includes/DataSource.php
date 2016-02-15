@@ -64,21 +64,21 @@ class DataSource
     /**
      * Mongo connection placeholder
      *
-     * @var Mongo
+     * @var MongoDB\Client
      */
     private $_mongo_connection;
 
     /**
      * Mongo database instance class
      *
-     * @var MongoDB
+     * @var MongoDB\Database
      */
     private $_mongo_dbo;
 
     /**
      * Mongo database collection
      *
-     * @var MongoCollection
+     * @var MongoDB\Collection
      */
     private $_mongo_collection;
 
@@ -221,7 +221,7 @@ class DataSource
     /**
      * Return the database collection
      *
-     * @return MongoCollection
+     * @return MongoDB\Collection
      */
     public function getCollection()
     {
@@ -236,7 +236,7 @@ class DataSource
      *
      * @param string $collectionName the name of the collection to retrieve
      *
-     * @return MongoCollection
+     * @return MongoDB\Collection
      * @throws ErrorException
      */
     private function _retrieveCollection($collectionName = null)
@@ -263,31 +263,16 @@ class DataSource
      *
      * @param string $teamId the Id of the team
      *
-     * TODO: Unit test return type.
-     *
-     * @return array
-     * @throws MongoConnectionException
+     * @return mixed
      */
     public function retrieveDocument($teamId)
     {
 
         $document = null;
 
-        try {
-            $document = $this->_mongo_collection->findOne(array('team_id' => $teamId));
-            if ($document === false) {
-                throw new MongoConnectionException('Team '.$teamId.' does not exist or was not created.');
-            }
+        $document = $this->_mongo_collection->findOne(array('team_id' => $teamId));
 
-            if ($document === null) {
-                throw new MongoConnectionException('Unable to search for team '.$teamId);
-            }
-
-            return $document;
-        } catch (MongoConnectionException $e){
-            echo 'Mongo Connection Exception: '.$e->getMessage();
-            exit();
-        }
+        return $document;
 
     }//end retrieveDocument()
 

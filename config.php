@@ -11,6 +11,9 @@
  * @link     https://github.com/alexmj212/trollbots
  */
 
+// Set Environment. Options: {test,prod}.
+putenv('env=test');
+
 if (file_exists(__DIR__.'/environment/environment.php') === true) {
     include __DIR__.'/environment/environment.php';
 }

@@ -13,6 +13,7 @@
  */
 
 require 'vendor/autoload.php';
+require 'includes/Bot.php';
 require 'includes/Post.php';
 require 'includes/Payload.php';
 require 'includes/Responder.php';
@@ -34,7 +35,7 @@ $app->get(
     '/',
     function () {
         header('Location: http://alexmj212.github.io/trollbots/');
-        die();
+        exit();
     }
 );
 
