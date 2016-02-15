@@ -75,7 +75,7 @@ class DKPBot extends Bot
                 $post = new Post($this->name, $this->icon, $response, $payload->getChannelName(), true);
             }
         } else if ($payload->getText() === 'score') {
-            $response = 'You have '.$this->_retrieveDKP($payload->getUserName()).'DKP';
+            $response = 'You have '.$this->_retrieveDKP($payload->getUserName()).' DKP';
 
             $post = new Post($this->name, $this->icon, $response, $payload->getChannelName(), false);
         } else if ($payload->getText() === 'rank') {
@@ -213,6 +213,7 @@ class DKPBot extends Bot
             && property_exists($document, 'team_id') === true
             && $document->team_id === $this->teamId
             && property_exists($document, 'users') === true
+            && property_exists($document->users, $user) === true
         ) {
             return $document->users[$user]['dkp'];
         } else {
