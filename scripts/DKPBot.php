@@ -60,7 +60,7 @@ class DKPBot extends Bot
             && Payload::isUserName($this->user) === true
         ) {
             if ($this->user === $payload->getUserName()) {
-                $this->_points = (0 - $this->_points);
+                $this->_points = (0 - abs($this->_points));
                 $this->_logDKP();
                 $response  = '*'.$payload->getUserName().'* has attempted to grant themselves DKP ';
                 $response .= 'but instead receives -'.abs($this->_points).'DKP';
