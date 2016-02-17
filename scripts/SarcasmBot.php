@@ -39,7 +39,7 @@ class SarcasmBot extends Bot
 
         $response = null;
 
-        $post = new Post($this->name, $this->icon, 'blah', $payload->getChannelName(), true);
+        $post = new Post($this->name, $this->icon, '', $payload->getChannelName(), true);
 
         switch(rand(0, 2)){
         case 0:
@@ -53,13 +53,13 @@ class SarcasmBot extends Bot
             break;
         case 2:
             $attachment = array(
-                           'pretext'    => 'According to Merriam-Webster',
+                           'pretext'    => 'According to Merriam-Webster,',
                            'title'      => 'sarcasm',
                            'title_link' => 'http://www.merriam-webster.com/dictionary/sarcasm',
                            'fallback'   => 'http://www.merriam-webster.com/dictionary/sarcasm',
                           );
 
-            $attachment['text']  = 'noun - sar·casm - \ˈsär-ˌka-zəm\\'.PHP_EOL;
+            $attachment['text']  = '_noun - sar·casm - \ˈsär-ˌka-zəm\\_'.PHP_EOL;
             $attachment['text'] .= 'the use of words that mean the opposite of what you ';
             $attachment['text'] .= 'really want to say especially in order to insult someone, ';
             $attachment['text'] .= 'to show irritation, or to be funny';
