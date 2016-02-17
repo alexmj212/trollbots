@@ -193,6 +193,18 @@ class Payload
 
 
     /**
+     * Get the token of the payload
+     *
+     * @return string
+     */
+    public function getToken()
+    {
+        return $this->_token;
+
+    }//end getToken()
+
+
+    /**
      * Check if the text contains a valid username
      *
      * @param string $user the given user
