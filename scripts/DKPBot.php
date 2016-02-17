@@ -64,13 +64,13 @@ class DKPBot extends Bot
                 $this->_logDKP();
                 $response  = '*'.$payload->getUserName().'* has attempted to grant themselves DKP ';
                 $response .= 'but instead receives -'.abs($this->_points).'DKP';
-                $response .= '\n'.$this->user.' now has '.$this->_retrieveDKP($this->user).'DKP';
+                $response .= PHP_EOL.$this->user.' now has '.$this->_retrieveDKP($this->user).'DKP';
 
                 $post = new Post($this->name, $this->icon, $response, $payload->getChannelName(), true);
             } else {
                 $this->_logDKP();
                 $response  = '*'.$payload->getUserName().'* has given *'.$this->user.'* '.$this->_points.'DKP';
-                $response .= '\n'.$this->user.' now has '.$this->_retrieveDKP($this->user).'DKP';
+                $response .= PHP_EOL.$this->user.' now has '.$this->_retrieveDKP($this->user).'DKP';
 
                 $post = new Post($this->name, $this->icon, $response, $payload->getChannelName(), true);
             }
@@ -82,7 +82,7 @@ class DKPBot extends Bot
             $post = new Post($this->name, $this->icon, '', $payload->getChannelName(), false);
             $post->addAttachment($this->_ranking());
         } else {
-            $post = new Post($this->name, $this->icon, 'Invalid command', $payload->getChannelName(), false);
+            $post = new Post($this->name, $this->icon, Post::INVALID_COMMAND, $payload->getChannelName(), false);
         }//end if
 
         $responder = new Responder($post);
