@@ -80,7 +80,7 @@ class PunBot extends Bot
             $post = new Post($this->name, $this->icon, $response, $payload->getChannelName(), false);
         } else {
             // Invalid command.
-            $post = new Post($this->name, $this->icon, 'Invalid Command', $payload->getChannelName(), false);
+            $post = new Post($this->name, $this->icon, Post::INVALID_COMMAND, $payload->getChannelName(), false);
         }
 
         $responder = new Responder($post);

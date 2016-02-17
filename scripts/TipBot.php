@@ -75,7 +75,7 @@ class TipBot extends Bot
             $post = new Post($this->name, $this->icon, $response, $payload->getChannelName(), false);
         } else {
             // No matching commands, return invalid.
-            $post = new Post($this->name, $this->icon, 'Invalid command', $payload->getChannelName(), false);
+            $post = new Post($this->name, $this->icon, Post::INVALID_COMMAND, $payload->getChannelName(), false);
         }//end if
 
         // Submit the response.
