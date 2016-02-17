@@ -12,13 +12,13 @@
  * @link     https://github.com/alexmj212/trollbots
  */
 
-require 'vendor/autoload.php';
-require 'includes/Bot.php';
-require 'includes/Post.php';
-require 'includes/Payload.php';
-require 'includes/Responder.php';
-require 'includes/DataSource.php';
-require 'includes/OAuth_Slack.php';
+require __DIR__.'vendor/autoload.php';
+require __DIR__.'includes/Bot.php';
+require __DIR__.'includes/Post.php';
+require __DIR__.'includes/Payload.php';
+require __DIR__.'includes/Responder.php';
+require __DIR__.'includes/DataSource.php';
+require __DIR__.'includes/OAuth_Slack.php';
 foreach (glob('scripts/*.php') as $filename) {
     include $filename;
 }
@@ -55,7 +55,12 @@ $app->get(
 $app->post(
     '/tipbot/',
     function () use ($app) {
-        $tipbot = new TipBot(new Payload($app->request->post()));
+        $payload = new Payload($app->request->post());
+        if (Bot::verifyToken('tipbot', $payload->getToken()) === true) {
+            $tipbot = new TipBot(new Payload($app->request->post()));
+        } else {
+            echo Post::INVALID_TOKEN;
+        }
     }
 );
 
@@ -63,7 +68,12 @@ $app->post(
 $app->post(
     '/triggerbot/',
     function () use ($app) {
-        $triggerbot = new TriggerBot(new Payload($app->request->post()));
+        $payload = new Payload($app->request->post());
+        if (Bot::verifyToken('triggerbot', $payload->getToken()) === true) {
+            $triggerbot = new TriggerBot(new Payload($app->request->post()));
+        } else {
+            echo Post::INVALID_TOKEN;
+        }
     }
 );
 
@@ -71,7 +81,12 @@ $app->post(
 $app->post(
     '/channelpolicebot/',
     function () use ($app) {
-        $channelpolicebot = new ChannelPoliceBot(new Payload($app->request->post()));
+        $payload = new Payload($app->request->post());
+        if (Bot::verifyToken('channelpolicebot', $payload->getToken()) === true) {
+            $channelpolicebot = new ChannelPoliceBot(new Payload($app->request->post()));
+        } else {
+            echo Post::INVALID_TOKEN;
+        }
     }
 );
 
@@ -79,7 +94,12 @@ $app->post(
 $app->post(
     '/punbot/',
     function () use ($app) {
-        $punbot = new PunBot(new Payload($app->request->post()));
+        $payload = new Payload($app->request->post());
+        if (Bot::verifyToken('punbot', $payload->getToken()) === true) {
+            $punbot = new PunBot(new Payload($app->request->post()));
+        } else {
+            echo Post::INVALID_TOKEN;
+        }
     }
 );
 
@@ -87,7 +107,12 @@ $app->post(
 $app->post(
     '/dkpbot/',
     function () use ($app) {
-        $dkpbot = new DKPBot(new Payload($app->request->post()));
+        $payload = new Payload($app->request->post());
+        if (Bot::verifyToken('dkpbot', $payload->getToken()) === true) {
+            $dkpbot = new DKPBot(new Payload($app->request->post()));
+        } else {
+            echo Post::INVALID_TOKEN;
+        }
     }
 );
 
@@ -95,7 +120,12 @@ $app->post(
 $app->post(
     '/sarcasmbot/',
     function () use ($app) {
-        $sarcasmbot = new SarcasmBot(new Payload($app->request->post()));
+        $payload = new Payload($app->request->post());
+        if (Bot::verifyToken('sarcasmbot', $payload->getToken()) === true) {
+            $sarcasmbot = new SarcasmBot(new Payload($app->request->post()));
+        } else {
+            echo Post::INVALID_TOKEN;
+        }
     }
 );
 
