@@ -25,6 +25,9 @@
 class Post
 {
 
+    const INVALID_COMMAND = 'Invalid Command';
+    const INVALID_TOKEN   = 'Invalid Token';
+
     /**
      * Name that will appear on the Slack post
      *
@@ -133,6 +136,20 @@ class Post
 
 
     /**
+     * Set the post text
+     *
+     * @param string $text the post text
+     *
+     * @return void
+     */
+    public function setText($text)
+    {
+        $this->_text = $text;
+
+    }//end setText()
+
+
+    /**
      * Function toString()
      *
      * @return string
@@ -145,7 +162,7 @@ class Post
                  'response_type' => $this->_responseType,
                 );
 
-        return json_encode($post, JSON_PRETTY_PRINT,JSON_UNESCAPED_UNICODE);
+        return json_encode($post, JSON_PRETTY_PRINT);
 
     }//end toString()
 
