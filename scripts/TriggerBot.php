@@ -40,7 +40,7 @@ class TriggerBot extends Bot
 
         if (Payload::isUserName($payload->getText()) === true) {
             $response .= ' *'.$payload->getText().'*!';
-        } else if ($payload->getText()) === 'warning') {
+        } else if ($payload->getText() === 'warning') {
             $response = 'TRIGGER WARNING';
         } else {
             $response = Post::INVALID_COMMAND;
