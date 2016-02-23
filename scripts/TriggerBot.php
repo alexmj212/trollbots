@@ -41,7 +41,7 @@ class TriggerBot extends Bot
         if (Payload::isUserName($payload->getText()) === true) {
             $response .= ' *'.$payload->getText().'*!';
         } else if ($payload->getText() === 'warning') {
-            $response = 'TRIGGER WARNING';
+            $response = ':heavy_exclamation_mark::heavy_exclamation_mark::heavy_exclamation_mark: :warning: :rotating_light: :warning: TRIGGER WARNING :warning: :rotating_light: :warning::heavy_exclamation_mark::heavy_exclamation_mark::heavy_exclamation_mark:';
         } else {
             $response = Post::INVALID_COMMAND;
         }
