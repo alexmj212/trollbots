@@ -33,13 +33,14 @@ class BotTest extends PHPUnit_Framework_TestCase
      * @param string $provided switch for post visibility
      * @param bool   $expected response type set
      *
+     * @covers Bot::verifyToken
+     *
      * @dataProvider providerTestVerifyToken
      *
      * @return void
      */
     public function testVerifyToken($provided, $expected)
     {
-
 
         static::assertEquals(Bot::verifyToken('test', $provided), $expected);
 
@@ -81,6 +82,8 @@ class BotTest extends PHPUnit_Framework_TestCase
      *
      * @param array $original the unsorted array
      * @param array $expected the sorted array to test against
+     *
+     * @covers Bot::sortUserList
      *
      * @dataProvider providerTestSortUserList
      *
