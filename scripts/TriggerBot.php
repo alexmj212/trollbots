@@ -43,8 +43,6 @@ class TriggerBot extends Bot
             $response .= ' *'.$payload->getText().'*!';
         } else if ($payload->getText() === 'warning') {
             $response = ':heavy_exclamation_mark::heavy_exclamation_mark::heavy_exclamation_mark: :warning: :rotating_light: :warning: TRIGGER WARNING :warning: :rotating_light: :warning::heavy_exclamation_mark::heavy_exclamation_mark::heavy_exclamation_mark:';
-        } else {
-            $response = Post::INVALID_COMMAND;
         }
 
         $responder = new Responder(new Post($this->name, $this->icon, $response, $payload->getChannelName(), POST::RESPONSE_IN_CHANNEL));
