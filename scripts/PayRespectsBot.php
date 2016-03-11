@@ -40,7 +40,7 @@ class PayRespectsBot extends Bot
         $response = '*'.$payload->getUserName().'* has paid their respects';
 
         if (Payload::isUserName($payload->getText()) === true) {
-            $response .= ' to *'.$payload->getText();
+            $response .= ' to *'.$payload->getText().'*';
         }
 
         $responder = new Responder(new Post($this->name, $this->icon, $response, $payload->getChannelName(), POST::RESPONSE_IN_CHANNEL));

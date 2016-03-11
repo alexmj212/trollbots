@@ -25,7 +25,7 @@ class DKPBot extends Bot
 
     const DKP_SELF_GRANT  = '*%s* has attempted to grant themselves DKP';
     const DKP_SELF_GRANT2 = 'but instead receives -%d DKP';
-    const DKP_NEW_COUNT   = '*%s* now has %d DKP';
+    const DKP_NEW_COUNT   = PHP_EOL.'*%s* now has %d DKP';
     const DKP_GRANT       = '*%s* has given *%s* %d DKP';
     const DKP_SCORE       = 'You have %s DKP';
 
