@@ -32,6 +32,7 @@ class ChannelPoliceBot extends Bot
      */
     public function __construct($payload)
     {
+        parent::__construct($payload);
         $this->name = 'Channel Police Bot';
         $this->icon = ':warning:';
         $this->user = $payload->getUserName();
@@ -44,7 +45,7 @@ class ChannelPoliceBot extends Bot
             $response .= 'appropriate channel.';
         }
 
-        $responder = new Responder(new Post($this->name, $this->icon, $response, $payload->getChannelName(), true));
+        $responder = new Responder(new Post($this->name, $this->icon, $response, $payload->getChannelName(), POST::RESPONSE_IN_CHANNEL));
         $responder->respond();
 
     }//end __construct()

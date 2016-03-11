@@ -23,6 +23,12 @@
 class DKPBot extends Bot
 {
 
+    const DKP_SELF_GRANT  = '*%s* has attempted to grant themselves DKP';
+    const DKP_SELF_GRANT2 = 'but instead receives -%d DKP';
+    const DKP_NEW_COUNT   = '*%s* now has %d DKP';
+    const DKP_GRANT       = '*%s* has given *%s* %d DKP';
+    const DKP_SCORE       = 'You have %s DKP';
+
     /**
      * The ID of the team
      *
@@ -32,22 +38,22 @@ class DKPBot extends Bot
 
 
     /**
-     * DKPBot constructor.
+     * DKPBot execute.
      *
-     * @param Payload $payload the payload data
+     * @return void
      */
-    public function __construct($payload)
+    public function execute()
     {
 
         $this->name           = 'DKP Bot';
         $this->icon           = ':dragon_face:';
         $this->collectionName = 'dkpbot';
 
-        $post = null;
+        $post = new Post($this->name, $this->icon, '', $this->payload->getChannelName());
 
-        $this->teamId = $payload->getTeamId();
+        $this->teamId = $this->payload->getTeamId();
 
-        $userPoints = explode(' ', $payload->getText());
+        $userPoints = explode(' ', $this->payload->getText());
         if (count($userPoints) === 2) {
             $this->user    = $userPoints[0];
             $this->_points = (int) $userPoints[1];
@@ -59,36 +65,34 @@ class DKPBot extends Bot
             && $this->_points <= 10
             && Payload::isUserName($this->user) === true
         ) {
-            if ($this->user === $payload->getUserName()) {
+            if ($this->user === $this->payload->getUserName()) {
                 $this->_points = (0 - abs($this->_points));
                 $this->_logDKP();
-                $response  = '*'.$payload->getUserName().'* has attempted to grant themselves DKP ';
-                $response .= 'but instead receives -'.abs($this->_points).'DKP';
-                $response .= PHP_EOL.$this->user.' now has '.$this->_retrieveDKP($this->user).'DKP';
-
-                $post = new Post($this->name, $this->icon, $response, $payload->getChannelName(), true);
+                $response  = sprintf(DKPBot::DKP_SELF_GRANT, $this->payload->getUserName());
+                $response .= sprintf(DKPBot::DKP_SELF_GRANT2, abs($this->_points));
+                $response .= sprintf(DKPBot::DKP_NEW_COUNT, $this->user, $this->_retrieveDKP($this->user));
+                $post->setText($response);
+                $post->setResponseType(Post::RESPONSE_IN_CHANNEL);
             } else {
                 $this->_logDKP();
-                $response  = '*'.$payload->getUserName().'* has given *'.$this->user.'* '.$this->_points.'DKP';
-                $response .= PHP_EOL.$this->user.' now has '.$this->_retrieveDKP($this->user).'DKP';
-
-                $post = new Post($this->name, $this->icon, $response, $payload->getChannelName(), true);
+                $response  = sprintf(DKPBot::DKP_GRANT, $this->payload->getUserName(), $this->user, $this->_points);
+                $response .= sprintf(DKPBot::DKP_NEW_COUNT, $this->user, $this->_retrieveDKP($this->user));
+                $post->setText($response);
+                $post->setResponseType(Post::RESPONSE_IN_CHANNEL);
             }
-        } else if ($payload->getText() === 'score') {
-            $response = 'You have '.$this->_retrieveDKP($payload->getUserName()).' DKP';
-
-            $post = new Post($this->name, $this->icon, $response, $payload->getChannelName(), false);
-        } else if ($payload->getText() === 'rank') {
-            $post = new Post($this->name, $this->icon, '', $payload->getChannelName(), false);
+        } else if ($this->payload->getText() === 'score') {
+            $response = sprintf(DKPBot::DKP_SCORE, $this->_retrieveDKP($this->payload->getUserName()));
+            $post->setText($response);
+        } else if ($this->payload->getText() === 'rank') {
             $post->addAttachment($this->_ranking());
         } else {
-            $post = new Post($this->name, $this->icon, Post::INVALID_COMMAND, $payload->getChannelName(), false);
+            $post->setText(Post::INVALID_COMMAND);
         }//end if
 
         $responder = new Responder($post);
         $responder->respond();
 
-    }//end __construct()
+    }//end execute()
 
 
     /**

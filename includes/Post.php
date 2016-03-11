@@ -25,8 +25,10 @@
 class Post
 {
 
-    const INVALID_COMMAND = 'Invalid Command';
-    const INVALID_TOKEN   = 'Invalid Token';
+    const INVALID_COMMAND     = 'Invalid Command';
+    const INVALID_TOKEN       = 'Invalid Token';
+    const RESPONSE_IN_CHANNEL = 'in_channel';
+    const RESPONSE_EPHEMERAL  = 'ephemeral';
 
     /**
      * Name that will appear on the Slack post
@@ -69,7 +71,7 @@ class Post
      *
      * @string
      */
-    private $_responseType = 'ephemeral';
+    private $_responseType = Post::RESPONSE_EPHEMERAL;
 
 
     /**
@@ -81,15 +83,15 @@ class Post
      * @param string $channel      The channel the post will appear
      * @param string $responseType The visibility of the post
      */
-    public function __construct($name, $icon, $text, $channel, $responseType)
+    public function __construct($name, $icon, $text, $channel, $responseType = null)
     {
         $this->_name    = $name;
         $this->_icon    = $icon;
         $this->_text    = $text;
         $this->_channel = $channel;
 
-        if ($responseType === true) {
-            $this->_responseType = 'in_channel';
+        if ($responseType !== null) {
+            $this->setResponseType($responseType);
         }
 
     }//end __construct()
@@ -121,6 +123,52 @@ class Post
         return $this->_responseType;
 
     }//end getResponseType()
+
+
+    /**
+     * Set Response Type based on provided flag, else switch the response type
+     *
+     * @param String $responseType the flag to change to response type
+     *
+     * @return String
+     */
+    public function setResponseType($responseType)
+    {
+
+        // Set the response type if provided.
+        if ($responseType === Post::RESPONSE_IN_CHANNEL) {
+            $this->_responseType = Post::RESPONSE_IN_CHANNEL;
+
+        } else if ($responseType === Post::RESPONSE_EPHEMERAL) {
+            $this->_responseType = Post::RESPONSE_EPHEMERAL;
+
+        }
+
+        return $this->_responseType;
+
+    }//end setResponseType()
+
+
+    /**
+     * Switch Response Type
+     *
+     * @return String
+     */
+    public function switchResponseType()
+    {
+
+        // Switch the responses if not provided.
+        if ($this->_responseType === Post::RESPONSE_IN_CHANNEL) {
+            $this->setResponseType(Post::RESPONSE_EPHEMERAL);
+
+        } else if ($this->_responseType === Post::RESPONSE_EPHEMERAL) {
+            $this->setResponseType(Post::RESPONSE_IN_CHANNEL);
+
+        }
+
+        return $this->_responseType;
+
+    }//end switchResponseType()
 
 
     /**

@@ -33,7 +33,7 @@ class TipBot extends Bot
      */
     public function __construct($payload)
     {
-
+        parent::__construct($payload);
         $this->name           = 'Tip Bot';
         $this->icon           = ':heavy_dollar_sign:';
         $this->collectionName = 'tipbot';
@@ -62,7 +62,7 @@ class TipBot extends Bot
                 $response  = '*'.$payload->getUserName().'* has tipped *'.$this->user.'*';
                 $response .= ' bringing their total to '.$this->_retrieveTips($this->user).' tips';
                 // Generate new Post.
-                $post = new Post($this->name, $this->icon, $response, $payload->getChannelName(), true);
+                $post = new Post($this->name, $this->icon, $response, $payload->getChannelName(), POST::RESPONSE_IN_CHANNEL);
             }
         } else if ($payload->getText() === 'total') {
             // Return the total number of tips of the requester.
@@ -72,10 +72,10 @@ class TipBot extends Bot
             // Build response.
             $response = 'You\'ve been tipped '.$total.' time(s)';
             // Generate new Post.
-            $post = new Post($this->name, $this->icon, $response, $payload->getChannelName(), false);
+            $post = new Post($this->name, $this->icon, $response, $payload->getChannelName(), POST::RESPONSE_EPHEMERAL);
         } else {
             // No matching commands, return invalid.
-            $post = new Post($this->name, $this->icon, Post::INVALID_COMMAND, $payload->getChannelName(), false);
+            $post = new Post($this->name, $this->icon, Post::INVALID_COMMAND, $payload->getChannelName(), POST::RESPONSE_EPHEMERAL);
         }//end if
 
         // Submit the response.

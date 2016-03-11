@@ -55,11 +55,11 @@ class PostTest extends PHPUnit_Framework_TestCase
     {
         return array(
                 array(
-                 false,
+                 POST::RESPONSE_EPHEMERAL,
                  'ephemeral',
                 ),
                 array(
-                 true,
+                 POST::RESPONSE_IN_CHANNEL,
                  'in_channel',
                 ),
                );
@@ -80,7 +80,7 @@ class PostTest extends PHPUnit_Framework_TestCase
     public function testAttachments($original, $expected)
     {
 
-        $post = new Post('Test', ':test:', 'test', '#channel', false);
+        $post = new Post('Test', ':test:', 'test', '#channel');
         foreach ($original as $attachment) {
             if (is_array($attachment) === true) {
                 $post->addAttachment($attachment);

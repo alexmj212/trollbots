@@ -32,6 +32,7 @@ class TriggerBot extends Bot
      */
     public function __construct($payload)
     {
+        parent::__construct($payload);
         $this->name = 'Trigger Bot';
         $this->icon = ':bangbang:';
         $this->user = $payload->getUserName();
@@ -46,7 +47,7 @@ class TriggerBot extends Bot
             $response = Post::INVALID_COMMAND;
         }
 
-        $responder = new Responder(new Post($this->name, $this->icon, $response, $payload->getChannelName(), true));
+        $responder = new Responder(new Post($this->name, $this->icon, $response, $payload->getChannelName(), POST::RESPONSE_IN_CHANNEL));
         $responder->respond();
 
     }//end __construct()

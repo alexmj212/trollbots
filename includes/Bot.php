@@ -60,6 +60,30 @@ class Bot
      */
     protected $collectionName;
 
+    /**
+     * The payload sent to the bot
+     *
+     * @var Payload
+     */
+    protected $payload;
+
+
+    /**
+     * Bot constructor.
+     *
+     * @param Payload $payload the sent payload
+     */
+    public function __construct($payload)
+    {
+
+        $this->payload = $payload;
+
+        if (method_exists($this, 'execute') === true) {
+            $this->execute();
+        }
+
+    }//end __construct()
+
 
     /**
      * Verify the request token
