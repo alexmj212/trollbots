@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ChannelPoliceBot.php
+ * PayRespectsBot.php
  *
  * PHP version 5
  *
@@ -13,7 +13,7 @@
  */
 
 /**
- * Class ChannelPoliceBot
+ * Class PayRespectsBot
  *
  * @category Bot
  * @package  TrollBots
@@ -21,28 +21,28 @@
  * @license  http://opensource.org/licenses/GPL-3.0 GPL 3.0
  * @link     https://github.com/alexmj212/trollbots
  */
-class ChannelPoliceBot extends Bot
+class PayRespectsBot extends Bot
 {
 
 
     /**
-     * ChannelPoliceBot constructor.
+     * TriggerBot constructor.
      *
      * @param Payload $payload the payload data
      */
     public function __construct($payload)
     {
         parent::__construct($payload);
-        $this->name = 'Channel Police Bot';
-        $this->icon = ':warning:';
+        $this->name = 'Pay Respects Bot';
+        $this->icon = ':bow:';
         $this->user = $payload->getUserName();
 
-        $response = '*'.$this->user.'* has requested the discussion be moved to the ';
+        $response = '*'.$payload->getUserName().'* has paid their respects';
 
-        if (Payload::isChannel($payload->getText()) === true) {
-            $response .= '*'.$payload->getText().'* channel!';
+        if (Payload::isUserName($payload->getText()) === true) {
+            $response .= ' to *'.$payload->getText();
         } else {
-            $response .= 'appropriate channel.';
+            $response = Post::INVALID_COMMAND;
         }
 
         $responder = new Responder(new Post($this->name, $this->icon, $response, $payload->getChannelName(), POST::RESPONSE_IN_CHANNEL));

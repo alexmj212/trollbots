@@ -41,6 +41,8 @@ class PunBot extends Bot
     public function __construct($payload)
     {
 
+        parent::__construct($payload);
+
         $this->name           = 'Pun Bot';
         $this->icon           = ':heavy_dollar_sign:';
         $this->collectionName = 'punbot';
@@ -71,16 +73,16 @@ class PunBot extends Bot
             $response  = '*'.$payload->getUserName().'* has rated *'.$this->user.'\'s* pun '.$this->_rating.'/10. ';
             $response .= 'Their average is now '.$this->_retrieveRating($this->user).'/10';
             // Store the Post.
-            $post = new Post($this->name, $this->icon, $response, $payload->getChannelName(), true);
+            $post = new Post($this->name, $this->icon, $response, $payload->getChannelName(), POST::RESPONSE_IN_CHANNEL);
         } else if ($payload->getText() === 'total') {
             // Build the requested "total" response string.
             $response  = 'You\'ve been rated '.$this->_retrieveRatingCount($payload->getUserName()).' times ';
             $response .= 'for an average of '.$this->_retrieveRating($payload->getUserName()).'/10';
             // Store the Post.
-            $post = new Post($this->name, $this->icon, $response, $payload->getChannelName(), false);
+            $post = new Post($this->name, $this->icon, $response, $payload->getChannelName(), POST::RESPONSE_EPHEMERAL);
         } else {
             // Invalid command.
-            $post = new Post($this->name, $this->icon, Post::INVALID_COMMAND, $payload->getChannelName(), false);
+            $post = new Post($this->name, $this->icon, Post::INVALID_COMMAND, $payload->getChannelName(), POST::RESPONSE_EPHEMERAL);
         }
 
         $responder = new Responder($post);

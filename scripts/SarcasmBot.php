@@ -32,14 +32,14 @@ class SarcasmBot extends Bot
      */
     public function __construct($payload)
     {
-
+        parent::__construct($payload);
         $this->name = 'Sarcasm Bot';
         $this->icon = ':upside_down_face:';
         $this->user = $payload->getUserName();
 
         $response = null;
 
-        $post = new Post($this->name, $this->icon, '', $payload->getChannelName(), true);
+        $post = new Post($this->name, $this->icon, '', $payload->getChannelName(), POST::RESPONSE_IN_CHANNEL);
 
         switch(rand(0, 2)){
         case 0:

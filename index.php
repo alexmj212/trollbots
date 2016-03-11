@@ -129,5 +129,18 @@ $app->post(
     }
 );
 
+// Define 'payrespectsbot' endpoint.
+$app->post(
+    '/payrespectsbot/',
+    function () use ($app) {
+        $payload = new Payload($app->request->post());
+        if (Bot::verifyToken('payrespectsbot', $payload->getToken()) === true) {
+            $sarcasmbot = new PayRespectsBot($payload);
+        } else {
+            echo Post::INVALID_TOKEN;
+        }
+    }
+);
+
 // Run the app.
 $app->run();
