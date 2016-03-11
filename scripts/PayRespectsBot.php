@@ -41,8 +41,6 @@ class PayRespectsBot extends Bot
 
         if (Payload::isUserName($payload->getText()) === true) {
             $response .= ' to *'.$payload->getText();
-        } else {
-            $response = Post::INVALID_COMMAND;
         }
 
         $responder = new Responder(new Post($this->name, $this->icon, $response, $payload->getChannelName(), POST::RESPONSE_IN_CHANNEL));
