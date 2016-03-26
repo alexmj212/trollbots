@@ -82,6 +82,13 @@ class DataSource
      */
     private $_mongo_collection;
 
+    /**
+     * Mongo database collection name
+     *
+     * @var string
+     */
+    private $_mongo_collectionName;
+
 
     /**
      * Grab configuration data
@@ -166,7 +173,8 @@ class DataSource
 
         // Set the collection name if provided.
         if ($collectionName !== null) {
-            $this->_mongo_collection = $this->_retrieveCollection($collectionName);
+            $this->_mongo_collectionName = $collectionName;
+            $this->_mongo_collection     = $this->_retrieveCollection($collectionName);
         }
 
     }//end __construct()
@@ -226,7 +234,22 @@ class DataSource
     public function getCollection()
     {
 
-        return $this->_mongo_collection;
+        if ($this->_mongo_collection !== null) {
+            return $this->_mongo_collection;
+        }
+
+        try {
+            $this->connect();
+            $collection = $this->_mongo_dbo->selectCollection($this->_mongo_collectionName);
+            if ($collection === null) {
+                throw new ErrorException('Unable to retrieve collection');
+            }
+        } catch (Exception $e) {
+            echo 'Log '.$this->_mongo_collectionName.' Error: ', $e->getMessage(), '\n';
+            exit;
+        }
+
+        return $collection;
 
     }//end getCollection()
 

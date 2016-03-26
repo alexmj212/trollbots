@@ -122,6 +122,51 @@ class Bot
 
 
     /**
+     * Retrieve the list of Users from the bot's storage
+     *
+     * @return mixed
+     * @throws ErrorException
+     */
+    public function retrieveUserList()
+    {
+        date_default_timezone_set('UTC');
+        // Retrieve the database collection.
+        $database = new DataSource($this->collectionName);
+        // Retrieve the dkpbot document.
+        $document = $database->retrieveDocument($this->teamId);
+
+        // Does this team exist?
+        if ($document !== null
+            && property_exists($document, 'team_id') === true
+            && $document->team_id === $this->teamId
+            && property_exists($document, 'users') === true
+        ) {
+            return $document->users;
+        } else {
+            return null;
+        }
+
+    }//end retrieveUserList()
+
+
+    /**
+     * Verify user exists in document
+     *
+     * @param string $userName the name of the user to verify
+     *
+     * @return bool
+     * @throws ErrorException
+     */
+    public function userExists($userName)
+    {
+
+        $userList = $this->retrieveUserList();
+        return array_key_exists($userName, $userList);
+
+    }//end userExists()
+
+
+    /**
      * Sort user list by given field
      *
      * @param array  $users the given arrays of users
@@ -150,6 +195,28 @@ class Bot
         return $users;
 
     }//end sortUserList()
+
+
+    /**
+     * Updates the specified user
+     *
+     * @param string $teamId  the id of the team
+     * @param array  $userDoc the document associated with the user
+     *
+     * @return void
+     * @throws ErrorException
+     */
+    public function updateUser($teamId, $userDoc)
+    {
+        $collection = new DataSource($this->collectionName);
+        $collection = $collection->getCollection();
+        try {
+            $collection->updateOne(array('team_id' => $this->teamId), array('$set' => $userDoc));
+        } catch (MongoCursorException $e){
+            echo 'Unable to update user '.$this->user.' with team '.$this->teamId.': '.$e->getMessage();
+        }
+
+    }//end updateUser()
 
 
 }//end class

@@ -99,64 +99,25 @@ class DKPBot extends Bot
      * Log the DKP sent by the user
      *
      * @return void
+     * @throws ErrorException
      */
     private function _logDKP()
     {
 
-        date_default_timezone_set('UTC');
-        // Retrieve the database collection.
-        $database = new DataSource($this->collectionName);
-        // Get the database collection.
-        $collection = $database->getCollection();
-        // Retrieve the punbot document.
-        $document = $database->retrieveDocument($this->teamId);
+        $userDoc = array();
 
-        // Does this team exist?
-        if ($document !== null
-            && property_exists($document, 'team_id') === true
-            && $document->team_id === $this->teamId
-            && property_exists($document, 'users') === true
-        ) {
-            // Yes this team exists.
-            $users = $document->users;
-            // Does this user exist?
-            if (array_key_exists($this->user, $users) === true) {
-                // Yes this user exists.
-                $users[$this->user]['dkp'] += $this->_points;
-                $users[$this->user]['last_received_date'] = date('Y-m-d H:i:s');
-            } else {
-                // No, add this user, start them at 500.
-                $users[$this->user]['dkp']     = (500 + $this->_points);
-                $users[$this->user]['created'] = date('Y-m-d H:i:s');
-                $users[$this->user]['last_received_date'] = date('Y-m-d H:i:s');
-            }
-
-            // Save the new information.
-            $document->users = $users;
-            // Publish update to datasource.
-            try {
-                $collection->updateOne(array('team_id' => $this->teamId), array('$set' => $document));
-            } catch (MongoCursorException $e){
-                echo 'Unable to update user '.$this->user.' with team '.$this->teamId.': '.$e->getMessage();
-            }
+        if ($this->userExists($this->user) === true) {
+            // Yes this user exists.
+            $userDoc[$this->user]['dkp'] += $this->_points;
+            $userDoc[$this->user]['last_received_date'] = date('Y-m-d H:i:s');
         } else {
-            // No, this team doesn't exist.
-            $team = array(
-                     'team_id' => $this->teamId,
-                     'users'   => array(
-                                   $this->user => array(
-                                                   'dkp   '             => 500 + $this->_points,
-                                                   'created'            => date('Y-m-d H:i:s'),
-                                                   'last_received_date' => date('Y-m-d H:i:s'),
-                                                  ),
-                                  ),
-                    );
-            try {
-                $collection->insertOne($team);
-            } catch (MongoException $e){
-                echo '\'Unable to insert team '.$this->teamId.': '.$e->getMessage();
-            }
-        }//end if
+            // No, add this user, start them at 500.
+            $userDoc[$this->user]['dkp']     = (500 + $this->_points);
+            $userDoc[$this->user]['created'] = date('Y-m-d H:i:s');
+            $userDoc[$this->user]['last_received_date'] = date('Y-m-d H:i:s');
+        }
+
+        $this->updateUser($this->teamId, $userDoc);
 
     }//end _logDKP()
 
@@ -165,14 +126,12 @@ class DKPBot extends Bot
      * Build the ranking table of all users
      *
      * @return string
+     * @throws ErrorException
      */
     private function _ranking()
     {
-        date_default_timezone_set('UTC');
-        // Retrieve the database collection.
-        $database = new DataSource($this->collectionName);
-        // Retrieve the dkpbot document.
-        $document = $database->retrieveDocument($this->teamId);
+
+        $document = $this->retrieveUserList();
 
         $document->users = Bot::sortUserList($document->users, 'dkp', SORT_DESC);
 
@@ -198,6 +157,7 @@ class DKPBot extends Bot
      * @param string $user the given user
      *
      * @return int
+     * @throws ErrorException
      */
     private function _retrieveDKP($user = null)
     {
@@ -206,18 +166,10 @@ class DKPBot extends Bot
             $user = $this->user;
         }
 
-        date_default_timezone_set('UTC');
-        // Retrieve the database collection.
-        $database = new DataSource($this->collectionName);
-        // Retrieve the dkpbot document.
-        $document = $database->retrieveDocument($this->teamId);
+        $document = $this->retrieveUserList();
 
         // Does this team exist?
-        if ($document !== null
-            && property_exists($document, 'team_id') === true
-            && $document->team_id === $this->teamId
-            && property_exists($document, 'users') === true
-            && property_exists($document->users, $user) === true
+        if (property_exists($document->users, $user) === true
         ) {
             return $document->users[$user]['dkp'];
         } else {
