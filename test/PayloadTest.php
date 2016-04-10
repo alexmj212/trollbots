@@ -12,7 +12,7 @@
  * @link     https://github.com/alexmj212/trollbots
  */
 
-require __DIR__.'/../auth/Payload.php';
+use TrollBots\Lib\Payload;
 
 /**
  * Class Payload Test
