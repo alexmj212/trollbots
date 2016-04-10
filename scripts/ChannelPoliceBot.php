@@ -12,6 +12,12 @@
  * @link     https://github.com/alexmj212/trollbots
  */
 
+namespace TrollBots\Scripts;
+use TrollBots\Lib\Payload;
+use TrollBots\Lib\Responder;
+use TrollBots\Lib\Post;
+use TrollBots\Lib\Bot;
+
 /**
  * Class ChannelPoliceBot
  *
@@ -20,6 +26,7 @@
  * @author   Alex Johnson <alexmj212@gmail.com>
  * @license  http://opensource.org/licenses/GPL-3.0 GPL 3.0
  * @link     https://github.com/alexmj212/trollbots
+ * @release  1
  */
 class ChannelPoliceBot extends Bot
 {
@@ -45,7 +52,7 @@ class ChannelPoliceBot extends Bot
             $response .= 'appropriate channel.';
         }
 
-        $responder = new Responder(new Post($this->name, $this->icon, $response, $payload->getChannelName(), POST::RESPONSE_IN_CHANNEL));
+        $responder = new Responder(new Post($this->name, $this->icon, $response, $payload->getChannelName(), Post::RESPONSE_IN_CHANNEL));
         $responder->respond();
 
     }//end __construct()

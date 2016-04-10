@@ -12,7 +12,7 @@
  * @link     https://github.com/alexmj212/trollbots
  */
 
-require __DIR__.'/../includes/OAuth_Slack.php';
+use TrollBots\Auth\OAuth_Slack;
 
 /**
  * Class OAuth Test

@@ -11,6 +11,12 @@
  * @link     https://github.com/alexmj212/trollbots
  */
 
+namespace TrollBots\Scripts;
+use TrollBots\Lib\Payload;
+use TrollBots\Lib\Responder;
+use TrollBots\Lib\Post;
+use TrollBots\Lib\Bot;
+
 /**
  * Class DKPBot
  *
@@ -19,6 +25,7 @@
  * @author   Alex Johnson <alexmj212@gmail.com>
  * @license  http://opensource.org/licenses/GPL-3.0 GPL 3.0
  * @link     https://github.com/alexmj212/trollbots
+ * @release  2
  */
 class DKPBot extends Bot
 {
@@ -28,9 +35,10 @@ class DKPBot extends Bot
     const DKP_NEW_COUNT   = PHP_EOL.'*%s* now has %d DKP';
     const DKP_GRANT       = '*%s* has given *%s* %d DKP';
     const DKP_SCORE       = 'You have %s DKP';
+    const DKP_TOO_SOON    = 'Please wait before giving %s DKP';
 
     /**
-     * The ID of the team
+     * The points to to be saved
      *
      * @var int
      */
@@ -60,8 +68,7 @@ class DKPBot extends Bot
         }
 
         if (is_numeric($this->_points) === true
-            && $this->_points >= -10
-            && $this->_points !== 0
+            && $this->_points > 0
             && $this->_points <= 10
             && Payload::isUserName($this->user) === true
         ) {
@@ -74,12 +81,18 @@ class DKPBot extends Bot
                 $post->setText($response);
                 $post->setResponseType(Post::RESPONSE_IN_CHANNEL);
             } else {
-                $this->_logDKP();
-                $response  = sprintf(DKPBot::DKP_GRANT, $this->payload->getUserName(), $this->user, $this->_points);
-                $response .= sprintf(DKPBot::DKP_NEW_COUNT, $this->user, $this->_retrieveDKP($this->user));
-                $post->setText($response);
-                $post->setResponseType(Post::RESPONSE_IN_CHANNEL);
-            }
+                if ($this->_checkLastReceived($this->user) !== true) {
+                    $response = sprintf(DKPBot::DKP_TOO_SOON, $this->user);
+                    $post->setText($response);
+                    $post->setResponseType(Post::RESPONSE_EPHEMERAL);
+                } else {
+                    $this->_logDKP();
+                    $response  = sprintf(DKPBot::DKP_GRANT, $this->payload->getUserName(), $this->user, $this->_points);
+                    $response .= sprintf(DKPBot::DKP_NEW_COUNT, $this->user, $this->_retrieveDKP($this->user));
+                    $post->setText($response);
+                    $post->setResponseType(Post::RESPONSE_IN_CHANNEL);
+                }
+            }//end if
         } else if ($this->payload->getText() === 'score') {
             $response = sprintf(DKPBot::DKP_SCORE, $this->_retrieveDKP($this->payload->getUserName()));
             $post->setText($response);
@@ -96,28 +109,60 @@ class DKPBot extends Bot
 
 
     /**
+     * Ensure user can receive DKP
+     *
+     * @param string $user the given user
+     *
+     * @return bool
+     */
+    private function _checkLastReceived($user)
+    {
+        try {
+            $users = Bot::retrieveUserList();
+            if (property_exists($users, $user) === true) {
+                $now = strtotime('now');
+                $last_received_date = strtotime($users[$user]['last_received_date']);
+                // $last_received_user = $users[$user]['last_received_user'];
+                // Time delay to prevent too much DKP (in seconds).
+                return !(($now - $last_received_date) < 30);
+            } return false;
+        } catch (\Exception $e){
+            echo 'Unable to check last received for user '.$user.': '.$e->getMessage();
+            exit();
+        }
+
+    }//end _checkLastReceived()
+
+
+    /**
      * Log the DKP sent by the user
      *
      * @return void
-     * @throws ErrorException
      */
     private function _logDKP()
     {
+        try {
+            $userDoc = Bot::retrieveUserList();
 
-        $userDoc = array();
+            if (Bot::userExists($this->user) === true) {
+                // Yes this user exists.
+                $userDoc[$this->user]['dkp'] += $this->_points;
+                $userDoc[$this->user]['last_received_user'] = $this->payload->getUserName();
+                $userDoc[$this->user]['last_received_date'] = date('Y-m-d H:i:s');
+            } else {
+                // No, add this user, start them at 500.
+                $userDoc[$this->user]['dkp']     = (500 + $this->_points);
+                $userDoc[$this->user]['created'] = date('Y-m-d H:i:s');
+                $userDoc[$this->user]['last_received_user'] = $this->payload->getUserName();
+                $userDoc[$this->user]['last_received_date'] = date('Y-m-d H:i:s');
+            }
 
-        if ($this->userExists($this->user) === true) {
-            // Yes this user exists.
-            $userDoc[$this->user]['dkp'] += $this->_points;
-            $userDoc[$this->user]['last_received_date'] = date('Y-m-d H:i:s');
-        } else {
-            // No, add this user, start them at 500.
-            $userDoc[$this->user]['dkp']     = (500 + $this->_points);
-            $userDoc[$this->user]['created'] = date('Y-m-d H:i:s');
-            $userDoc[$this->user]['last_received_date'] = date('Y-m-d H:i:s');
+            Bot::updateUser($this->teamId, $userDoc);
         }
-
-        $this->updateUser($this->teamId, $userDoc);
+        catch (\Exception $e) {
+            echo 'Unable to log DKP for user '.$this->user.': '.$e->getMessage();
+            exit();
+        }//end try
 
     }//end _logDKP()
 
@@ -126,27 +171,29 @@ class DKPBot extends Bot
      * Build the ranking table of all users
      *
      * @return string
-     * @throws ErrorException
      */
     private function _ranking()
     {
+        try {
+            $users = $this->retrieveUserList();
+            $users = Bot::sortUserList($users, 'dkp', SORT_DESC);
 
-        $document = $this->retrieveUserList();
+            $attachment = array(
+                           'title' => 'DKP Leaderboard',
+                           'text'  => '',
+                          );
 
-        $document->users = Bot::sortUserList($document->users, 'dkp', SORT_DESC);
+            foreach ($users as $user => $data) {
+                $attachment['text'] .= $user.' - ';
+                $attachment['text'] .= $data['dkp'].' DKP'.PHP_EOL;
+            }
 
-        $attachment = array(
-                       'title' => 'DKP Leaderboard',
-                       'text'  => '',
-                      );
-
-        foreach ($document->users as $user => $data) {
-            $attachment['text'] .= $user.' - ';
-            $attachment['text'] .= $data['dkp'].' DKP'.PHP_EOL;
+            $attachment['pretext'] = 'If you\'re not listed, you\'ve not received DKP';
+            return $attachment;
+        } catch (\Exception $e) {
+            echo 'Unable to generate ranking: '.$e->getMessage();
+            exit();
         }
-
-        $attachment['pretext'] = 'If you\'re not listed, you\'ve not received DKP';
-        return $attachment;
 
     }//end _ranking()
 
@@ -157,7 +204,6 @@ class DKPBot extends Bot
      * @param string $user the given user
      *
      * @return int
-     * @throws ErrorException
      */
     private function _retrieveDKP($user = null)
     {
@@ -166,14 +212,17 @@ class DKPBot extends Bot
             $user = $this->user;
         }
 
-        $document = $this->retrieveUserList();
-
-        // Does this team exist?
-        if (property_exists($document->users, $user) === true
-        ) {
-            return $document->users[$user]['dkp'];
-        } else {
-            return 500;
+        try {
+            $users = $this->retrieveUserList();
+            // Does this team exist?
+            if (property_exists($users, $user) === true) {
+                return $users[$user]['dkp'];
+            } else {
+                return 500;
+            }
+        } catch (\Exception $e) {
+            echo 'Unable to retrieve DKP for user '.$user.': '.$e->getMessage();
+            exit();
         }
 
     }//end _retrieveDKP()

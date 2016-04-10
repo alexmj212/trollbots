@@ -12,6 +12,15 @@
  * @link     https://github.com/alexmj212/trollbots
  */
 
+namespace TrollBots\Scripts;
+use TrollBots\Lib\Payload;
+use TrollBots\Lib\Responder;
+use TrollBots\Lib\DataSource;
+use TrollBots\Lib\Post;
+use TrollBots\Lib\Bot;
+use MongoCursorException;
+use MongoException;
+
 /**
  * Class PunBot
  *
@@ -20,6 +29,7 @@
  * @author   Alex Johnson <alexmj212@gmail.com>
  * @license  http://opensource.org/licenses/GPL-3.0 GPL 3.0
  * @link     https://github.com/alexmj212/trollbots
+ * @release  1
  */
 
 class PunBot extends Bot
@@ -73,16 +83,16 @@ class PunBot extends Bot
             $response  = '*'.$payload->getUserName().'* has rated *'.$this->user.'\'s* pun '.$this->_rating.'/10. ';
             $response .= 'Their average is now '.$this->_retrieveRating($this->user).'/10';
             // Store the Post.
-            $post = new Post($this->name, $this->icon, $response, $payload->getChannelName(), POST::RESPONSE_IN_CHANNEL);
+            $post = new Post($this->name, $this->icon, $response, $payload->getChannelName(), Post::RESPONSE_IN_CHANNEL);
         } else if ($payload->getText() === 'total') {
             // Build the requested "total" response string.
             $response  = 'You\'ve been rated '.$this->_retrieveRatingCount($payload->getUserName()).' times ';
             $response .= 'for an average of '.$this->_retrieveRating($payload->getUserName()).'/10';
             // Store the Post.
-            $post = new Post($this->name, $this->icon, $response, $payload->getChannelName(), POST::RESPONSE_EPHEMERAL);
+            $post = new Post($this->name, $this->icon, $response, $payload->getChannelName(), Post::RESPONSE_EPHEMERAL);
         } else {
             // Invalid command.
-            $post = new Post($this->name, $this->icon, Post::INVALID_COMMAND, $payload->getChannelName(), POST::RESPONSE_EPHEMERAL);
+            $post = new Post($this->name, $this->icon, Post::INVALID_COMMAND, $payload->getChannelName(), Post::RESPONSE_EPHEMERAL);
         }
 
         $responder = new Responder($post);

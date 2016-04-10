@@ -12,6 +12,15 @@
  * @link     https://github.com/alexmj212/trollbots
  */
 
+namespace TrollBots\Scripts;
+use TrollBots\Lib\Payload;
+use TrollBots\Lib\Responder;
+use TrollBots\Lib\Post;
+use TrollBots\Lib\Bot;
+use TrollBots\Lib\DataSource;
+use MongoException;
+use MongoCursorException;
+
 /**
  * Class TipBot
  *
@@ -20,6 +29,7 @@
  * @author   Alex Johnson <alexmj212@gmail.com>
  * @license  http://opensource.org/licenses/GPL-3.0 GPL 3.0
  * @link     https://github.com/alexmj212/trollbots
+ * @release  0.1
  */
 
 class TipBot extends Bot
@@ -62,7 +72,7 @@ class TipBot extends Bot
                 $response  = '*'.$payload->getUserName().'* has tipped *'.$this->user.'*';
                 $response .= ' bringing their total to '.$this->_retrieveTips($this->user).' tips';
                 // Generate new Post.
-                $post = new Post($this->name, $this->icon, $response, $payload->getChannelName(), POST::RESPONSE_IN_CHANNEL);
+                $post = new Post($this->name, $this->icon, $response, $payload->getChannelName(), Post::RESPONSE_IN_CHANNEL);
             }
         } else if ($payload->getText() === 'total') {
             // Return the total number of tips of the requester.
@@ -72,10 +82,10 @@ class TipBot extends Bot
             // Build response.
             $response = 'You\'ve been tipped '.$total.' time(s)';
             // Generate new Post.
-            $post = new Post($this->name, $this->icon, $response, $payload->getChannelName(), POST::RESPONSE_EPHEMERAL);
+            $post = new Post($this->name, $this->icon, $response, $payload->getChannelName(), Post::RESPONSE_EPHEMERAL);
         } else {
             // No matching commands, return invalid.
-            $post = new Post($this->name, $this->icon, Post::INVALID_COMMAND, $payload->getChannelName(), POST::RESPONSE_EPHEMERAL);
+            $post = new Post($this->name, $this->icon, Post::INVALID_COMMAND, $payload->getChannelName(), Post::RESPONSE_EPHEMERAL);
         }//end if
 
         // Submit the response.

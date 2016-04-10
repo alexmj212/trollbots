@@ -12,6 +12,10 @@
  * @link     https://github.com/alexmj212/trollbots
  */
 
+namespace TrollBots\Lib;
+use ErrorException;
+use MongoDB;
+
 /**
  * Class Bot
  *
@@ -122,12 +126,49 @@ class Bot
 
 
     /**
-     * Retrieve the list of Users from the bot's storage
+     * Retrieve the list of Users
      *
      * @return mixed
      * @throws ErrorException
+     * @throws MongoDB\Driver\Exception\ConnectionException
+     * @throws MongoDB\Exception\InvalidArgumentException
      */
     public function retrieveUserList()
+    {
+        try{
+            date_default_timezone_set('UTC');
+            // Retrieve the database collection.
+            $database = new DataSource($this->collectionName);
+            // Retrieve the dkpbot document.
+            $document = $database->retrieveDocument($this->teamId);
+
+            // Does this team exist?
+            if ($document !== null
+                && $document->team_id === $this->teamId
+                && property_exists($document, 'team_id') === true
+                && property_exists($document, 'users') === true
+            ) {
+                return $document->users;
+            } else {
+                return null;
+            }
+        } catch (\Exception $e) {
+            echo 'Exception while retrieving user list';
+            exit();
+        }//end try
+
+    }//end retrieveUserList()
+
+
+    /**
+     * Retrieve the team document
+     *
+     * @return mixed
+     * @throws ErrorException
+     * @throws MongoDB\Driver\Exception\ConnectionException
+     * @throws MongoDB\Exception\InvalidArgumentException
+     */
+    public function retrieveTeamDoc()
     {
         date_default_timezone_set('UTC');
         // Retrieve the database collection.
@@ -141,12 +182,12 @@ class Bot
             && $document->team_id === $this->teamId
             && property_exists($document, 'users') === true
         ) {
-            return $document->users;
+            return $document;
         } else {
             return null;
         }
 
-    }//end retrieveUserList()
+    }//end retrieveTeamDoc()
 
 
     /**
@@ -156,6 +197,8 @@ class Bot
      *
      * @return bool
      * @throws ErrorException
+     * @throws MongoDB\Driver\Exception\ConnectionException
+     * @throws MongoDB\Exception\InvalidArgumentException
      */
     public function userExists($userName)
     {
@@ -205,15 +248,23 @@ class Bot
      *
      * @return void
      * @throws ErrorException
+     * @throws MongoDB\Driver\Exception\ConnectionException
+     * @throws MongoDB\Exception\InvalidArgumentException
      */
     public function updateUser($teamId, $userDoc)
     {
         $collection = new DataSource($this->collectionName);
         $collection = $collection->getCollection();
+
+        $teamDoc = $this->retrieveTeamDoc();
+
+        $teamDoc->users = $userDoc;
+
         try {
-            $collection->updateOne(array('team_id' => $this->teamId), array('$set' => $userDoc));
-        } catch (MongoCursorException $e){
+            $collection->updateOne(array('team_id' => $this->teamId), array('$set' => $teamDoc));
+        } catch (\Exception $e){
             echo 'Unable to update user '.$this->user.' with team '.$this->teamId.': '.$e->getMessage();
+            exit;
         }
 
     }//end updateUser()

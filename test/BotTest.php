@@ -12,7 +12,7 @@
  * @link     https://github.com/alexmj212/trollbots
  */
 
-require __DIR__.'/../includes/Bot.php';
+use TrollBots\Lib\Bot;
 
 /**
  * Class Bot Test
@@ -38,6 +38,7 @@ class BotTest extends PHPUnit_Framework_TestCase
      * @dataProvider providerTestVerifyToken
      *
      * @return void
+     * @throws ErrorException
      */
     public function testVerifyToken($provided, $expected)
     {

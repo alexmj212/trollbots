@@ -12,6 +12,9 @@
  * @link     https://github.com/alexmj212/trollbots
  */
 
+namespace TrollBots\Auth;
+use ErrorException;
+
 if (file_exists(__DIR__.'/../config.php') === true) {
     include __DIR__.'/../config.php';
 }
@@ -112,7 +115,7 @@ class OAuth_Slack
             } else {
                 throw new ErrorException('No Client Secret for '.$this->_bot);
             }
-        } catch (Exception $e) {
+        } catch (ErrorException $e) {
             echo 'OAuth Error: ', $e->getMessage(), '\n';
         }//end try
 
@@ -147,8 +150,6 @@ class OAuth_Slack
      */
     public function buildSlackURL()
     {
-        // Pull the OAuth URL.
-        global $conf;
 
         // Build the access.token url for Slack.
         try {

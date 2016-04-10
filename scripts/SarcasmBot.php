@@ -12,6 +12,12 @@
  * @link     https://github.com/alexmj212/trollbots
  */
 
+namespace TrollBots\Scripts;
+use TrollBots\Lib\Payload;
+use TrollBots\Lib\Responder;
+use TrollBots\Lib\Post;
+use TrollBots\Lib\Bot;
+
 /**
  * Class SarcasmBot
  *
@@ -20,6 +26,7 @@
  * @author   Alex Johnson <alexmj212@gmail.com>
  * @license  http://opensource.org/licenses/GPL-3.0 GPL 3.0
  * @link     https://github.com/alexmj212/trollbots
+ * @release  1
  */
 class SarcasmBot extends Bot
 {
@@ -39,7 +46,7 @@ class SarcasmBot extends Bot
 
         $response = null;
 
-        $post = new Post($this->name, $this->icon, '', $payload->getChannelName(), POST::RESPONSE_IN_CHANNEL);
+        $post = new Post($this->name, $this->icon, '', $payload->getChannelName(), Post::RESPONSE_IN_CHANNEL);
 
         switch(rand(0, 2)){
         case 0:
