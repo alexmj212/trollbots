@@ -3,6 +3,8 @@ php:
 - 5.6
 script: phpunit --configuation phpunit.xml test/
 before_script:
+- pecl install mongodb
+- echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 - composer install
 notifications:
   slack:
