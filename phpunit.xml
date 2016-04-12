@@ -3,8 +3,8 @@
 <phpunit bootstrap="vendor/autoload.php" colors="true">
     <testsuites>
         <testsuite>
-            <directory>./tests/auth/</directory>
-            <directory>./tests/lib/</directory>
+            <directory>./tests/Auth/</directory>
+            <directory>./tests/Lib/</directory>
         </testsuite>
     </testsuites>
 
