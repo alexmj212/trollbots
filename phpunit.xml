@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpunit bootstrap="vendor/autoload.php" colors="true" stderr="true">
+<phpunit bootstrap="vendor/autoload.php" colors="true">
     <testsuites>
         <testsuite>
-            <directory>./test/</directory>
+            <directory>./tests/auth/</directory>
+            <directory>./tests/lib/</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">./lib/</directory>
-            <directory suffix=".php">./auth/</directory>
+            <directory suffix=".php">src/</directory>
         </whitelist>
     </filter>
 </phpunit>

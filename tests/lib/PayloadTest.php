@@ -32,6 +32,9 @@ class PayloadTest extends PHPUnit_Framework_TestCase
      *
      * @param array $original switch for post visibility
      *
+     * @covers TrollBots\Lib\Payload::getChannelName
+     * @covers TrollBots\Lib\Payload::getUserName
+     *
      * @dataProvider providerTestPayloadProcessing
      *
      * @return void

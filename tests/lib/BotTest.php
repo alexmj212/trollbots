@@ -33,7 +33,7 @@ class BotTest extends PHPUnit_Framework_TestCase
      * @param string $provided switch for post visibility
      * @param bool   $expected response type set
      *
-     * @covers Bot::verifyToken
+     * @covers TrollBots\Lib\Bot::verifyToken
      *
      * @dataProvider providerTestVerifyToken
      *
@@ -84,7 +84,7 @@ class BotTest extends PHPUnit_Framework_TestCase
      * @param array $original the unsorted array
      * @param array $expected the sorted array to test against
      *
-     * @covers Bot::sortUserList
+     * @covers TrollBots\Lib\Bot::sortUserList
      *
      * @dataProvider providerTestSortUserList
      *

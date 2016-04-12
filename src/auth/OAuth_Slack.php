@@ -15,8 +15,8 @@
 namespace TrollBots\Auth;
 use ErrorException;
 
-if (file_exists(__DIR__.'/../config.php') === true) {
-    include __DIR__.'/../config.php';
+if (file_exists(__DIR__.'/../../config.php') === true) {
+    include __DIR__.'/../../config.php';
 }
 
 /**

@@ -30,7 +30,7 @@ class OAuthTest extends PHPUnit_Framework_TestCase
     /**
      * Test the creation of the slack auth url
      *
-     * @covers OAuth_Slack::buildSlackURL
+     * @covers TrollBots\Auth\OAuth_Slack::buildSlackURL
      *
      * @return void
      */

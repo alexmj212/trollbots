@@ -19,10 +19,6 @@ use MongoDB\Exception;
 use MongoDB\Driver\Exception\ConnectionException;
 use ErrorException;
 
-if (file_exists(__DIR__.'/../config.php') === true) {
-    include __DIR__.'/../config.php';
-}
-
 /**
  * Class DataSource
  *
