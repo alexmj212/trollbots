@@ -50,7 +50,7 @@ class PayRespectsBot extends Bot
 
         $response = '*'.$payload->getUserName().'* has paid their respects';
 
-        if (Payload::isUserName($payload->getText()) === true) {
+        if ($payload->getText() !== null) {
             $response .= ' to *'.$payload->getText().'*';
         }
 
@@ -58,7 +58,7 @@ class PayRespectsBot extends Bot
 
         $attachment = new Attachment('Join in the Respects', 'Pay Respects', PayRespectsBot::PAY_RESPECTS);
 
-        $attachment->addAction(new Action('Pay Respects', 'f'));
+        $attachment->addAction(new Action('Pay Respects', 'F'));
 
         $post->addAttachment($attachment);
 
