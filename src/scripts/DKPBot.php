@@ -12,6 +12,7 @@
  */
 
 namespace TrollBots\Scripts;
+use TrollBots\Lib\Attachment;
 use TrollBots\Lib\Payload;
 use TrollBots\Lib\Responder;
 use TrollBots\Lib\Post;
@@ -170,7 +171,7 @@ class DKPBot extends Bot
     /**
      * Build the ranking table of all users
      *
-     * @return string
+     * @return Attachment
      */
     private function _ranking()
     {
@@ -178,22 +179,23 @@ class DKPBot extends Bot
             $users = $this->retrieveUserList();
             $users = Bot::sortUserList($users, 'dkp', SORT_DESC);
 
-            $attachment = array(
-                           'title' => 'DKP Leaderboard',
-                           'text'  => '',
-                          );
+            $attachment = new Attachment('DKP Leaderboard', 'DKP Leaderboard', 'leaderboard');
+
+            $attachmentText = '';
 
             foreach ($users as $user => $data) {
-                $attachment['text'] .= $user.' - ';
-                $attachment['text'] .= $data['dkp'].' DKP'.PHP_EOL;
+                $attachmentText .= $user.' - ';
+                $attachmentText .= $data['dkp'].' DKP'.PHP_EOL;
             }
 
-            $attachment['pretext'] = 'If you\'re not listed, you\'ve not received DKP';
+            $attachment->setText($attachmentText);
+            $attachment->setPretext('If you\'re not listed, you\'ve not received DKP');
+
             return $attachment;
         } catch (\Exception $e) {
             echo 'Unable to generate ranking: '.$e->getMessage();
             exit();
-        }
+        }//end try
 
     }//end _ranking()
 
