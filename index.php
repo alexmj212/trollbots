@@ -49,7 +49,7 @@ $app->get(
     }
 );
 
-$app->post(
+$app->get(
     '/payrespectsbot-auth/',
     function () use ($app) {
         $payrespectsbotauth = new OAuth_Slack($app->request->get(), 'Pay Respects Bot');
