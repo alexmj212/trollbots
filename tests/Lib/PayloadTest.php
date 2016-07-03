@@ -12,7 +12,7 @@
  * @link     https://github.com/alexmj212/trollbots
  */
 
-require __DIR__.'/../includes/Payload.php';
+use TrollBots\Lib\Payload;
 
 /**
  * Class Payload Test
@@ -31,6 +31,9 @@ class PayloadTest extends PHPUnit_Framework_TestCase
      * Ensure payload is processed and stored appropriately
      *
      * @param array $original switch for post visibility
+     *
+     * @covers TrollBots\Lib\Payload::getChannelName
+     * @covers TrollBots\Lib\Payload::getUserName
      *
      * @dataProvider providerTestPayloadProcessing
      *

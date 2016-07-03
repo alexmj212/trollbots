@@ -12,7 +12,7 @@
  * @link     https://github.com/alexmj212/trollbots
  */
 
-require __DIR__.'/../includes/Post.php';
+use TrollBots\Lib\Post;
 
 /**
  * Class Post Test
@@ -55,11 +55,11 @@ class PostTest extends PHPUnit_Framework_TestCase
     {
         return array(
                 array(
-                 POST::RESPONSE_EPHEMERAL,
+                 Post::RESPONSE_EPHEMERAL,
                  'ephemeral',
                 ),
                 array(
-                 POST::RESPONSE_IN_CHANNEL,
+                 Post::RESPONSE_IN_CHANNEL,
                  'in_channel',
                 ),
                );

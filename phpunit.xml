@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpunit colors="true">
+<phpunit bootstrap="vendor/autoload.php" colors="true" process-isolation="true">
     <testsuites>
         <testsuite>
-            <directory>./test/</directory>
+            <directory>./tests/Auth/</directory>
+            <directory>./tests/Lib/</directory>
+            <!-- <directory>./tests/Scripts/</directory>   -->
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">./includes/</directory>
+            <directory suffix=".php">src/</directory>
         </whitelist>
     </filter>
 </phpunit>

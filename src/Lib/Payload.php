@@ -12,6 +12,9 @@
  * @link     https://github.com/alexmj212/trollbots
  */
 
+namespace TrollBots\Lib;
+use ErrorException;
+
 /**
  * Class Payload
  *
@@ -85,6 +88,8 @@ class Payload
      * Payload constructor.
      *
      * @param array $data the post data received
+     *
+     * @throws ErrorException
      */
     public function __construct($data)
     {
@@ -136,7 +141,7 @@ class Payload
             } else {
                 throw new ErrorException('text missing from payload');
             }
-        } catch (Exception $e){
+        } catch (ErrorException $e){
             echo 'Payload Processing Error: ', $e->getMessage(), '\n';
             exit();
         }//end try

@@ -12,7 +12,7 @@
  * @link     https://github.com/alexmj212/trollbots
  */
 
-require __DIR__.'/../includes/OAuth_Slack.php';
+use TrollBots\Auth\OAuth_Slack;
 
 /**
  * Class OAuth Test
@@ -30,7 +30,7 @@ class OAuthTest extends PHPUnit_Framework_TestCase
     /**
      * Test the creation of the slack auth url
      *
-     * @covers OAuth_Slack::buildSlackURL
+     * @covers TrollBots\Auth\OAuth_Slack::buildSlackURL
      *
      * @return void
      */

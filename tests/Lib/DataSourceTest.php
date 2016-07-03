@@ -13,7 +13,7 @@
  * @link     https://github.com/alexmj212/trollbots
  */
 
-require __DIR__.'/../includes/DataSource.php';
+use TrollBots\Lib\DataSource;
 
 /**
  * Class DataSource Test

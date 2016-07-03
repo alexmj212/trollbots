@@ -12,6 +12,8 @@
  * @link     https://github.com/alexmj212/trollbots
  */
 
+namespace TrollBots\Lib;
+
 /**
  * Class Post
  *
@@ -138,10 +140,8 @@ class Post
         // Set the response type if provided.
         if ($responseType === Post::RESPONSE_IN_CHANNEL) {
             $this->_responseType = Post::RESPONSE_IN_CHANNEL;
-
         } else if ($responseType === Post::RESPONSE_EPHEMERAL) {
             $this->_responseType = Post::RESPONSE_EPHEMERAL;
-
         }
 
         return $this->_responseType;
@@ -160,10 +160,8 @@ class Post
         // Switch the responses if not provided.
         if ($this->_responseType === Post::RESPONSE_IN_CHANNEL) {
             $this->setResponseType(Post::RESPONSE_EPHEMERAL);
-
         } else if ($this->_responseType === Post::RESPONSE_EPHEMERAL) {
             $this->setResponseType(Post::RESPONSE_IN_CHANNEL);
-
         }
 
         return $this->_responseType;

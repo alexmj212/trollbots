@@ -12,6 +12,8 @@
  * @link     https://github.com/alexmj212/trollbots
  */
 
+namespace TrollBots\Lib;
+
 /**
  * Class Responder
  *

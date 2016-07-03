@@ -1,7 +1,7 @@
 language: php
 php:
 - 5.6
-script: phpunit test/
+script: phpunit --configuration ./phpunit.xml
 before_script:
 - pecl install mongodb
 - echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini

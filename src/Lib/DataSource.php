@@ -12,9 +12,12 @@
  * @link     https://github.com/alexmj212/trollbots
  */
 
-if (file_exists(__DIR__.'/../config.php') === true) {
-    include __DIR__.'/../config.php';
-}
+namespace TrollBots\Lib;
+use MongoDB;
+use MongoDB\Client;
+use MongoDB\Exception;
+use MongoDB\Driver\Exception\ConnectionException;
+use ErrorException;
 
 /**
  * Class DataSource
@@ -82,6 +85,13 @@ class DataSource
      */
     private $_mongo_collection;
 
+    /**
+     * Mongo database collection name
+     *
+     * @var string
+     */
+    private $_mongo_collectionName;
+
 
     /**
      * Grab configuration data
@@ -94,6 +104,8 @@ class DataSource
      * @param string $database       connection database name
      *
      * @throws ErrorException
+     * @throws MongoDB\Driver\Exception\ConnectionException
+     * @throws MongoDB\Exception\InvalidArgumentException
      */
     public function __construct(
         $collectionName = null,
@@ -140,7 +152,7 @@ class DataSource
             if (array_key_exists('mongo_port', $conf['datasource']) === true) {
                 $this->_mongo_port = $conf['datasource']['mongo_port'];
             }
-        } catch (Exception $e) {
+        } catch (ErrorException $e) {
             echo 'Database Configuration Error: ', $e->getMessage(), '\n';
         }//end try
 
@@ -165,8 +177,13 @@ class DataSource
         }
 
         // Set the collection name if provided.
-        if ($collectionName !== null) {
-            $this->_mongo_collection = $this->_retrieveCollection($collectionName);
+        try {
+            if ($collectionName !== null) {
+                $this->_mongo_collectionName = $collectionName;
+                $this->_mongo_collection     = $this->_retrieveCollection($collectionName);
+            }
+        } catch (\Exception $e) {
+            echo 'Unable to retrieve collection with name '.$collectionName.' with error: '.$e->getMessage();
         }
 
     }//end __construct()
@@ -176,22 +193,23 @@ class DataSource
      * Attempt the connection to the mongo database
      *
      * @return boolean
-     * @throws Exception
+     * @throws MongoDB\Driver\Exception\ConnectionException
+     * @throws MongoDB\Exception\InvalidArgumentException
      */
     public function connect()
     {
 
         try {
-            $this->_mongo_connection = new MongoDB\Client($this->buildMongoConnectionString());
+            $this->_mongo_connection = new Client($this->buildMongoConnectionString());
             if ($this->_mongo_connection === false) {
-                throw new MongoConnectionException('Unable to connect to database '.$this->_mongo_domain);
+                throw new ConnectionException('Unable to connect to database '.$this->_mongo_domain);
             }
 
             $this->_mongo_dbo = $this->_mongo_connection->selectDatabase($this->_mongo_database);
             if ($this->_mongo_dbo === false) {
-                throw new MongoConnectionException('Unable to select database '.$this->_mongo_database);
+                throw new ConnectionException('Unable to select database '.$this->_mongo_database);
             }
-        } catch (MongoConnectionException $e) {
+        } catch (ConnectionException $e) {
             echo 'Mongo Connection Exception: '.$e->getMessage().'\n';
             return false;
         }
@@ -222,11 +240,28 @@ class DataSource
      * Return the database collection
      *
      * @return MongoDB\Collection
+     * @throws MongoDB\Driver\Exception\ConnectionException
+     * @throws MongoDB\Exception\InvalidArgumentException
      */
     public function getCollection()
     {
 
-        return $this->_mongo_collection;
+        if ($this->_mongo_collection !== null) {
+            return $this->_mongo_collection;
+        }
+
+        try {
+            $this->connect();
+            $collection = $this->_mongo_dbo->selectCollection($this->_mongo_collectionName);
+            if ($collection === null) {
+                throw new ErrorException('Unable to retrieve collection');
+            }
+        } catch (ErrorException $e) {
+            echo 'Log '.$this->_mongo_collectionName.' Error: ', $e->getMessage(), '\n';
+            exit;
+        }
+
+        return $collection;
 
     }//end getCollection()
 
@@ -237,7 +272,8 @@ class DataSource
      * @param string $collectionName the name of the collection to retrieve
      *
      * @return MongoDB\Collection
-     * @throws ErrorException
+     * @throws MongoDB\Driver\Exception\ConnectionException
+     * @throws MongoDB\Exception\InvalidArgumentException
      */
     private function _retrieveCollection($collectionName = null)
     {
@@ -248,7 +284,7 @@ class DataSource
             if ($collection === null) {
                 throw new ErrorException('Unable to retrieve collection');
             }
-        } catch (Exception $e) {
+        } catch (ErrorException $e) {
             echo 'Log '.$collectionName.' Error: ', $e->getMessage(), '\n';
             exit;
         }
@@ -268,11 +304,11 @@ class DataSource
     public function retrieveDocument($teamId)
     {
 
-        $document = null;
-
-        $document = $this->_mongo_collection->findOne(array('team_id' => $teamId));
-
-        return $document;
+        try {
+            return $this->_mongo_collection->findOne(array('team_id' => $teamId));
+        } catch (\Exception $e){
+            echo 'Unable to find team with ID: '.$teamId;
+        }
 
     }//end retrieveDocument()
 
