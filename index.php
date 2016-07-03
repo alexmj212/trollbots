@@ -15,6 +15,7 @@
 
 namespace TrollBots;
 use Slim;
+use TrollBots\Lib\ActionPayload;
 use TrollBots\Lib\Payload;
 use TrollBots\Lib\Post;
 use TrollBots\Lib\Bot;
@@ -45,6 +46,14 @@ $app->get(
     function () use ($app) {
         $dkpbotauth = new OAuth_Slack($app->request->get(), 'DKP Bot');
         $dkpbotauth->requestSlackAuth();
+    }
+);
+
+$app->post(
+    '/payrespectsbot-auth/',
+    function () use ($app) {
+        $payrespectsbotauth = new OAuth_Slack($app->request->get(), 'Pay Respects Bot');
+        $payrespectsbotauth->requestSlackAuth();
     }
 );
 
@@ -137,6 +146,18 @@ $app->post(
         $payload = new Payload($app->request->post());
         if (Bot::verifyToken('payrespectsbot', $payload->getToken()) === true) {
             $sarcasmbot = new Bots\PayRespectsBot($payload);
+        } else {
+            echo Post::INVALID_TOKEN;
+        }
+    }
+);
+$app->post(
+    '/payrespectsbot-action/',
+    function () use ($app) {
+        $payload = new ActionPayload($app->request->post());
+        if (Bot::verifyToken('payrespectsbot', $payload->getToken()) === true) {
+            //$payrespectsbot = new Bots\PayRespectsBot($payload);
+            echo 'You paid respects';
         } else {
             echo Post::INVALID_TOKEN;
         }

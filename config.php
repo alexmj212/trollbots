@@ -24,6 +24,10 @@ if (file_exists(__DIR__.'/environment/environment.php') === true) {
 $conf['bots']['DKP Bot']['slack_client_id']     = getenv('dkpbot_slack_client_id') ?: null;
 $conf['bots']['DKP Bot']['slack_client_secret'] = getenv('dkpbot_slack_client_secret') ?: null;
 
+// Pay Respects Bot Credentials.
+$conf['bots']['Pay Respects Bot']['slack_client_id']     = getenv('payrespectsbot_slack_client_id') ?: null;
+$conf['bots']['Pay Respects Bot']['slack_client_secret'] = getenv('payrespectsbot_slack_client_secret') ?: null;
+
 // Test Bot Credentials.
 $conf['bots']['Test Bot']['slack_client_id']     = getenv('testbot_slack_client_id') ?: null;
 $conf['bots']['Test Bot']['slack_client_secret'] = getenv('testbot_slack_client_secret') ?: null;

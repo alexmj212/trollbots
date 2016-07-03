@@ -60,7 +60,7 @@ class Attachment
      *
      * @string
      */
-    private $_callback_id;
+    private $_callbackId;
 
     /**
      * The color of the attachment indent
@@ -80,21 +80,21 @@ class Attachment
     /**
      * Post constructor
      *
-     * @param string $title       The name of the bot that will post
-     * @param string $fallback    Icon to represent the post
-     * @param string $callback_id The text of the post
-     * @param string $text        The text that will appear in the attachment
-     * @param string $pretext     the pretext of the attachment
-     * @param string $color       The channel the post will appear
+     * @param string $title      The name of the bot that will post
+     * @param string $fallback   Icon to represent the post
+     * @param string $callbackId The text of the post
+     * @param string $text       The text that will appear in the attachment
+     * @param string $pretext    the pretext of the attachment
+     * @param string $color      The channel the post will appear
      */
-    public function __construct($title, $fallback, $callback_id, $text = null, $pretext = null, $color = null)
+    public function __construct($title, $fallback, $callbackId, $text = null, $pretext = null, $color = null)
     {
-        $this->_title       = $title;
-        $this->_fallback    = $fallback;
-        $this->_callback_id = $callback_id;
-        $this->_text        = $text;
-        $this->_pretext     = $pretext;
-        $this->_color       = $color;
+        $this->_title      = $title;
+        $this->_fallback   = $fallback;
+        $this->_callbackId = $callbackId;
+        $this->_text       = $text;
+        $this->_pretext    = $pretext;
+        $this->_color      = $color;
 
     }//end __construct()
 
@@ -177,7 +177,7 @@ class Attachment
         $attachment = array(
                        'title'       => $this->_title,
                        'fallback'    => $this->_fallback,
-                       'callback_id' => $this->_callback_id,
+                       'callback_id' => $this->_callbackId,
                        'color'       => $this->_color,
                        'actions'     => array(),
                       );
