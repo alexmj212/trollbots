@@ -114,6 +114,8 @@ class ActionPayload
      */
     public function __construct($data)
     {
+        $data = json_encode($data['payload']);
+
         try {
             if (array_key_exists('actions', $data) === true) {
                 foreach ($data['actions'] as $action) {
