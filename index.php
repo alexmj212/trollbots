@@ -12,9 +12,6 @@
  * @link     https://github.com/alexmj212/trollbots
  */
 
-
-namespace TrollBots;
-use Slim;
 use TrollBots\Lib;
 use TrollBots\Auth;
 use TrollBots\Scripts as Bots;
