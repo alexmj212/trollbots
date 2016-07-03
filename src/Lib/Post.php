@@ -208,9 +208,10 @@ class Post
                  'attachments'   => array(),
                  'response_type' => $this->_responseType,
                 );
-
-        foreach ($this->_attachments as $attachment) {
-            $post['attachments'][] = $attachment;
+        if ($this->_attachments !== null) {
+            foreach ($this->_attachments as $attachment) {
+                $post['attachments'][] = $attachment;
+            }
         }
 
         return json_encode($post, JSON_PRETTY_PRINT);
