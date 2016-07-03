@@ -28,11 +28,25 @@ class Attachment
 {
 
     /**
-     * The text of the post that will appear in Slack
+     * The title of the attachment
      *
      * @string
      */
-    private $_title;
+    private $_title = '';
+
+    /**
+     * The text of the attachment
+     *
+     * @string
+     */
+    private $_text = '';
+
+    /**
+     * The pretext of the attachment
+     *
+     * @string
+     */
+    private $_pretext = '';
 
     /**
      * The fallback of the attachment text for mobile displays
@@ -53,7 +67,7 @@ class Attachment
      *
      * @string
      */
-    private $_color;
+    private $_color = '';
 
     /**
      * The text of the post that will appear in Slack
@@ -69,13 +83,17 @@ class Attachment
      * @param string $title       The name of the bot that will post
      * @param string $fallback    Icon to represent the post
      * @param string $callback_id The text of the post
+     * @param string $text        The text that will appear in the attachment
+     * @param string $pretext     the pretext of the attachment
      * @param string $color       The channel the post will appear
      */
-    public function __construct($title, $fallback, $callback_id, $color = null)
+    public function __construct($title, $fallback, $callback_id, $text = null, $pretext = null, $color = null)
     {
         $this->_title       = $title;
         $this->_fallback    = $fallback;
         $this->_callback_id = $callback_id;
+        $this->_text        = $text;
+        $this->_pretext     = $pretext;
         $this->_color       = $color;
 
     }//end __construct()
@@ -108,7 +126,7 @@ class Attachment
 
 
     /**
-     * Set the post text
+     * Set the post title
      *
      * @param string $title the attachment title
      *
@@ -119,6 +137,58 @@ class Attachment
         $this->_title = $title;
 
     }//end setTitle()
+
+
+    /**
+     * Set the post text
+     *
+     * @param string $text the attachment text
+     *
+     * @return void
+     */
+    public function setText($text)
+    {
+        $this->_text = $text;
+
+    }//end setText()
+
+
+    /**
+     * Set the post pretext
+     *
+     * @param string $pretext the attachment text
+     *
+     * @return void
+     */
+    public function setPretext($pretext)
+    {
+        $this->_pretext = $pretext;
+
+    }//end setPretext()
+
+
+    /**
+     * Create attachemnt Array
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        $attachment = array(
+                       'title'       => $this->_title,
+                       'fallback'    => $this->_fallback,
+                       'callback_id' => $this->_callback_id,
+                       'color'       => $this->_color,
+                       'actions'     => array(),
+                      );
+
+        foreach ($this->_actions as $action) {
+            $attachment['actions'][] = $action->toArray();
+        }
+
+        return $attachment;
+
+    }//end toArray()
 
 
 }//end class

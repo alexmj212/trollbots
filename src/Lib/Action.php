@@ -87,4 +87,22 @@ class Action
     }//end __construct()
 
 
+    /**
+     * Returns array item for the action
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return array(
+                'name'  => $this->_name,
+                'text'  => $this->_text,
+                'style' => $this->_style,
+                'type'  => $this->_type,
+                'value' => $this->_value,
+               );
+
+    }//end toArray()
+
+
 }//end class

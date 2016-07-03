@@ -63,7 +63,7 @@ class Post
     /**
      * Attachments that will appear on the Slack post
      *
-     * @array
+     * @array<Attachment>
      */
     private $_attachments;
 
@@ -102,14 +102,14 @@ class Post
     /**
      * Function addAttachment()
      *
-     * @param array $attachment Container for an additional attachment
+     * @param Attachment $attachment Container for an additional attachment
      *
      * @return void
      */
     public function addAttachment($attachment)
     {
 
-        $this->_attachments[] = $attachment;
+        $this->_attachments[] = $attachment->toArray();
 
     }//end addAttachment()
 
@@ -176,6 +176,7 @@ class Post
      */
     public function getAttachments()
     {
+
         return array('attachments' => $this->_attachments);
 
     }//end getAttachments()
@@ -204,9 +205,13 @@ class Post
     {
         $post = array(
                  'text'          => $this->_text,
-                 'attachments'   => $this->_attachments,
+                 'attachments'   => array(),
                  'response_type' => $this->_responseType,
                 );
+
+        foreach ($this->_attachments as $attachment) {
+            $post['attachments'][] = $attachment;
+        }
 
         return json_encode($post, JSON_PRETTY_PRINT);
 
