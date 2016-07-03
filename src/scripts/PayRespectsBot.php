@@ -35,6 +35,7 @@ class PayRespectsBot extends Bot
 
     const PAY_RESPECTS = 'pay_respects';
 
+
     /**
      * TriggerBot constructor.
      *
@@ -58,6 +59,8 @@ class PayRespectsBot extends Bot
         $attachment = new Attachment('Join in the Respects', 'Pay Respects', PayRespectsBot::PAY_RESPECTS);
 
         $attachment->addAction(new Action('Pay Respects', 'f'));
+
+        $post->addAttachment($attachment);
 
         $responder = new Responder($post);
         $responder->respond();
