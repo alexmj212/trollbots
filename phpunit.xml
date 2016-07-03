@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpunit bootstrap="vendor/autoload.php" colors="true">
+<phpunit bootstrap="vendor/autoload.php" colors="true" process-isolation="true">
     <testsuites>
         <testsuite>
             <directory>./tests/Auth/</directory>
             <directory>./tests/Lib/</directory>
+            <!-- <directory>./tests/Scripts/</directory>   -->
         </testsuite>
     </testsuites>
 

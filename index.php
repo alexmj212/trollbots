@@ -21,6 +21,7 @@ use TrollBots\Lib\Bot;
 use TrollBots\Auth\OAuth_Slack;
 use TrollBots\Scripts as Bots;
 require __DIR__.'/vendor/autoload.php';
+require __DIR__.'/config.php';
 
 // Initialize Slim Framework.
 $app = new Slim\Slim();
