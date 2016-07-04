@@ -51,26 +51,27 @@ class PayRespectsBot extends Bot
         $response = '*'.$this->payload->getUserName().'* has paid their respects';
 
         $post = new Post($this->name, $this->icon, $response, $this->payload->getChannelName(), Post::RESPONSE_IN_CHANNEL);
-        $post->setReplaceOriginal(false);
+        $post->setReplaceOriginal(true);
+
+        if (get_class($this->payload) === 'TrollBots\Lib\ActionPayload') {
+            $post->setText($this->payload->getUserName().', '.$response);
+        }
 
         // Check to make sure the user hasn't already paid their respects. Too much respect.
-        if (strpos($this->payload->getText(), '@'.$this->payload->getUserName()) !== false) {
+        if (strpos($this->payload->getText(), $this->payload->getUserName()) !== false) {
             $post->setText('Too much respect.');
             $post->setResponseType(Post::RESPONSE_EPHEMERAL);
+            $post->setReplaceOriginal(false);
             $responder = new Responder($post);
             $responder->respond();
             die();
         }
 
-        // Check if the call to the bot is an action.
-        // If the call is not an action, add an attachment with an action.
-        if (get_class($this->payload) === 'TrollBots\Lib\Payload') {
-            $attachment = new Attachment('Pay Respects', 'Pay Respects', PayRespectsBot::PAY_RESPECTS_CALLBACK);
+        $attachment = new Attachment('Pay Respects', 'Pay Respects', PayRespectsBot::PAY_RESPECTS_CALLBACK);
 
-            $attachment->addAction(new Action('Press F to Pay Respects', 'F', Action::ACTION_PRIMARY_STYLE));
+        $attachment->addAction(new Action('Press F to Pay Respects', 'F', Action::ACTION_PRIMARY_STYLE));
 
-            $post->addAttachment($attachment);
-        }
+        $post->addAttachment($attachment);
 
         $responder = new Responder($post);
         $responder->respond();
