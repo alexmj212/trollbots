@@ -93,7 +93,7 @@ class ActionPayload
     /**
      * The text of the original message that created the action
      *
-     * @var string
+     * @var array
      */
     private $_original;
 
@@ -129,7 +129,7 @@ class ActionPayload
             }
 
             if (array_key_exists('callbackId', $data) === true) {
-                $this->_callbackId = strtolower($data['callbackId']);
+                $this->_callbackId = strtolower($data['callback_id']);
             } else {
                 throw new ErrorException('callbackId missing from action payload');
             }
