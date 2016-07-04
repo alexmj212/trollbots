@@ -208,7 +208,7 @@ class ActionPayload
 
 
     /**
-     * Get Channel Name
+     * Get Channel array
      *
      * @return array
      */
@@ -217,6 +217,18 @@ class ActionPayload
         return $this->_channel;
 
     }//end getChannel()
+
+
+    /**
+     * Get Channel Name
+     *
+     * @return string
+     */
+    public function getChannelName()
+    {
+        return $this->_channel['name'];
+
+    }//end getChannelName()
 
 
     /**
