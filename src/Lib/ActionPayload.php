@@ -152,20 +152,20 @@ class ActionPayload
                 throw new ErrorException('user missing from action payload');
             }
 
-            if (array_key_exists('actionTs', $data) === true) {
-                $this->_actionTs = strtolower($data['actionTs']);
+            if (array_key_exists('action_ts', $data) === true) {
+                $this->_actionTs = strtolower($data['action_ts']);
             } else {
                 throw new ErrorException('actionTs missing from action payload');
             }
 
             if (array_key_exists('messageTs', $data) === true) {
-                $this->_messageTs = strtolower($data['messageTs']);
+                $this->_messageTs = strtolower($data['message_ts']);
             } else {
                 throw new ErrorException('messageTs missing from action payload');
             }
 
-            if (array_key_exists('attachmentId', $data) === true) {
-                $this->_attachmentId = strtolower($data['attachmentId']);
+            if (array_key_exists('attachment_id', $data) === true) {
+                $this->_attachmentId = strtolower($data['attachment_id']);
             } else {
                 throw new ErrorException('attachmentId missing from action payload');
             }
@@ -176,14 +176,14 @@ class ActionPayload
                 throw new ErrorException('token missing from action payload');
             }
 
-            if (array_key_exists('original', $data) === true) {
-                $this->_original = strtolower($data['original']);
+            if (array_key_exists('original_message', $data) === true) {
+                $this->_original = strtolower($data['original_message']);
             } else {
                 throw new ErrorException('original missing from action payload');
             }
 
-            if (array_key_exists('responseUrl', $data) === true) {
-                $this->_responseUrl = strtolower($data['responseUrl']);
+            if (array_key_exists('response_url', $data) === true) {
+                $this->_responseUrl = strtolower($data['response_url']);
             } else {
                 throw new ErrorException('responseUrl missing from action payload');
             }
