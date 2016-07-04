@@ -250,7 +250,7 @@ class ActionPayload
      */
     public function getUserName()
     {
-        return $this->_user['name'];
+        return '@'.$this->_user['name'];
 
     }//end getUserName()
 
