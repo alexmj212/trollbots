@@ -128,7 +128,7 @@ class ActionPayload
                 throw new ErrorException('actions missing from action payload');
             }
 
-            if (array_key_exists('callbackId', $data) === true) {
+            if (array_key_exists('callback_id', $data) === true) {
                 $this->_callbackId = strtolower($data['callback_id']);
             } else {
                 throw new ErrorException('callbackId missing from action payload');
