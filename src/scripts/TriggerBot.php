@@ -35,27 +35,26 @@ class TriggerBot extends Bot
     /**
      * TriggerBot constructor.
      *
-     * @param Payload $payload the payload data
+     * @return void
      */
-    public function __construct($payload)
+    public function execute()
     {
-        parent::__construct($payload);
         $this->name = 'Trigger Bot';
         $this->icon = ':bangbang:';
-        $this->user = $payload->getUserName();
+        $this->user = $this->payload->getUserName();
 
-        $response = '*'.$payload->getUserName().'* has been triggered';
+        $response = '*'.$this->payload->getUserName().'* has been triggered';
 
-        if (Payload::isUserName($payload->getText()) === true) {
-            $response .= ' *'.$payload->getText().'*!';
-        } else if ($payload->getText() === 'warning') {
+        if (Payload::isUserName($this->payload->getText()) === true) {
+            $response .= ' *'.$this->payload->getText().'*!';
+        } else if ($this->payload->getText() === 'warning') {
             $response = ':heavy_exclamation_mark::heavy_exclamation_mark::heavy_exclamation_mark: :warning: :rotating_light: :warning: TRIGGER WARNING :warning: :rotating_light: :warning::heavy_exclamation_mark::heavy_exclamation_mark::heavy_exclamation_mark:';
         }
 
-        $responder = new Responder(new Post($this->name, $this->icon, $response, $payload->getChannelName(), Post::RESPONSE_IN_CHANNEL));
+        $responder = new Responder(new Post($this->name, $this->icon, $response, $this->payload->getChannelName(), Post::RESPONSE_IN_CHANNEL));
         $responder->respond();
 
-    }//end __construct()
+    }//end execute()
 
 
 }//end class

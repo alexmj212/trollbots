@@ -46,12 +46,10 @@ class PunBot extends Bot
     /**
      * PunBot constructor.
      *
-     * @param Payload $payload the payload data
+     * @return void
      */
-    public function __construct($payload)
+    public function execute()
     {
-
-        parent::__construct($payload);
 
         $this->name           = 'Pun Bot';
         $this->icon           = ':heavy_dollar_sign:';
@@ -59,9 +57,9 @@ class PunBot extends Bot
 
         $post = null;
 
-        $this->teamId = $payload->getTeamId();
+        $this->teamId = $this->payload->getTeamId();
 
-        $userRating = explode(' ', $payload->getText());
+        $userRating = explode(' ', $this->payload->getText());
         if (count($userRating) === 2) {
             $this->user    = $userRating[0];
             $this->_rating = $userRating[1];
@@ -75,24 +73,24 @@ class PunBot extends Bot
             // Valid username check.
             && Payload::isUserName($this->user) === true
             // Self-rating check.
-            && $this->user !== $payload->getUserName()
+            && $this->user !== $this->payload->getUserName()
         ) {
             // Log the Pun Rating.
             $this->_logPunRating();
             // Build the response string.
-            $response  = '*'.$payload->getUserName().'* has rated *'.$this->user.'\'s* pun '.$this->_rating.'/10. ';
+            $response  = '*'.$this->payload->getUserName().'* has rated *'.$this->user.'\'s* pun '.$this->_rating.'/10. ';
             $response .= 'Their average is now '.$this->_retrieveRating($this->user).'/10';
             // Store the Post.
-            $post = new Post($this->name, $this->icon, $response, $payload->getChannelName(), Post::RESPONSE_IN_CHANNEL);
-        } else if ($payload->getText() === 'total') {
+            $post = new Post($this->name, $this->icon, $response, $this->payload->getChannelName(), Post::RESPONSE_IN_CHANNEL);
+        } else if ($this->payload->getText() === 'total') {
             // Build the requested "total" response string.
-            $response  = 'You\'ve been rated '.$this->_retrieveRatingCount($payload->getUserName()).' times ';
-            $response .= 'for an average of '.$this->_retrieveRating($payload->getUserName()).'/10';
+            $response  = 'You\'ve been rated '.$this->_retrieveRatingCount($this->payload->getUserName()).' times ';
+            $response .= 'for an average of '.$this->_retrieveRating($this->payload->getUserName()).'/10';
             // Store the Post.
-            $post = new Post($this->name, $this->icon, $response, $payload->getChannelName(), Post::RESPONSE_EPHEMERAL);
+            $post = new Post($this->name, $this->icon, $response, $this->payload->getChannelName(), Post::RESPONSE_EPHEMERAL);
         } else {
             // Invalid command.
-            $post = new Post($this->name, $this->icon, Post::INVALID_COMMAND, $payload->getChannelName(), Post::RESPONSE_EPHEMERAL);
+            $post = new Post($this->name, $this->icon, Post::INVALID_COMMAND, $this->payload->getChannelName(), Post::RESPONSE_EPHEMERAL);
         }
 
         $responder = new Responder($post);

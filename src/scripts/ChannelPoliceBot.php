@@ -35,27 +35,27 @@ class ChannelPoliceBot extends Bot
     /**
      * ChannelPoliceBot constructor.
      *
-     * @param Payload $payload the payload data
+     * @return void
      */
-    public function __construct($payload)
+    public function execute()
     {
-        parent::__construct($payload);
+
         $this->name = 'Channel Police Bot';
         $this->icon = ':warning:';
-        $this->user = $payload->getUserName();
+        $this->user = $this->payload->getUserName();
 
         $response = '*'.$this->user.'* has requested the discussion be moved to the ';
 
-        if (Payload::isChannel($payload->getText()) === true) {
-            $response .= '*'.$payload->getText().'* channel!';
+        if (Payload::isChannel($this->payload->getText()) === true) {
+            $response .= '*'.$this->payload->getText().'* channel!';
         } else {
             $response .= 'appropriate channel.';
         }
 
-        $responder = new Responder(new Post($this->name, $this->icon, $response, $payload->getChannelName(), Post::RESPONSE_IN_CHANNEL));
+        $responder = new Responder(new Post($this->name, $this->icon, $response, $this->payload->getChannelName(), Post::RESPONSE_IN_CHANNEL));
         $responder->respond();
 
-    }//end __construct()
+    }//end execute()
 
 
 }//end class
