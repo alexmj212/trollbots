@@ -139,7 +139,7 @@ $app->post(
     function () use ($app) {
         $payload = new Lib\Payload($app->request->post());
         if (Lib\Bot::verifyToken('payrespectsbot', $payload->getToken()) === true) {
-            $sarcasmbot = new Bots\PayRespectsBot($payload);
+            $payrespectsbot = new Bots\PayRespectsBot($payload);
         } else {
             echo Lib\Post::INVALID_TOKEN;
         }
@@ -150,8 +150,7 @@ $app->post(
     function () use ($app) {
         $payload = new Lib\ActionPayload($app->request->post());
         if (Lib\Bot::verifyToken('payrespectsbot', $payload->getToken()) === true) {
-            //$payrespectsbot = new Bots\PayRespectsBot($payload);
-            echo 'You paid respects';
+            $payrespectsbot = new Bots\PayRespectsBot($payload);
         } else {
             echo Lib\Post::INVALID_TOKEN;
         }
