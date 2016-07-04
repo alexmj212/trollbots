@@ -67,7 +67,7 @@ class Bot
     /**
      * The payload sent to the bot
      *
-     * @var Payload
+     * @var mixed
      */
     protected $payload;
 
@@ -75,7 +75,7 @@ class Bot
     /**
      * Bot constructor.
      *
-     * @param Payload $payload the sent payload
+     * @param mixed $payload the sent payload
      */
     public function __construct($payload)
     {
