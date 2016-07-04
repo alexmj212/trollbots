@@ -75,6 +75,12 @@ class Post
      */
     private $_responseType = Post::RESPONSE_EPHEMERAL;
 
+    /**
+     * In the case of an action, toggle the replace original
+     *
+     * @var boolean
+     */
+    private $_replaceOriginal;
 
     /**
      * Post constructor
@@ -197,6 +203,20 @@ class Post
 
 
     /**
+     * Change the replace_original option
+     *
+     * @param boolean $replace the setting for replace original
+     *
+     * @return void
+     */
+    public function setReplaceOriginal($replace)
+    {
+        $this->_replaceOriginal = $replace;
+
+    }//end setReplaceOriginal()
+
+
+    /**
      * Function toString()
      *
      * @return string
@@ -212,6 +232,10 @@ class Post
             foreach ($this->_attachments as $attachment) {
                 $post['attachments'][] = $attachment;
             }
+        }
+
+        if ($this->_replaceOriginal !== null) {
+            $post['replace_original'] = $this->_replaceOriginal;
         }
 
         return json_encode($post, JSON_PRETTY_PRINT);
