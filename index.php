@@ -26,7 +26,6 @@ $app = new Slim\Slim();
 */
 
 // Redirect the root web page to repo page.
-
 $app->get(
     '/',
     function () {
@@ -35,38 +34,9 @@ $app->get(
     }
 );
 
-$app->get(
-    '/dkpbot-auth/',
-    function () use ($app) {
-        $dkpbotauth = new Auth\OAuth_Slack($app->request->get(), 'DKP Bot');
-        $dkpbotauth->requestSlackAuth();
-    }
-);
-
-$app->get(
-    '/payrespectsbot-auth/',
-    function () use ($app) {
-        $payrespectsbotauth = new Auth\OAuth_Slack($app->request->get(), 'Pay Respects Bot');
-        $payrespectsbotauth->requestSlackAuth();
-    }
-);
-
 /*
     * POST Requests
 */
-
-// Define 'tip' endpoint.
-$app->post(
-    '/tipbot/',
-    function () use ($app) {
-        $payload = new Lib\Payload($app->request->post());
-        if (Lib\Bot::verifyToken('tipbot', $payload->getToken()) === true) {
-            $tipbot = new Bots\TipBot($payload);
-        } else {
-            echo Lib\Post::INVALID_TOKEN;
-        }
-    }
-);
 
 // Define 'triggered' endpoint.
 $app->post(
@@ -95,6 +65,13 @@ $app->post(
 );
 
 // Define 'punbot' endpoint.
+$app->get(
+    '/punbot-auth/',
+    function () use ($app) {
+        $punbotauth = new Auth\OAuth_Slack($app->request->get(), 'Pun Bot');
+        $punbotauth->requestSlackAuth();
+    }
+);
 $app->post(
     '/punbot/',
     function () use ($app) {
@@ -108,6 +85,13 @@ $app->post(
 );
 
 // Define 'dkpbot' endpoint.
+$app->get(
+    '/dkpbot-auth/',
+    function () use ($app) {
+        $dkpbotauth = new Auth\OAuth_Slack($app->request->get(), 'DKP Bot');
+        $dkpbotauth->requestSlackAuth();
+    }
+);
 $app->post(
     '/dkpbot/',
     function () use ($app) {
@@ -134,6 +118,13 @@ $app->post(
 );
 
 // Define 'payrespectsbot' endpoint.
+$app->get(
+    '/payrespectsbot-auth/',
+    function () use ($app) {
+        $payrespectsbotauth = new Auth\OAuth_Slack($app->request->get(), 'Pay Respects Bot');
+        $payrespectsbotauth->requestSlackAuth();
+    }
+);
 $app->post(
     '/payrespectsbot/',
     function () use ($app) {
