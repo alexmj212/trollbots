@@ -179,6 +179,7 @@ class Attachment
                        'fallback'    => $this->_fallback,
                        'callback_id' => $this->_callbackId,
                        'color'       => $this->_color,
+                       'text'        => $this->_text,
                        'actions'     => array(),
                       );
 
