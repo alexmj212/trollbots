@@ -15,7 +15,6 @@
 namespace TrollBots\Scripts;
 use TrollBots\Lib\Action;
 use TrollBots\Lib\Attachment;
-use TrollBots\Lib\Payload;
 use TrollBots\Lib\Responder;
 use TrollBots\Lib\Post;
 use TrollBots\Lib\Bot;
