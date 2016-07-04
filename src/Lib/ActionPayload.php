@@ -158,7 +158,7 @@ class ActionPayload
                 throw new ErrorException('actionTs missing from action payload');
             }
 
-            if (array_key_exists('messageTs', $data) === true) {
+            if (array_key_exists('message_ts', $data) === true) {
                 $this->_messageTs = strtolower($data['message_ts']);
             } else {
                 throw new ErrorException('messageTs missing from action payload');
