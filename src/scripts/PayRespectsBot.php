@@ -54,11 +54,7 @@ class PayRespectsBot extends Bot
         $post->setReplaceOriginal(true);
 
         if (get_class($this->payload) === 'TrollBots\Lib\ActionPayload') {
-            if (strpos($this->payload->getText(), 'has') !== false) {
-                $post->setText(str_replace('has', 'have', $this->payload->getText()));
-            }
             $post->setText('*'.$this->payload->getUserName().'*, '.$this->payload->getText());
-
         }
 
         // Check to make sure the user hasn't already paid their respects. Too much respect.
