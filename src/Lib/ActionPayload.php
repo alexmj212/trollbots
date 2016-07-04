@@ -243,4 +243,16 @@ class ActionPayload
     }//end getToken()
 
 
+    /**
+     * Get the original message
+     *
+     * @return string
+     */
+    public function getOriginal()
+    {
+        return $this->_original;
+
+    }//end getToken()
+
+
 }//end class
