@@ -33,7 +33,7 @@ use TrollBots\Lib\Bot;
 class PayRespectsBot extends Bot
 {
 
-    const PAY_RESPECTS = 'pay_respects';
+    const PAY_RESPECTS_CALLBACK = 'pay_respects';
 
 
     /**
@@ -56,7 +56,7 @@ class PayRespectsBot extends Bot
 
         $post = new Post($this->name, $this->icon, $response, $payload->getChannelName(), Post::RESPONSE_IN_CHANNEL);
 
-        $attachment = new Attachment('Join in the Respects', 'Pay Respects', PayRespectsBot::PAY_RESPECTS);
+        $attachment = new Attachment('Pay Respect', 'Pay Respects', PayRespectsBot::PAY_RESPECTS_CALLBACK);
 
         $attachment->addAction(new Action('Pay Respects', 'F'));
 

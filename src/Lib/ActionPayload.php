@@ -115,7 +115,7 @@ class ActionPayload
     public function __construct($data)
     {
 
-        $data = json_decode($data['payload']);
+        $data = json_decode($data['payload'], true);
 
         try {
             if (array_key_exists('actions', $data) === true) {
