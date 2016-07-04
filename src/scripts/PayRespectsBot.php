@@ -39,22 +39,34 @@ class PayRespectsBot extends Bot
     /**
      * TriggerBot constructor.
      *
-     * @param Payload $payload the payload data
+     * @return void
      */
-    public function __construct($payload)
+    public function execute()
     {
-        parent::__construct($payload);
+
         $this->name = 'Pay Respects Bot';
         $this->icon = ':bow:';
-        $this->user = $payload->getUserName();
+        $this->user = $this->payload->getUserName();
 
-        $response = '*'.$payload->getUserName().'* has paid their respects';
-
-        if ($payload->getText() !== null) {
-            $response .= ' to *'.$payload->getText().'*';
+        if (get_class($this->payload) === 'ActionPayload') {
+            $post = new Post($this->name, $this->icon, '', $this->payload->getChannel()['name'], Post::RESPONSE_IN_CHANNEL);
+            $original = $this->payload->getOriginal();
+            $response = $original['text'];
+            str_replace('has', 'have', $original['text']);
+            $response = '@'.$this->payload->getUser()['name'].', '.$response;
+            $post->setText($response);
+            $responder = new Responder($post);
+            $responder->respond();
+            exit();
         }
 
-        $post = new Post($this->name, $this->icon, $response, $payload->getChannelName(), Post::RESPONSE_IN_CHANNEL);
+        $response = '*'.$this->payload->getUserName().'* has paid their respects';
+
+        if ($this->payload->getText() !== null && $this->payload->getText() !== '') {
+            $response .= ' to *'.$this->payload->getText().'*';
+        }
+
+        $post = new Post($this->name, $this->icon, $response, $this->payload->getChannelName(), Post::RESPONSE_IN_CHANNEL);
 
         $attachment = new Attachment('Pay Respect', 'Pay Respects', PayRespectsBot::PAY_RESPECTS_CALLBACK);
 
@@ -65,7 +77,7 @@ class PayRespectsBot extends Bot
         $responder = new Responder($post);
         $responder->respond();
 
-    }//end __construct()
+    }//end execute()
 
 
 }//end class
