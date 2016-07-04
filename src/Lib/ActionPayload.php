@@ -198,7 +198,7 @@ class ActionPayload
     /**
      * Get the Team ID
      *
-     * @return mixed
+     * @return array
      */
     public function getTeam()
     {
@@ -210,7 +210,7 @@ class ActionPayload
     /**
      * Get Channel Name
      *
-     * @return string
+     * @return array
      */
     public function getChannel()
     {
@@ -220,15 +220,27 @@ class ActionPayload
 
 
     /**
-     * Get Username
+     * Get User array
      *
-     * @return string
+     * @return array
      */
     public function getUser()
     {
         return $this->_user;
 
     }//end getUser()
+
+
+    /**
+     * Get Username
+     *
+     * @return string
+     */
+    public function getUserName()
+    {
+        return $this->_user['name'];
+
+    }//end getUserName()
 
 
     /**
@@ -252,7 +264,19 @@ class ActionPayload
     {
         return $this->_original;
 
-    }//end getToken()
+    }//end getOriginal()
+
+
+    /**
+     * Get the original text of the message
+     *
+     * @return string
+     */
+    public function getText()
+    {
+        return $this->_original['text'];
+
+    }//end getText()
 
 
 }//end class
