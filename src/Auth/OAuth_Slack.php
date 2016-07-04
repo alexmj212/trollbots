@@ -80,8 +80,12 @@ class OAuth_Slack
         // Set the client credentials based on the bot requesting access.
         $this->_setSlackClientDetails();
 
-        $this->_client_id     = $client_id;
-        $this->_client_secret = $client_secret;
+        if ($client_id !== null) {
+            $this->_client_id     = $client_id;
+        }
+        if ($client_secret !== null) {
+            $this->_client_secret = $client_secret;
+        }
 
     }//end __construct()
 

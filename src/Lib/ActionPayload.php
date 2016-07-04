@@ -93,7 +93,7 @@ class ActionPayload
     /**
      * The text of the original message that created the action
      *
-     * @var string
+     * @var array
      */
     private $_original;
 
@@ -114,6 +114,9 @@ class ActionPayload
      */
     public function __construct($data)
     {
+
+        $data = json_decode($data['payload'], true);
+
         try {
             if (array_key_exists('actions', $data) === true) {
                 foreach ($data['actions'] as $action) {
@@ -125,8 +128,8 @@ class ActionPayload
                 throw new ErrorException('actions missing from action payload');
             }
 
-            if (array_key_exists('callbackId', $data) === true) {
-                $this->_callbackId = strtolower($data['callbackId']);
+            if (array_key_exists('callback_id', $data) === true) {
+                $this->_callbackId = $data['callback_id'];
             } else {
                 throw new ErrorException('callbackId missing from action payload');
             }
@@ -149,20 +152,20 @@ class ActionPayload
                 throw new ErrorException('user missing from action payload');
             }
 
-            if (array_key_exists('actionTs', $data) === true) {
-                $this->_actionTs = strtolower($data['actionTs']);
+            if (array_key_exists('action_ts', $data) === true) {
+                $this->_actionTs = $data['action_ts'];
             } else {
                 throw new ErrorException('actionTs missing from action payload');
             }
 
-            if (array_key_exists('messageTs', $data) === true) {
-                $this->_messageTs = strtolower($data['messageTs']);
+            if (array_key_exists('message_ts', $data) === true) {
+                $this->_messageTs = $data['message_ts'];
             } else {
                 throw new ErrorException('messageTs missing from action payload');
             }
 
-            if (array_key_exists('attachmentId', $data) === true) {
-                $this->_attachmentId = strtolower($data['attachmentId']);
+            if (array_key_exists('attachment_id', $data) === true) {
+                $this->_attachmentId = $data['attachment_id'];
             } else {
                 throw new ErrorException('attachmentId missing from action payload');
             }
@@ -173,14 +176,14 @@ class ActionPayload
                 throw new ErrorException('token missing from action payload');
             }
 
-            if (array_key_exists('original', $data) === true) {
-                $this->_original = strtolower($data['original']);
+            if (array_key_exists('original_message', $data) === true) {
+                $this->_original = $data['original_message'];
             } else {
                 throw new ErrorException('original missing from action payload');
             }
 
-            if (array_key_exists('responseUrl', $data) === true) {
-                $this->_responseUrl = strtolower($data['responseUrl']);
+            if (array_key_exists('response_url', $data) === true) {
+                $this->_responseUrl = $data['response_url'];
             } else {
                 throw new ErrorException('responseUrl missing from action payload');
             }
@@ -195,7 +198,7 @@ class ActionPayload
     /**
      * Get the Team ID
      *
-     * @return mixed
+     * @return array
      */
     public function getTeam()
     {
@@ -205,9 +208,9 @@ class ActionPayload
 
 
     /**
-     * Get Channel Name
+     * Get Channel array
      *
-     * @return string
+     * @return array
      */
     public function getChannel()
     {
@@ -217,15 +220,39 @@ class ActionPayload
 
 
     /**
-     * Get Username
+     * Get Channel Name
      *
      * @return string
+     */
+    public function getChannelName()
+    {
+        return $this->_channel['name'];
+
+    }//end getChannelName()
+
+
+    /**
+     * Get User array
+     *
+     * @return array
      */
     public function getUser()
     {
         return $this->_user;
 
     }//end getUser()
+
+
+    /**
+     * Get Username
+     *
+     * @return string
+     */
+    public function getUserName()
+    {
+        return '@'.$this->_user['name'];
+
+    }//end getUserName()
 
 
     /**
@@ -238,6 +265,30 @@ class ActionPayload
         return $this->_token;
 
     }//end getToken()
+
+
+    /**
+     * Get the original message
+     *
+     * @return string
+     */
+    public function getOriginal()
+    {
+        return $this->_original;
+
+    }//end getOriginal()
+
+
+    /**
+     * Get the original text of the message
+     *
+     * @return string
+     */
+    public function getText()
+    {
+        return $this->_original['text'];
+
+    }//end getText()
 
 
 }//end class

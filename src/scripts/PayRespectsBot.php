@@ -15,7 +15,6 @@
 namespace TrollBots\Scripts;
 use TrollBots\Lib\Action;
 use TrollBots\Lib\Attachment;
-use TrollBots\Lib\Payload;
 use TrollBots\Lib\Responder;
 use TrollBots\Lib\Post;
 use TrollBots\Lib\Bot;
@@ -33,39 +32,50 @@ use TrollBots\Lib\Bot;
 class PayRespectsBot extends Bot
 {
 
-    const PAY_RESPECTS = 'pay_respects';
+    const PAY_RESPECTS_CALLBACK = 'pay_respects';
 
 
     /**
      * TriggerBot constructor.
      *
-     * @param Payload $payload the payload data
+     * @return void
      */
-    public function __construct($payload)
+    public function execute()
     {
-        parent::__construct($payload);
+
         $this->name = 'Pay Respects Bot';
         $this->icon = ':bow:';
-        $this->user = $payload->getUserName();
+        $this->user = $this->payload->getUserName();
 
-        $response = '*'.$payload->getUserName().'* has paid their respects';
+        $response = '*'.$this->payload->getUserName().'* has paid their respects';
 
-        if ($payload->getText() !== null) {
-            $response .= ' to *'.$payload->getText().'*';
+        $post = new Post($this->name, $this->icon, $response, $this->payload->getChannelName(), Post::RESPONSE_IN_CHANNEL);
+        $post->setReplaceOriginal(true);
+
+        if (get_class($this->payload) === 'TrollBots\Lib\ActionPayload') {
+            $post->setText('*'.$this->payload->getUserName().'*, '.$this->payload->getText());
         }
 
-        $post = new Post($this->name, $this->icon, $response, $payload->getChannelName(), Post::RESPONSE_IN_CHANNEL);
+        // Check to make sure the user hasn't already paid their respects. Too much respect.
+        if (strpos($this->payload->getText(), $this->payload->getUserName()) !== false) {
+            $post->setText('Too much respect.');
+            $post->setResponseType(Post::RESPONSE_EPHEMERAL);
+            $post->setReplaceOriginal(false);
+            $responder = new Responder($post);
+            $responder->respond();
+            die();
+        }
 
-        $attachment = new Attachment('Join in the Respects', 'Pay Respects', PayRespectsBot::PAY_RESPECTS);
+        $attachment = new Attachment('Pay Respects', 'Pay Respects', PayRespectsBot::PAY_RESPECTS_CALLBACK);
 
-        $attachment->addAction(new Action('Pay Respects', 'F'));
+        $attachment->addAction(new Action('Press F to Pay Respects', 'F', Action::ACTION_PRIMARY_STYLE));
 
         $post->addAttachment($attachment);
 
         $responder = new Responder($post);
         $responder->respond();
 
-    }//end __construct()
+    }//end execute()
 
 
 }//end class

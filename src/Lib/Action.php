@@ -27,9 +27,9 @@ namespace TrollBots\Lib;
 class Action
 {
 
-    const DEFAULT_STYLE = 'default';
-    const PRIMARY_STYLE = 'primary';
-    const DANGER_STYLE  = 'danger';
+    const ACTION_DEFAULT_STYLE = 'default';
+    const ACTION_PRIMARY_STYLE = 'primary';
+    const ACTION_DANGER_STYLE  = 'danger';
 
     /**
      * The name of the action that will appear in Slack
@@ -50,7 +50,7 @@ class Action
      *
      * @string
      */
-    private $_style = Action::DEFAULT_STYLE;
+    private $_style = Action::ACTION_DEFAULT_STYLE;
 
     /**
      * The type of action, button is the only action available right now
