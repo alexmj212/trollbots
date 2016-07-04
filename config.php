@@ -28,17 +28,9 @@ $conf['bots']['DKP Bot']['slack_client_secret'] = getenv('dkpbot_slack_client_se
 $conf['bots']['Pay Respects Bot']['slack_client_id']     = getenv('payrespectsbot_slack_client_id') ?: null;
 $conf['bots']['Pay Respects Bot']['slack_client_secret'] = getenv('payrespectsbot_slack_client_secret') ?: null;
 
-// Test Bot Credentials.
-$conf['bots']['Test Bot']['slack_client_id']     = getenv('testbot_slack_client_id') ?: null;
-$conf['bots']['Test Bot']['slack_client_secret'] = getenv('testbot_slack_client_secret') ?: null;
-
-// Subreddit Bot Credentials.
-$conf['bots']['Subreddit Bot']['reddit_token_url']     = getenv('reddit_token_url') ?: null;
-$conf['bots']['Subreddit Bot']['reddit_redirect_uri']  = getenv('reddit_redirect_uri') ?: null;
-$conf['bots']['Subreddit Bot']['reddit_client_id']     = getenv('reddit_client_id') ?: null;
-$conf['bots']['Subreddit Bot']['reddit_client_secret'] = getenv('reddit_client_secret') ?: null;
-$conf['bots']['Subreddit Bot']['reddit_username']      = getenv('reddit_username') ?: null;
-$conf['bots']['Subreddit Bot']['reddit_password']      = getenv('reddit_password') ?: null;
+// Pun Bot Credentials.
+$conf['bots']['Pun Bot']['slack_client_id']     = getenv('punbot_slack_client_id') ?: null;
+$conf['bots']['Pun Bot']['slack_client_secret'] = getenv('punbot_slack_client_secret') ?: null;
 
 // Mongo Credentials.
 $conf['datasource']['mongo_username']      = getenv('mongo_username') ?: null;
