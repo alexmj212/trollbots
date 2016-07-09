@@ -148,5 +148,25 @@ $app->post(
     }
 );
 
+// Define 'shamebot' endpoint.
+$app->get(
+    '/shamebot-auth/',
+    function () use ($app) {
+        $shamebotauth = new Auth\OAuth_Slack($app->request->get(), 'Shame Bot');
+        $shamebotauth->requestSlackAuth();
+    }
+);
+$app->post(
+    '/shamebot/',
+    function () use ($app) {
+        $payload = new Lib\Payload($app->request->post());
+        if (Lib\Bot::verifyToken('shamebot', $payload->getToken()) === true) {
+            $shamebot = new Bots\ShameBot($payload);
+        } else {
+            echo Lib\Post::INVALID_TOKEN;
+        }
+    }
+);
+
 // Run the app.
 $app->run();

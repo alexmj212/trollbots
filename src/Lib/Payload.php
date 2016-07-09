@@ -83,6 +83,13 @@ class Payload
      */
     private $_text;
 
+    /**
+     * The response URL of the command that was sent
+     *
+     * @var string
+     */
+    private $_responseURL;
+
 
     /**
      * Payload constructor.
@@ -140,6 +147,12 @@ class Payload
                 $this->_text = strtolower($data['text']);
             } else {
                 throw new ErrorException('text missing from payload');
+            }
+
+            if (array_key_exists('response_url', $data) === true) {
+                $this->_text = $data['response_url'];
+            } else {
+                throw new ErrorException('response_url missing from payload');
             }
         } catch (ErrorException $e){
             echo 'Payload Processing Error: ', $e->getMessage(), '\n';
@@ -207,6 +220,18 @@ class Payload
         return $this->_token;
 
     }//end getToken()
+
+
+    /**
+     * Get the response url
+     *
+     * @return string
+     */
+    public function getResponseURL()
+    {
+        return $this->_responseURL;
+
+    }//end getResponseURL()
 
 
     /**

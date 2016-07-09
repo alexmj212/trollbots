@@ -55,12 +55,36 @@ class Responder
     public function respond()
     {
 
-        // Set response header to json type.
-        header('Content-Type: application/json');
-        echo $this->_post->toString();
-        exit();
+        if ($this->_post->getResponseURL() !== null) {
+            $this->respondCURL();
+        } else {
+            // Set response header to json type.
+            header('Content-Type: application/json');
+            echo $this->_post->toString();
+            exit();
+        }
 
     }//end respond()
+
+
+    /**
+     * Respond using the response URL for delayed responses
+     *
+     * @return void
+     */
+    public function respondCURL()
+    {
+
+        // Initialize Response request.
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $this->_post->getResponseURL());
+        curl_setopt($ch, CURLOPT_POST, count($this->_post->toArray()));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $this->_post->toString());
+        curl_setopt($ch, CURLOPT_HTTPHEADER, 'Content-Type: application/json');
+        curl_exec($ch);
+        curl_close($ch);
+
+    }//end respondCURL()
 
 
 }//end class

@@ -32,6 +32,10 @@ $conf['bots']['Pay Respects Bot']['slack_client_secret'] = getenv('payrespectsbo
 $conf['bots']['Pun Bot']['slack_client_id']     = getenv('punbot_slack_client_id') ?: null;
 $conf['bots']['Pun Bot']['slack_client_secret'] = getenv('punbot_slack_client_secret') ?: null;
 
+// Shame Bot Credentials.
+$conf['bots']['Shame Bot']['slack_client_id']     = getenv('shamebot_slack_client_id') ?: null;
+$conf['bots']['Shame Bot']['slack_client_secret'] = getenv('shamebot_slack_client_secret') ?: null;
+
 // Mongo Credentials.
 $conf['datasource']['mongo_username']      = getenv('mongo_username') ?: null;
 $conf['datasource']['mongo_pw']            = getenv('mongo_pw') ?: null;

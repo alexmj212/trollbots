@@ -76,11 +76,19 @@ class Post
     private $_responseType = Post::RESPONSE_EPHEMERAL;
 
     /**
+     * The url to post to
+     *
+     * @string
+     */
+    private $_responseURL;
+
+    /**
      * In the case of an action, toggle the replace original
      *
      * @var boolean
      */
     private $_replaceOriginal;
+
 
     /**
      * Post constructor
@@ -90,8 +98,9 @@ class Post
      * @param string $text         The text of the post
      * @param string $channel      The channel the post will appear
      * @param string $responseType The visibility of the post
+     * @param string $responseURL  The URL to respond to for delayed messages
      */
-    public function __construct($name, $icon, $text, $channel, $responseType = null)
+    public function __construct($name, $icon, $text, $channel, $responseType = null, $responseURL = null)
     {
         $this->_name    = $name;
         $this->_icon    = $icon;
@@ -100,6 +109,10 @@ class Post
 
         if ($responseType !== null) {
             $this->setResponseType($responseType);
+        }
+
+        if ($responseURL !== null) {
+            $this->_responseURL = $responseURL;
         }
 
     }//end __construct()
@@ -153,6 +166,19 @@ class Post
         return $this->_responseType;
 
     }//end setResponseType()
+
+
+    /**
+     * Get Response URL
+     *
+     * @return mixed
+     */
+    public function getResponseURL()
+    {
+
+        return $this->_responseURL;
+
+    }//end getResponseURL()
 
 
     /**
@@ -217,14 +243,16 @@ class Post
 
 
     /**
-     * Function toString()
+     * Function toArray()
      *
-     * @return string
+     * @return array
      */
-    public function toString()
+    public function toArray()
     {
+
         $post = array(
                  'text'          => $this->_text,
+                 'channel'       => $this->_channel,
                  'attachments'   => array(),
                  'response_type' => $this->_responseType,
                 );
@@ -238,7 +266,20 @@ class Post
             $post['replace_original'] = $this->_replaceOriginal;
         }
 
-        return json_encode($post, JSON_PRETTY_PRINT);
+        return $post;
+
+    }//end toArray()
+
+
+    /**
+     * Function toString()
+     *
+     * @return string
+     */
+    public function toString()
+    {
+
+        return json_encode($this->toArray(), JSON_PRETTY_PRINT);
 
     }//end toString()
 
