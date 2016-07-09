@@ -150,7 +150,7 @@ class Payload
             }
 
             if (array_key_exists('response_url', $data) === true) {
-                $this->_text = $data['response_url'];
+                $this->_responseURL = $data['response_url'];
             } else {
                 throw new ErrorException('response_url missing from payload');
             }

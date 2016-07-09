@@ -64,7 +64,7 @@ class ShameBot extends Bot
                 sleep(3);
             }
         } else {
-            $post = new Post($this->name, $this->icon, Post::INVALID_COMMAND, $shamedUser, Post::RESPONSE_IN_CHANNEL);
+            $post = new Post($this->name, $this->icon, Post::INVALID_COMMAND, $shamedUser, Post::RESPONSE_EPHEMERAL);
 
             $responder = new Responder($post);
             $responder->respond();
