@@ -103,6 +103,17 @@ $app->post(
         }
     }
 );
+$app->post(
+    '/dkpbot-action/',
+    function () use ($app) {
+        $payload = new Lib\ActionPayload($app->request->post());
+        if (Lib\Bot::verifyToken('dkpbot', $payload->getToken()) === true) {
+            $dkpbot = new Bots\DKPBot($payload);
+        } else {
+            echo Lib\Post::INVALID_TOKEN;
+        }
+    }
+);
 
 // Define 'sarcasmbot' endpoint.
 $app->post(

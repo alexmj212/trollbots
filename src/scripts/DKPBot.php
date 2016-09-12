@@ -12,11 +12,13 @@
  */
 
 namespace TrollBots\Scripts;
+
+use TrollBots\Lib\Action;
 use TrollBots\Lib\Attachment;
-use TrollBots\Lib\Payload;
-use TrollBots\Lib\Responder;
-use TrollBots\Lib\Post;
 use TrollBots\Lib\Bot;
+use TrollBots\Lib\Payload;
+use TrollBots\Lib\Post;
+use TrollBots\Lib\Responder;
 
 /**
  * Class DKPBot
@@ -35,8 +37,12 @@ class DKPBot extends Bot
     const DKP_SELF_GRANT2 = 'but instead receives -%d DKP';
     const DKP_NEW_COUNT   = PHP_EOL.'*%s* now has %d DKP';
     const DKP_GRANT       = '*%s* has given *%s* %d DKP';
-    const DKP_SCORE       = 'You have %s DKP';
-    const DKP_TOO_SOON    = 'Please wait before giving %s DKP';
+    const DKP_SCORE       = 'You have %d DKP';
+    const DKP_TOO_SOON    = 'Please wait before giving *%s* DKP';
+    const DKP_VOTE_START  = '*%s* has started a vote to take %d DKP from *%s*. 3 votes are needed.';
+    const DKP_VOTE_COUNT  = 'Current Count: %d/3';
+    const DKP_VOTE        = PHP_EOL.'Votes from: *$s*';
+    const DKP_CALLBACK    = 'dkp_bot';
 
     /**
      * The points to to be saved
@@ -62,46 +68,75 @@ class DKPBot extends Bot
 
         $this->teamId = $this->payload->getTeamId();
 
-        $userPoints = explode(' ', $this->payload->getText());
-        if (count($userPoints) === 2) {
-            $this->user    = $userPoints[0];
-            $this->_points = (int) $userPoints[1];
+        if (get_class($this->payload) === 'TrollBots\Lib\ActionPayload') {
+            $post->setText('*'.$this->payload->getUserName().'*, '.$this->payload->getText());
+            $responder = new Responder($post);
+            $responder->respond();
+            return;
         }
 
-        if (is_numeric($this->_points) === true
-            && $this->_points > 0
-            && $this->_points <= 10
-            && Payload::isUserName($this->user) === true
-        ) {
-            if ($this->user === $this->payload->getUserName()) {
-                $this->_points = (0 - abs($this->_points));
-                $this->_logDKP();
-                $response  = sprintf(DKPBot::DKP_SELF_GRANT, $this->payload->getUserName());
-                $response .= sprintf(DKPBot::DKP_SELF_GRANT2, abs($this->_points));
-                $response .= sprintf(DKPBot::DKP_NEW_COUNT, $this->user, $this->_retrieveDKP($this->user));
-                $post->setText($response);
-                $post->setResponseType(Post::RESPONSE_IN_CHANNEL);
-            } else {
-                if ($this->_checkLastReceived($this->user) !== true) {
-                    $response = sprintf(DKPBot::DKP_TOO_SOON, $this->user);
-                    $post->setText($response);
-                    $post->setResponseType(Post::RESPONSE_EPHEMERAL);
-                } else {
+        switch ($this->payload->getText()) {
+        case 'rank':
+            $post->addAttachment($this->_ranking());
+            break;
+        case 'score':
+            $response = sprintf(DKPBot::DKP_SCORE, $this->_retrieveDKP($this->payload->getUserName()));
+            $post->setText($response);
+            break;
+        default:
+            $userPoints = explode(' ', $this->payload->getText());
+            if (count($userPoints) === 2) {
+                $this->user    = $userPoints[0];
+                $this->_points = (int) $userPoints[1];
+            }
+
+            if (Payload::isUserName($this->user) === true) {
+                // Valid username.
+                if ($this->user === $this->payload->getUserName()) {
+                    // User tried to gift themselves.
+                    $this->_points = (0 - abs($this->_points));
                     $this->_logDKP();
-                    $response  = sprintf(DKPBot::DKP_GRANT, $this->payload->getUserName(), $this->user, $this->_points);
+                    $response  = sprintf(DKPBot::DKP_SELF_GRANT, $this->payload->getUserName());
+                    $response .= sprintf(DKPBot::DKP_SELF_GRANT2, abs($this->_points));
                     $response .= sprintf(DKPBot::DKP_NEW_COUNT, $this->user, $this->_retrieveDKP($this->user));
                     $post->setText($response);
                     $post->setResponseType(Post::RESPONSE_IN_CHANNEL);
+                } else if ($this->_checkLastReceived($this->user) !== true) {
+                    // Too soon to grant the user DKP.
+                    $response = sprintf(DKPBot::DKP_TOO_SOON, $this->user);
+                    $post->setText($response);
+                    $post->setResponseType(Post::RESPONSE_EPHEMERAL);
+                } else if (is_numeric($this->_points) === true) {
+                    // Valid number.
+                    if ($this->_points > 0 && $this->_points <= 10) {
+                        // Between 0 and 10.
+                        $this->_logDKP();
+                        $response  = sprintf(DKPBot::DKP_GRANT, $this->payload->getUserName(), $this->user, $this->_points);
+                        $response .= sprintf(DKPBot::DKP_NEW_COUNT, $this->user, $this->_retrieveDKP($this->user));
+                        $post->setText($response);
+                        $post->setResponseType(Post::RESPONSE_IN_CHANNEL);
+
+                    } else if ($this->_points < 0 && $this->_points >= -50) {
+                        // -50 DKP!!!
+                        $response  = sprintf(DKPBot::DKP_VOTE_START, $this->payload->getUserName(), $this->_points, $this->user);
+                        $response .= sprintf(DKPBot::DKP_VOTE_COUNT, $this->payload->getUserName());
+
+                        $attachmentTitle = sprintf('Vote to take %d DKP from $s', $this->_points, $this->user);
+
+                        $attachment = new Attachment($attachmentTitle, $attachmentTitle, DKPBot::DKP_CALLBACK);
+
+                        $actionButton = sprintf('Take $d DKP', $this->_points);
+                        $attachment->addAction(new Action($attachmentTitle, $actionButton, Action::ACTION_PRIMARY_STYLE));
+                        $post->setText($response);
+                        $post->setResponseType(Post::RESPONSE_IN_CHANNEL);
+                    } else {
+                        $post->setText(Post::INVALID_COMMAND);
+                    }
                 }
+            } else {
+                $post->setText(Post::INVALID_COMMAND);
             }//end if
-        } else if ($this->payload->getText() === 'score') {
-            $response = sprintf(DKPBot::DKP_SCORE, $this->_retrieveDKP($this->payload->getUserName()));
-            $post->setText($response);
-        } else if ($this->payload->getText() === 'rank') {
-            $post->addAttachment($this->_ranking());
-        } else {
-            $post->setText(Post::INVALID_COMMAND);
-        }//end if
+        }//end switch
 
         $responder = new Responder($post);
         $responder->respond();
@@ -126,8 +161,10 @@ class DKPBot extends Bot
                 // $last_received_user = $users[$user]['last_received_user'];
                 // Time delay to prevent too much DKP (in seconds).
                 return !(($now - $last_received_date) < 30);
-            } return false;
-        } catch (\Exception $e){
+            }
+
+            return false;
+        } catch (\Exception $e) {
             echo 'Unable to check last received for user '.$user.': '.$e->getMessage();
             exit();
         }
@@ -159,8 +196,7 @@ class DKPBot extends Bot
             }
 
             Bot::updateUser($this->teamId, $userDoc);
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             echo 'Unable to log DKP for user '.$this->user.': '.$e->getMessage();
             exit();
         }//end try
