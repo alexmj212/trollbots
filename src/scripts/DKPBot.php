@@ -69,10 +69,8 @@ class DKPBot extends Bot
         $this->teamId = $this->payload->getTeamId();
 
         if (get_class($this->payload) === 'TrollBots\Lib\ActionPayload') {
-            $post->setText('*'.$this->payload->getUserName().'*, '.$this->payload->getText());
-            $responder = new Responder($post);
-            $responder->respond();
-            return;
+            echo "hello world";
+            exit();
         }
 
         switch ($this->payload->getText()) {
@@ -101,11 +99,11 @@ class DKPBot extends Bot
                     $response .= sprintf(DKPBot::DKP_NEW_COUNT, $this->user, $this->_retrieveDKP($this->user));
                     $post->setText($response);
                     $post->setResponseType(Post::RESPONSE_IN_CHANNEL);
-                } else if ($this->_checkLastReceived($this->user) !== true) {
+                /*} else if ($this->_checkLastReceived($this->user) !== true) {
                     // Too soon to grant the user DKP.
                     $response = sprintf(DKPBot::DKP_TOO_SOON, $this->user);
                     $post->setText($response);
-                    $post->setResponseType(Post::RESPONSE_EPHEMERAL);
+                    $post->setResponseType(Post::RESPONSE_EPHEMERAL);*/
                 } else if (is_numeric($this->_points) === true) {
                     // Valid number.
                     if ($this->_points > 0 && $this->_points <= 10) {
@@ -121,11 +119,11 @@ class DKPBot extends Bot
                         $response  = sprintf(DKPBot::DKP_VOTE_START.' ', $this->payload->getUserName(), $this->_points, $this->user);
                         $response .= sprintf(DKPBot::DKP_VOTE_COUNT, $this->payload->getUserName());
 
-                        $attachmentTitle = sprintf('Vote to take %d DKP from $s', $this->_points, $this->user);
+                        $attachmentTitle = sprintf('Vote to take %d DKP from %s', abs($this->_points), $this->user);
 
                         $attachment = new Attachment($attachmentTitle, $attachmentTitle, DKPBot::DKP_CALLBACK);
 
-                        $actionButton = sprintf('Take $d DKP', $this->_points);
+                        $actionButton = sprintf('Take %d DKP', $this->_points);
                         $attachment->addAction(new Action($attachmentTitle, $actionButton, Action::ACTION_PRIMARY_STYLE));
                         $post->addAttachment($attachment);
                         $post->setText($response);
