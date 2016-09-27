@@ -41,7 +41,7 @@ class DKPBot extends Bot
     const DKP_TOO_SOON    = 'Please wait before giving *%s* DKP';
     const DKP_VOTE_START  = '*%s* has started a vote to take %d DKP from *%s*. 3 votes are needed.';
     const DKP_VOTE_COUNT  = 'Current Count: %d/3';
-    const DKP_VOTE        = PHP_EOL.'Votes from: *$s*';
+    const DKP_VOTE        = PHP_EOL.'Votes from: *%s*';
     const DKP_CALLBACK    = 'dkp_bot';
 
     /**
@@ -64,13 +64,26 @@ class DKPBot extends Bot
         $this->icon           = ':dragon_face:';
         $this->collectionName = 'dkpbot';
 
+        $post = new Post($this->name, $this->icon, '', $this->payload->getChannelName());
+        $post->setReplaceOriginal(true);
 
         if (get_class($this->payload) === 'TrollBots\Lib\ActionPayload') {
-            echo "hello world";
+            $count = array();
+
+            $count_line = explode(PHP_EOL, $this->payload->getText());
+
+            preg_match('/(\d)\/\d/', $count_line[1], $count);
+            $count[1]++;
+
+            $response  = $count_line[0];
+            $response .= sprintf(DKPBot::DKP_VOTE_COUNT, $count[1]);
+            $post->setText($response);
+            $responder = new Responder($post);
+            $responder->respond();
             exit();
         }
 
-        $post = new Post($this->name, $this->icon, '', $this->payload->getChannelName());
+
 
         $this->teamId = $this->payload->getTeamId();
 
@@ -117,8 +130,8 @@ class DKPBot extends Bot
 
                     } else if ($this->_points < 0 && $this->_points >= -50) {
                         // -50 DKP!!!
-                        $response  = sprintf(DKPBot::DKP_VOTE_START.' ', $this->payload->getUserName(), $this->_points, $this->user);
-                        $response .= sprintf(DKPBot::DKP_VOTE_COUNT, $this->payload->getUserName());
+                        $response  = sprintf(DKPBot::DKP_VOTE_START.PHP_EOL, $this->payload->getUserName(), $this->_points, $this->user);
+                        $response .= sprintf(DKPBot::DKP_VOTE_COUNT, 0);
 
                         $attachmentTitle = sprintf('Vote to take %d DKP from %s', abs($this->_points), $this->user);
 
