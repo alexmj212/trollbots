@@ -64,14 +64,15 @@ class DKPBot extends Bot
         $this->icon           = ':dragon_face:';
         $this->collectionName = 'dkpbot';
 
-        $post = new Post($this->name, $this->icon, '', $this->payload->getChannelName());
-
-        $this->teamId = $this->payload->getTeamId();
 
         if (get_class($this->payload) === 'TrollBots\Lib\ActionPayload') {
             echo "hello world";
             exit();
         }
+
+        $post = new Post($this->name, $this->icon, '', $this->payload->getChannelName());
+
+        $this->teamId = $this->payload->getTeamId();
 
         switch ($this->payload->getText()) {
         case 'rank':
