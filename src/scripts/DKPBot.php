@@ -118,7 +118,7 @@ class DKPBot extends Bot
 
                     } else if ($this->_points < 0 && $this->_points >= -50) {
                         // -50 DKP!!!
-                        $response  = sprintf(DKPBot::DKP_VOTE_START, $this->payload->getUserName(), $this->_points, $this->user);
+                        $response  = sprintf(DKPBot::DKP_VOTE_START.' ', $this->payload->getUserName(), $this->_points, $this->user);
                         $response .= sprintf(DKPBot::DKP_VOTE_COUNT, $this->payload->getUserName());
 
                         $attachmentTitle = sprintf('Vote to take %d DKP from $s', $this->_points, $this->user);
@@ -127,6 +127,7 @@ class DKPBot extends Bot
 
                         $actionButton = sprintf('Take $d DKP', $this->_points);
                         $attachment->addAction(new Action($attachmentTitle, $actionButton, Action::ACTION_PRIMARY_STYLE));
+                        $post->addAttachment($attachment);
                         $post->setText($response);
                         $post->setResponseType(Post::RESPONSE_IN_CHANNEL);
                     } else {
